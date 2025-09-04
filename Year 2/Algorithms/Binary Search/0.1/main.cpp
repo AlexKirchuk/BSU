@@ -49,27 +49,36 @@ int main()
 
         for (long j = 0; j < arrCount; j++)
         {
-            if (b != 1 and query[i] == arr[j])
+            if ((b != 1 and query[i] == arr[j]))
             {
                 b = 1;
+            }
+            if (l == -1 and query[i] <= arr[j])
+            {
                 l = j;
             }
-            else if (r != -1 and query[i] > arr[j])
+            if (r == -1 and query[i] < arr[j])
             {
                 r = j;
-                continue;
             }
-            else if (i == queryCount - 1 and r == -1)
+            if (r != -1)
             {
                 fout << b << " " << l << " " << r << std::endl;
                 std::cout << b << " " << l << " " << r << std::endl;
                 break;
             }
-            else
+            if (j == arrCount - 1 and l == -1)
             {
+                l = arrCount;
+                r = arrCount;
                 fout << b << " " << l << " " << r << std::endl;
                 std::cout << b << " " << l << " " << r << std::endl;
-                break;
+            }
+            else if (j == arrCount - 1 and r == -1)
+            {
+                r = arrCount;
+                fout << b << " " << l << " " << r << std::endl;
+                std::cout << b << " " << l << " " << r << std::endl;
             }
         }
     }
