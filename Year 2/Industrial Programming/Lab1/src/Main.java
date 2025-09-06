@@ -9,7 +9,7 @@ public class Main {
         int n = 1;
         while ((x >= 2 * PI) || (x < 0))
         {
-            if (x < 0) x += + 2 * PI;
+            if (x < 0) x += 2 * PI;
             else x -= 2 * PI;
         }
         seqMembCos = sumCos = 1;
