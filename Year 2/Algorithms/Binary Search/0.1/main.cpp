@@ -6,56 +6,50 @@ int main()
 
     std::cin >> arrCount;
     arr = new long[arrCount];
-    for (int i = 0; i < arrCount; i++)
+    for (long i = 0; i < arrCount; i++)
     {
         std::cin >> arr[i];
     }
 
     std::cin >> queryCount;
     query = new long[queryCount];
-    for (int i = 0; i < queryCount; i++)
+    for (long i = 0; i < queryCount; i++)
     {
         std::cin >> query[i];
     }
 
-    long b, l, r;
-    for (long i = 0; i < queryCount; i++)
-    {
-        b = 0;
-        l = -1;
-        r = -1;
+    long b, l, r, left, right, mid;
 
-        for (long j = 0; j < arrCount; j++)
-        {
-            if ((b != 1 and query[i] == arr[j]))
-            {
-                b = 1;
-            }
-            if (l == -1 and query[i] <= arr[j])
-            {
-                l = j;
-            }
-            if (r == -1 and query[i] < arr[j])
-            {
-                r = j;
-            }
-            if (r != -1)
-            {
-                std::cout << b << " " << l << " " << r << std::endl;
-                break;
-            }
-            if (j == arrCount - 1 and l == -1)
-            {
-                l = arrCount;
-                r = arrCount;
-                std::cout << b << " " << l << " " << r << std::endl;
-            }
-            else if (j == arrCount - 1 and r == -1)
-            {
-                r = arrCount;
-                std::cout << b << " " << l << " " << r << std::endl;
-            }
+    for (long i = 0; i < queryCount; i++) {
+
+        left = 0;
+        right = arrCount;
+        while (left < right) {
+            mid = (left + right) / 2;
+            if (arr[mid] < query[i])
+                left = mid + 1;
+            else
+                right = mid;
         }
+        l = left;
+
+        left = 0;
+        right = arrCount;
+        while (left < right) {
+            mid = (left + right) / 2;
+            if (arr[mid] <= query[i])
+                left = mid + 1;
+            else
+                right = mid;
+        }
+        r = left;
+
+        if (l < arrCount && arr[l] == query[i])
+            b = 1;
+        else
+            b = 0;
+
+        std::cout << b << " " << l << " " << r << std::endl;
     }
 
     delete[] arr;
