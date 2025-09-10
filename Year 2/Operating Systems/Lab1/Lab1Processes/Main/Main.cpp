@@ -1,14 +1,6 @@
-#include <windows.h>
 #include <iostream>
 #include <fstream>
-#include <string>
-
-struct employee
-{
-    int num;
-    char name[10];
-    double hours;
-};
+#include "employee.h"
 
 int main()
 {
@@ -22,24 +14,13 @@ int main()
     std::cout << "Enter number of employees: ";
     std::cin >> count;
 
-    std::string cmdCreator = "Creator.exe " + binFile + " " + std::to_string(count);
+    std::string cmdCreator = buildCreatorCmd(binFile, count);
 
-    STARTUPINFO si;
-    PROCESS_INFORMATION pi;
-    ZeroMemory(&si, sizeof(STARTUPINFO));
-    si.cb = sizeof(STARTUPINFO);
-
-    if (!CreateProcess(NULL, const_cast<char*>(cmdCreator.c_str()),
-        NULL, NULL, FALSE, CREATE_NEW_CONSOLE,
-        NULL, NULL, &si, &pi))
+    if (!runProcess(cmdCreator))
     {
         std::cout << "Error: cannot start Creator.exe" << std::endl;
         return 1;
     }
-
-    WaitForSingleObject(pi.hProcess, INFINITE);
-    CloseHandle(pi.hProcess);
-    CloseHandle(pi.hThread);
 
     std::ifstream fin(binFile, std::ios::binary);
     if (!fin)
@@ -48,13 +29,20 @@ int main()
         return 1;
     }
 
-    employee emp;
-    std::cout << std::endl << "Binary file content:" << std::endl;
-    while (fin.read(reinterpret_cast<char*>(&emp), sizeof(emp)))
+    try
     {
-        std::cout << emp.num << " " << emp.name << " " << emp.hours << std::endl;
+        auto employees = readEmployees(binFile);
+        std::cout << std::endl <<"Binary file content:" << std::endl;
+        for (const auto& e : employees)
+        {
+            std::cout << e.num << " " << e.name << " " << e.hours << std::endl;
+        }
     }
-    fin.close();
+    catch (const std::exception& ex)
+    {
+        std::cout << ex.what() << std::endl;
+        return 1;
+    }
 
     // Reporter.exe
     std::cout << std::endl << "Enter report file name: ";
@@ -62,24 +50,11 @@ int main()
     std::cout << "Enter hourly payment: ";
     std::cin >> payment;
 
-    std::string cmdReporter = "Reporter.exe " + binFile + " " + reportFile + " " + std::to_string(payment);
-
-    STARTUPINFO si2;
-    PROCESS_INFORMATION pi2;
-    ZeroMemory(&si2, sizeof(STARTUPINFO));
-    si2.cb = sizeof(STARTUPINFO);
-
-    if (!CreateProcess(NULL, const_cast<char*>(cmdReporter.c_str()),
-        NULL, NULL, FALSE, CREATE_NEW_CONSOLE,
-        NULL, NULL, &si2, &pi2))
+    auto cmdReporter = buildReporterCmd(binFile, reportFile, payment);
+    if (!runProcess(cmdReporter))
     {
         std::cout << "Error: cannot start Reporter.exe" << std::endl;
-        return 1;
     }
-
-    WaitForSingleObject(pi2.hProcess, INFINITE);
-    CloseHandle(pi2.hProcess);
-    CloseHandle(pi2.hThread);
 
     std::ifstream finReport(reportFile);
     if (!finReport)
