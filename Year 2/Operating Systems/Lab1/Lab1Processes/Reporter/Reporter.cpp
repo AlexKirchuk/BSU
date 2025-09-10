@@ -1,5 +1,7 @@
 #include <iostream>
 #include <fstream>
+#include <vector>
+#include <algorithm>
 
 struct employee
 {
@@ -33,11 +35,25 @@ int main(int argc, char* argv[])
     fout << "=========================================" << std::endl;
     fout << "Num\tName\tHours\tSalary" << std::endl;
 
+    std::vector<employee> employees;
     employee emp;
     while (fin.read(reinterpret_cast<char*>(&emp), sizeof(emp)))
     {
-        double salary = emp.hours * payment;
-        fout << emp.num << "\t" << emp.name << "\t" << emp.hours << "\t" << salary << std::endl;
+        employees.push_back(emp);
+    }
+
+    std::sort(employees.begin(), employees.end(),
+        [](const employee& a, const employee& b)
+        {
+            return a.hours > b.hours;
+        });
+
+    for (const auto& emp : employees)
+    {
+        fout << emp.num << "\t"
+            << emp.name << "\t"
+            << emp.hours << "\t"
+            << emp.hours * payment << std::endl;
     }
 
     fin.close();
