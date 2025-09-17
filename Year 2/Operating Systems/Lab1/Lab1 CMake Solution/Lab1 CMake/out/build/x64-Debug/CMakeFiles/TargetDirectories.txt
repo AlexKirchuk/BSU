@@ -1,0 +1,3 @@
+C:/Users/akirt/source/repos/AlexKirchuk/BSU/Year 2/Operating Systems/Lab1/Lab1 CMake Solution/Lab1 CMake/out/build/x64-Debug/CMakeFiles/CMakeTarget.dir
+C:/Users/akirt/source/repos/AlexKirchuk/BSU/Year 2/Operating Systems/Lab1/Lab1 CMake Solution/Lab1 CMake/out/build/x64-Debug/CMakeFiles/edit_cache.dir
+C:/Users/akirt/source/repos/AlexKirchuk/BSU/Year 2/Operating Systems/Lab1/Lab1 CMake Solution/Lab1 CMake/out/build/x64-Debug/CMakeFiles/rebuild_cache.dir

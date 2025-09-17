@@ -1,0 +1,5 @@
+if(EXISTS "C:/Users/akirt/source/repos/AlexKirchuk/BSU/Year 2/Operating Systems/Lab1/Lab1 CMake Solution/out/build/x64-debug/EmployeeTests/EmployeeTests[1]_tests.cmake")
+  include("C:/Users/akirt/source/repos/AlexKirchuk/BSU/Year 2/Operating Systems/Lab1/Lab1 CMake Solution/out/build/x64-debug/EmployeeTests/EmployeeTests[1]_tests.cmake")
+else()
+  add_test(EmployeeTests_NOT_BUILT EmployeeTests_NOT_BUILT)
+endif()

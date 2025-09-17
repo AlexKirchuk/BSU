@@ -1,0 +1,21 @@
+# ninja log v6
+3945	4000	7798351513268439	googletest-populate-prefix/src/googletest-populate-stamp/googletest-populate-build	7c3e48252599b6b2
+4	68	7798351473941111	googletest-populate-prefix/src/googletest-populate-stamp/googletest-populate-mkdir	12c142aa7695b8cb
+3771	3830	7798351511550610	googletest-populate-prefix/src/googletest-populate-stamp/googletest-populate-update	ee19b1b72985d6dd
+4	68	7798351473941111	C:/Users/akirt/source/repos/AlexKirchuk/BSU/Year 2/Operating Systems/Lab1/Lab1 CMake Solution/out/build/x64-debug/_deps/googletest-subbuild/googletest-populate-prefix/src/googletest-populate-stamp/googletest-populate-mkdir	12c142aa7695b8cb
+3830	3887	7798351512129172	googletest-populate-prefix/src/googletest-populate-stamp/googletest-populate-patch	37cab1512d4c7fe5
+3830	3887	7798351512129172	C:/Users/akirt/source/repos/AlexKirchuk/BSU/Year 2/Operating Systems/Lab1/Lab1 CMake Solution/out/build/x64-debug/_deps/googletest-subbuild/googletest-populate-prefix/src/googletest-populate-stamp/googletest-populate-patch	37cab1512d4c7fe5
+3945	4000	7798351513268439	C:/Users/akirt/source/repos/AlexKirchuk/BSU/Year 2/Operating Systems/Lab1/Lab1 CMake Solution/out/build/x64-debug/_deps/googletest-subbuild/googletest-populate-prefix/src/googletest-populate-stamp/googletest-populate-build	7c3e48252599b6b2
+68	3770	7798351510962048	googletest-populate-prefix/src/googletest-populate-stamp/googletest-populate-download	fc2462808e63eb77
+68	3770	7798351510962048	C:/Users/akirt/source/repos/AlexKirchuk/BSU/Year 2/Operating Systems/Lab1/Lab1 CMake Solution/out/build/x64-debug/_deps/googletest-subbuild/googletest-populate-prefix/src/googletest-populate-stamp/googletest-populate-download	fc2462808e63eb77
+3771	3830	7798351511550610	C:/Users/akirt/source/repos/AlexKirchuk/BSU/Year 2/Operating Systems/Lab1/Lab1 CMake Solution/out/build/x64-debug/_deps/googletest-subbuild/googletest-populate-prefix/src/googletest-populate-stamp/googletest-populate-update	ee19b1b72985d6dd
+3888	3944	7798351512702853	googletest-populate-prefix/src/googletest-populate-stamp/googletest-populate-configure	ad7ade59bd878fa0
+4118	4197	7798351515242600	CMakeFiles/googletest-populate-complete	4dab88274b281b5a
+3888	3944	7798351512702853	C:/Users/akirt/source/repos/AlexKirchuk/BSU/Year 2/Operating Systems/Lab1/Lab1 CMake Solution/out/build/x64-debug/_deps/googletest-subbuild/googletest-populate-prefix/src/googletest-populate-stamp/googletest-populate-configure	ad7ade59bd878fa0
+4118	4197	7798351515242600	googletest-populate-prefix/src/googletest-populate-stamp/googletest-populate-done	4dab88274b281b5a
+4001	4060	7798351513859785	googletest-populate-prefix/src/googletest-populate-stamp/googletest-populate-install	7a36a4af744981d4
+4001	4060	7798351513859785	C:/Users/akirt/source/repos/AlexKirchuk/BSU/Year 2/Operating Systems/Lab1/Lab1 CMake Solution/out/build/x64-debug/_deps/googletest-subbuild/googletest-populate-prefix/src/googletest-populate-stamp/googletest-populate-install	7a36a4af744981d4
+4060	4117	7798351514441498	googletest-populate-prefix/src/googletest-populate-stamp/googletest-populate-test	3aad8769196f3fc0
+4060	4117	7798351514441498	C:/Users/akirt/source/repos/AlexKirchuk/BSU/Year 2/Operating Systems/Lab1/Lab1 CMake Solution/out/build/x64-debug/_deps/googletest-subbuild/googletest-populate-prefix/src/googletest-populate-stamp/googletest-populate-test	3aad8769196f3fc0
+4118	4197	7798351515242600	C:/Users/akirt/source/repos/AlexKirchuk/BSU/Year 2/Operating Systems/Lab1/Lab1 CMake Solution/out/build/x64-debug/_deps/googletest-subbuild/CMakeFiles/googletest-populate-complete	4dab88274b281b5a
+4118	4197	7798351515242600	C:/Users/akirt/source/repos/AlexKirchuk/BSU/Year 2/Operating Systems/Lab1/Lab1 CMake Solution/out/build/x64-debug/_deps/googletest-subbuild/googletest-populate-prefix/src/googletest-populate-stamp/googletest-populate-done	4dab88274b281b5a
