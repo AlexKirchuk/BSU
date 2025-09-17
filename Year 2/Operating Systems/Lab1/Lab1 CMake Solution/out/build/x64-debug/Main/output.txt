@@ -1,8 +1,0 @@
-Report based on file "data.bin"
-=========================================
-Num	Name	Hours	Salary
-2	Ellen	9	90
-856	Vlaimi	8	80
-354	Alex	5	50
-52	Bob	1	10
-1	Gabe	0	0
