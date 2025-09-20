@@ -1,6 +1,8 @@
-#include "minmax.h"
+#include <minmax.h>
 #include <windows.h>
 #include <iostream>
+
+extern HANDLE hConsoleMutex;
 
 DWORD WINAPI min_max_thread(LPVOID param)
 {
@@ -18,6 +20,9 @@ DWORD WINAPI min_max_thread(LPVOID param)
     data->min = min;
     data->max = max;
 
+    WaitForSingleObject(hConsoleMutex, INFINITE);
     std::cout << "Minimum: " << min << std::endl << "Maximum: " << max << std::endl;
+    ReleaseMutex(hConsoleMutex);
+    
     return 0;
 }
