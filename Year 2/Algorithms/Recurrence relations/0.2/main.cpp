@@ -7,31 +7,35 @@ Input
 ѕерва€ строка входных данных содержит
 два целых неотрицательных числа N
 и K (0 <= K <= N <= 1000).
-Output
 
+Output
 ¬ыведите одно число - ответ на задачу.
 “ак как ответ может быть очень большим,
 необходимо его вывести по модулю 10^9 + 7.
 */
 
 #include <iostream>
+#include <vector>
+
+std::vector <std::vector<long long>> b;
+const long long MOD = 1000000007;
+
 long long comb(long long n, long long k)
 {
-	if (n == k)
-	{
-		return 1;
-	}
-	if (k == 0)
-	{
-		return 1;
-	}
-	return comb(n - 1, k - 1) + comb(n - 1, k);
+	if (k == 0 || k == n) return 1;
+	if (b[n][k] == -1)
+		b[n][k] = (comb(n - 1, k - 1) + comb(n - 1, k)) % MOD;
+	return b[n][k];
 }
+
 
 int main()
 {
-	long long N, K;
-	std::cin >> N >> K;
-	std::cout << comb(N, K);
+	long long n, k;
+	std::cin >> n >> k;
+
+	b.assign(n + 1, std::vector<long long>(k + 1, -1));
+
+	std::cout << comb(n, k);
 	return 0;
 }
