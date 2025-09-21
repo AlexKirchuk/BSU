@@ -46,56 +46,52 @@ int main() {
         std::cin >> arr[i];
     }
 
-    long long* maxMosq = new long long[n];
-    for (long long i = 0; i < n; i++)
+    std::vector<std::pair<long long, long long>> path(n);
+
+    for (int i = 0; i < n; i++)
     {
-        maxMosq[i] = -1;
+        path[i].first = -1;
+        path[i].second = -1;
     }
 
-    long long* path = new long long[n];
-    for (long long i = 0; i < n; i++)
-    {
-        path[i] = -1;
-    }
-
-    maxMosq[0] = arr[0];
+    path[0].first = arr[0];
     long long content;
 
     for (long long i = 0; i < n; i++)
     {
-        if (maxMosq[i] == -1) continue;
+        if (path[i].first == -1) continue;
 
         if (i + 2 <= n - 1)
         {
-            content = maxMosq[i] + arr[i + 2];
-            if (content > maxMosq[i + 2])
+            content = path[i].first + arr[i + 2];
+            if (content > path[i + 2].first)
             {
-                maxMosq[i + 2] = content;
-                path[i + 2] = i;
+                path[i + 2].first = content;
+                path[i + 2].second = i;
             }
         }
 
         if (i + 3 <= n - 1)
         {
-            content = maxMosq[i] + arr[i + 3];
-            if (content > maxMosq[i + 3])
+            content = path[i].first + arr[i + 3];
+            if (content > path[i + 3].first)
             {
-                maxMosq[i + 3] = content;
-                path[i + 3] = i;
+                path[i + 3].first = content;
+                path[i + 3].second = i;
             }
         }
     }
 
-    if (maxMosq[n - 1] == -1)
+    if (path[n - 1].first == -1)
     {
         std::cout << -1 << std::endl;
         return -1;
     }
 
-    std::cout << maxMosq[n - 1] << std::endl;
+    std::cout << path[n - 1].first << std::endl;
 
     std::vector<long long> track;
-    for (long long i = n - 1; i != -1; i = path[i])
+    for (long long i = n - 1; i != -1; i = path[i].second)
     {
         track.push_back(i);
     }
