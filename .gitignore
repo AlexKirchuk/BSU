@@ -1,0 +1,6 @@
+﻿################################################################################
+# This .gitignore file was automatically created by Microsoft(R) Visual Studio.
+################################################################################
+
+/Year 2/Operating Systems/Lab2/Lab2 CMake/out/build/x64-debug
+/Year 2/Operating Systems/Lab2/Lab2 CMake/.vs/Lab2 CMake/v17
