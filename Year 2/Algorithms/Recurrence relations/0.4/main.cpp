@@ -34,7 +34,7 @@ Output
 необходимое для перемножения s матриц.
 */
 
-#include <iostream>
+#include <fstream>
 #include <vector>
 #include <climits>
 
@@ -45,15 +45,21 @@ long long myMin(long long a, long long b)
 
 int main()
 {
+	std::ifstream fin;
+	std::ofstream fout;
+
+	fin.open("input.txt");
+	fout.open("output.txt");
+
 	long long n;
-	std::cin >> n;
+	fin >> n;
 
 	std::vector<long long> dim(n + 1);
 
 	long long rows, cols;
 	for (long long i = 0; i < n; i++)
 	{
-		std::cin >> rows >> cols;
+		fin >> rows >> cols;
 		if (i == 0) dim[i] = rows;
 		dim[i + 1] = cols;
 	}
@@ -74,6 +80,6 @@ int main()
 		}
 	}
 
-	std::cout << b[1][n];
+	fout << b[1][n];
 	return 0;
 }
