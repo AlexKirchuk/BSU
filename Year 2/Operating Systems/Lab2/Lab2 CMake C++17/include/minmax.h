@@ -1,5 +1,4 @@
 #pragma once
-#include <data.h>
-#include <windows.h>
+#include "data.h"
 
-DWORD WINAPI min_max_thread(LPVOID param);
+void min_max_thread(Data& data);

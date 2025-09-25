@@ -1,29 +1,26 @@
-#include <minmax.h>
-#include <windows.h>
+#include "minmax.h"
 #include <iostream>
+#include <thread>
+#include <chrono>
+#include <mutex>
 
-extern HANDLE hConsoleMutex;
+extern std::mutex console_mutex;
 
-DWORD WINAPI min_max_thread(LPVOID param)
+void min_max_thread(Data& data)
 {
-    Data* data = static_cast<Data*>(param);
-    int min = data->arr[0];
-    int max = data->arr[0];
+    int min = data.arr[0];
+    int max = data.arr[0];
 
-    for (int i = 0; i < data->size; i++)
-    {
-        if (data->arr[i] < min) min = data->arr[i];
-        Sleep(7);
-        if (data->arr[i] > max) max = data->arr[i];
-        Sleep(7);
+    for (int value : data.arr) {
+        if (value < min) min = value;
+        std::this_thread::sleep_for(std::chrono::milliseconds(7));
+        if (value > max) max = value;
+        std::this_thread::sleep_for(std::chrono::milliseconds(7));
     }
 
-    data->min = min;
-    data->max = max;
+    data.min = min;
+    data.max = max;
 
-    WaitForSingleObject(hConsoleMutex, INFINITE);
+    std::lock_guard<std::mutex> lock(console_mutex);
     std::cout << "Minimum: " << min << std::endl << "Maximum: " << max << std::endl;
-    ReleaseMutex(hConsoleMutex);
-    
-    return 0;
 }

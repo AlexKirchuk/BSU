@@ -1,54 +1,40 @@
-#include <data.h>
-#include <minmax.h>
-#include <average.h>
+#include "data.h"
+#include "minmax.h"
+#include "average.h"
 #include <iostream>
+#include <thread>
+#include <mutex>
 
-HANDLE hConsoleMutex = CreateMutex(NULL, FALSE, NULL);
+std::mutex console_mutex;
 
-DWORD WINAPI main_thread(LPVOID)
-{
+int main() {
     int n;
     std::cout << "Enter array size: ";
     std::cin >> n;
 
-    int* arr = new int[n];
-    std::cout << "Enter array elements: ";
-    for (int i = 0; i < n; i++) std::cin >> arr[i];
-
     Data data;
-    data.arr = arr;
-    data.size = n;
+    data.arr.resize(n);
 
-    HANDLE hMinMax = CreateThread(NULL, 0, min_max_thread, &data, 0, NULL);
-    HANDLE hAverage = CreateThread(NULL, 0, average_thread, &data, 0, NULL);
-
-    WaitForSingleObject(hMinMax, INFINITE);
-    WaitForSingleObject(hAverage, INFINITE);
-
-    CloseHandle(hMinMax);
-    CloseHandle(hAverage);
-
+    std::cout << "Enter array elements: ";
     for (int i = 0; i < n; i++)
+        std::cin >> data.arr[i];
+    
+    std::thread t1(min_max_thread, std::ref(data));
+    std::thread t2(average_thread, std::ref(data));
+
+    t1.join();
+    t2.join();
+
+    for (int& value : data.arr)
     {
-        if (arr[i] == data.min || arr[i] == data.max)
-            arr[i] = static_cast<int>(data.average);
+        if (value == data.min || value == data.max)
+            value = static_cast<int>(data.average);
     }
 
     std::cout << "Modified array: ";
-    for (int i = 0; i < n; i++)
-        std::cout << arr[i] << " ";
+    for (int value : data.arr)
+        std::cout << value << " ";
     std::cout << std::endl;
 
-    delete[] arr;
     return 0;
-}
-
-int main()
-{
-    HANDLE hMain = CreateThread(NULL, 0, main_thread, NULL, 0, NULL);
-    WaitForSingleObject(hMain, INFINITE);
-    CloseHandle(hMain);
-    CloseHandle(hConsoleMutex);
-
-	return 0;
 }

@@ -1,5 +1,4 @@
 #pragma once
-#include <data.h>
-#include <windows.h>
+#include "data.h"
 
-DWORD WINAPI average_thread(LPVOID param);
+void average_thread(Data& data);

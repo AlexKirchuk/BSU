@@ -13,6 +13,7 @@ DWORD WINAPI min_max_thread(LPVOID param)
     for (int i = 0; i < data->size; i++)
     {
         if (data->arr[i] < min) min = data->arr[i];
+        Sleep(7);
         if (data->arr[i] > max) max = data->arr[i];
         Sleep(7);
     }

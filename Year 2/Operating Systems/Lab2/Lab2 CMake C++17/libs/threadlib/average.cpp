@@ -1,25 +1,21 @@
-#include <average.h>
-#include <windows.h>
+#include "average.h"
 #include <iostream>
+#include <thread>
+#include <chrono>
+#include <mutex>
 
-extern HANDLE hConsoleMutex;
+extern std::mutex console_mutex;
 
-DWORD WINAPI average_thread(LPVOID param)
+void average_thread(Data& data)
 {
-    Data* data = static_cast<Data*>(param);
     double sum = 0;
-
-    for (int i = 0; i < data->size; i++)
+    for (int value : data.arr)
     {
-        sum += data->arr[i];
-        Sleep(12);
+        sum += value;
+        std::this_thread::sleep_for(std::chrono::milliseconds(12));
     }
+    data.average = sum / data.arr.size();
 
-    data->average = sum / data->size;
-
-    WaitForSingleObject(hConsoleMutex, INFINITE);
-    std::cout << "Average: " << data->average << std::endl;
-    ReleaseMutex(hConsoleMutex);
-
-    return 0;
+    std::lock_guard<std::mutex> lock(console_mutex);
+    std::cout << "Average: " << data.average << std::endl;
 }
