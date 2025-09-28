@@ -1,122 +1,85 @@
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
-import java.util.ArrayList;
-
-class CreditBook {
-    private String lastName;
-    private String firstName;
-    private String patronymic;
-    private int year;
-    private String group;
-    private ArrayList<Period> periods = new ArrayList<>();
-
-    public CreditBook(String lastName, String firstName, String patronymic, int year, String group) {
-        this.lastName = lastName;
-        this.firstName = firstName;
-        this.patronymic = patronymic;
-        this.year = year;
-        this.group = group;
-    }
-
-    public Period createPeriod(int periodNumber) {
-        Period p = new Period(periodNumber);
-        periods.add(p);
-        return p;
-    }
-
-    public boolean isExcellent() {
-        for (Period p : periods) {
-            if (!p.allExamsExcellent() || !p.allCreditsPassed()) {
-                return false;
-            }
-        }
-        return true;
-    }
-
-    public String getFullName() {
-        return lastName + " " + firstName + " " + patronymic;
-    }
-
-    public int getYear() {
-        return year;
-    }
-
-    public String getGroup() {
-        return group;
-    }
-
-    public ArrayList<Period> getPeriods() {
-        return periods;
-    }
-
-    class Period {
-        private int periodNumber;
-        private ArrayList<Subject> subjects = new ArrayList<>();
-
-        class Subject {
-            String subjectName;
-            boolean credit;
-            int grade;
-
-            Subject(String subjectName, boolean credit, int grade) {
-                this.subjectName = subjectName;
-                this.credit = credit;
-                this.grade = grade;
-            }
-        }
-
-        Period(int periodNumber) {
-            this.periodNumber = periodNumber;
-        }
-
-        public void addExam(String subjectName, int grade) {
-            subjects.add(new Subject(subjectName, false, grade));
-        }
-
-        public void addCredit(String subjectName) {
-            subjects.add(new Subject(subjectName, true, 0));
-        }
-
-        public boolean allExamsExcellent() {
-            for (Subject s : subjects) {
-                if (!s.credit && s.grade < 9) {
-                    return false;
-                }
-            }
-            return true;
-        }
-
-        public boolean allCreditsPassed() {
-            return true;
-        }
-
-        public ArrayList<Subject> getSubjects() {
-            return subjects;
-        }
-
-        public int getPeriodNumber() {
-            return periodNumber;
-        }
-    }
-    void readFromFile(String filename) {
-        BufferedReader br = null;
-        try {
-            br = new BufferedReader(new FileReader(filename));
-            String line;
-            while ((line = br.readLine()) != null) {
-                System.out.println(line);
-            }
-        } catch (IOException e) {
-            System.out.println("Error" + e);
-        }
-    }
-
-}
+import java.io.*;
+import java.util.*;
 
 public class Main {
     public static void main(String[] args) {
+        ArrayList<Group> groups = readInput("Input.txt");
+        writeExcellentStudents("output.txt", groups);
+    }
 
+    public static ArrayList<Group> readInput(String filename) {
+        ArrayList<Group> groups = new ArrayList<>();
+
+        try (BufferedReader br = new BufferedReader(new FileReader("Input.txt"))) {
+            String line;
+            Group currentGroup = null;
+            Student currentStudent = null;
+            CreditBook.Period currentPeriod = null;
+
+            while ((line = br.readLine()) != null) {
+                line = line.trim();
+                if (line.isEmpty() || line.startsWith("#")) continue;
+
+                if (line.startsWith("YEAR")) {
+                    String[] parts = line.split(" ");
+                    int year = Integer.parseInt(parts[0].split("=")[1]);
+                    int groupNumber = Integer.parseInt(parts[1].split("=")[1]);
+                    currentGroup = new Group(year, groupNumber);
+                    groups.add(currentGroup);
+                } else if (line.startsWith("STUDENT")) {
+                    String[] parts = line.split("=")[1].split(" ");
+                    String lastName = parts[0];
+                    String firstName = parts[1];
+                    String patronymic = parts[2];
+                    currentStudent = new Student(lastName, firstName, patronymic, 0, 0);
+                    if (currentGroup != null) {
+                        currentGroup.getStudents().add(currentStudent);
+                    }
+                } else if (line.startsWith("PERIOD")) {
+                    currentPeriod = currentStudent.getCreditBook().new Period();
+                    currentStudent.getCreditBook().getPeriods().add(currentPeriod);
+                } else if (line.startsWith("SUBJECT")) {
+                    String[] parts = line.split(" ");
+                    String subjectName = parts[0].split("=")[1];
+                    int grade = Integer.parseInt(parts[1].split("=")[1]);
+                    boolean credit = Integer.parseInt(parts[2].split("=")[1]) == 1;
+
+                    CreditBook.Period.Subject subject =
+                            currentPeriod.new Subject(subjectName, credit, grade);
+                    currentPeriod.getSubjects().add(subject);
+                }
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return groups;
+    }
+
+    public static void writeExcellentStudents(String filename, ArrayList<Group> groups) {
+        try (BufferedWriter bw = new BufferedWriter(new FileWriter(filename))) {
+            for (Group g : groups) {
+                for (Student st : g.getStudents()) {
+                    if (st.getCreditBook().isExcellent()) {
+                        int periodNum = 1;
+                        for (CreditBook.Period p : st.getCreditBook().getPeriods()) {
+                            for (CreditBook.Period.Subject s : p.getSubjects()) {
+                                bw.write(st.getLastName() + " " + st.getFirstName() + " " + st.getPatronymic()
+                                        + ", Year=" + g.getYear()
+                                        + ", Group=" + g.getGroupNumber()
+                                        + ", Period=" + periodNum
+                                        + ", Subject=" + s.getSubjectName()
+                                        + ", Grade=" + s.getGrade());
+                                bw.newLine();
+                            }
+                            periodNum++;
+                        }
+                    }
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

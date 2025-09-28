@@ -1,0 +1,89 @@
+# Group 1
+YEAR=2023 GROUP=1
+    STUDENT=Smith John Michael
+        PERIOD=1
+            SUBJECT=Math GRADE=10 CREDIT=1
+            SUBJECT=Physics GRADE=9 CREDIT=1
+            SUBJECT=History GRADE=8 CREDIT=1
+        PERIOD=2
+            SUBJECT=Math GRADE=9 CREDIT=1
+            SUBJECT=Physics GRADE=10 CREDIT=1
+            SUBJECT=History GRADE=9 CREDIT=1
+    STUDENT=Johnson Peter David
+        PERIOD=1
+            SUBJECT=Math GRADE=7 CREDIT=1
+            SUBJECT=Physics GRADE=6 CREDIT=1
+            SUBJECT=History GRADE=8 CREDIT=1
+        PERIOD=2
+            SUBJECT=Math GRADE=6 CREDIT=1
+            SUBJECT=Physics GRADE=7 CREDIT=1
+            SUBJECT=History GRADE=6 CREDIT=1
+    STUDENT=Williams Robert James
+        PERIOD=1
+            SUBJECT=Math GRADE=9 CREDIT=1
+            SUBJECT=Physics GRADE=9 CREDIT=1
+            SUBJECT=History GRADE=10 CREDIT=1
+        PERIOD=2
+            SUBJECT=Math GRADE=10 CREDIT=1
+            SUBJECT=Physics GRADE=9 CREDIT=1
+            SUBJECT=History GRADE=10 CREDIT=1
+
+# Group 2
+YEAR=2023 GROUP=2
+    STUDENT=Brown Charles Thomas
+        PERIOD=1
+            SUBJECT=Math GRADE=8 CREDIT=1
+            SUBJECT=Physics GRADE=7 CREDIT=1
+            SUBJECT=History GRADE=7 CREDIT=1
+        PERIOD=2
+            SUBJECT=Math GRADE=7 CREDIT=1
+            SUBJECT=Physics GRADE=8 CREDIT=1
+            SUBJECT=History GRADE=6 CREDIT=1
+    STUDENT=Jones William Richard
+        PERIOD=1
+            SUBJECT=Math GRADE=10 CREDIT=1
+            SUBJECT=Physics GRADE=9 CREDIT=1
+            SUBJECT=History GRADE=10 CREDIT=1
+        PERIOD=2
+            SUBJECT=Math GRADE=9 CREDIT=1
+            SUBJECT=Physics GRADE=10 CREDIT=1
+            SUBJECT=History GRADE=9 CREDIT=1
+    STUDENT=Miller James Edward
+        PERIOD=1
+            SUBJECT=Math GRADE=6 CREDIT=1
+            SUBJECT=Physics GRADE=5 CREDIT=1
+            SUBJECT=History GRADE=6 CREDIT=1
+        PERIOD=2
+            SUBJECT=Math GRADE=5 CREDIT=1
+            SUBJECT=Physics GRADE=6 CREDIT=1
+            SUBJECT=History GRADE=5 CREDIT=1
+
+# Group 3
+YEAR=2023 GROUP=3
+    STUDENT=Davis Christopher Daniel
+        PERIOD=1
+            SUBJECT=Math GRADE=9 CREDIT=1
+            SUBJECT=Physics GRADE=8 CREDIT=1
+            SUBJECT=History GRADE=9 CREDIT=1
+        PERIOD=2
+            SUBJECT=Math GRADE=10 CREDIT=1
+            SUBJECT=Physics GRADE=9 CREDIT=1
+            SUBJECT=History GRADE=10 CREDIT=1
+    STUDENT=Garcia Matthew Anthony
+        PERIOD=1
+            SUBJECT=Math GRADE=7 CREDIT=1
+            SUBJECT=Physics GRADE=6 CREDIT=1
+            SUBJECT=History GRADE=7 CREDIT=1
+        PERIOD=2
+            SUBJECT=Math GRADE=8 CREDIT=1
+            SUBJECT=Physics GRADE=7 CREDIT=1
+            SUBJECT=History GRADE=8 CREDIT=1
+    STUDENT=Martinez Joshua Andrew
+        PERIOD=1
+            SUBJECT=Math GRADE=10 CREDIT=1
+            SUBJECT=Physics GRADE=10 CREDIT=1
+            SUBJECT=History GRADE=10 CREDIT=1
+        PERIOD=2
+            SUBJECT=Math GRADE=10 CREDIT=1
+            SUBJECT=Physics GRADE=9 CREDIT=1
+            SUBJECT=History GRADE=10 CREDIT=1
