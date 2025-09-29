@@ -1,0 +1,26 @@
+# makefile for Lab 4 (Windows version)
+
+TARG=StudentApp
+JC=javac -g -encoding utf8
+JM=java -ea -jar
+JR=jar -cfe
+
+SRC=src
+BIN=bin
+
+SOURCES=$(SRC)/Group.java $(SRC)/Student.java $(SRC)/CreditBook.java $(SRC)/Main.java
+
+classes:
+	@mkdir -p $(BIN)
+	$(JC) -d $(BIN) $(SOURCES)
+
+run: build
+	$(JM) $(TARG).jar
+
+build: classes
+	$(JR) $(TARG).jar Main -C $(BIN) .
+
+clean:
+	rm -rf $(BIN)/*.class $(TARG).jar
+
+# eof makefile Lab 4

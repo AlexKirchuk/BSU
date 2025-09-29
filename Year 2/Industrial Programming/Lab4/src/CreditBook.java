@@ -1,38 +1,14 @@
-
 import java.util.ArrayList;
 
 public class CreditBook {
-    public class Period {
-        public class Subject {
-            public String getSubjectName() {
-                return subjectName;
-            }
+    public static class Period {
+        public record Subject(String subjectName, boolean credit, int grade) {}
 
-            private String subjectName;
-            private boolean credit;
-
-            public int getGrade() {
-                return grade;
-            }
-
-            private int grade;
-
-            public boolean isCredit() {
-                return credit;
-            }
-
-            Subject(String subjectName, boolean credit, int grade) {
-                this.subjectName = subjectName;
-                this.credit = credit;
-                this.grade = grade;
-            }
-        }
+        private final ArrayList<Subject> subjects = new ArrayList<>();
 
         public ArrayList<Subject> getSubjects() {
             return subjects;
         }
-
-        private ArrayList<Subject> subjects = new ArrayList<>();
 
         public double getAverageGradeThisPeriod() {
             double sum = 0;
@@ -45,11 +21,11 @@ public class CreditBook {
         }
     }
 
+    private final ArrayList<Period> periods = new ArrayList<>();
+
     public ArrayList<Period> getPeriods() {
         return periods;
     }
-
-    private ArrayList<Period> periods = new ArrayList<>();
 
     public boolean isExcellent() {
         for (Period p : periods) {
@@ -72,5 +48,4 @@ public class CreditBook {
         }
         return true;
     }
-
 }

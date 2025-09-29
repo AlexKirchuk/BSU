@@ -1,23 +1,23 @@
 import java.util.ArrayList;
 
 public class Group {
-    private int year;
+    private final int year;
 
     public int getYear() {
         return year;
     }
 
-    private int groupNumber;
+    private final int groupNumber;
 
     public int getGroupNumber() {
         return groupNumber;
     }
 
+    private final ArrayList<Student> students;
+
     public ArrayList<Student> getStudents() {
         return students;
     }
-
-    private ArrayList<Student> students;
 
     public Group(int year, int groupNumber) {
         this.year = year;

@@ -1,35 +1,33 @@
-import java.util.ArrayList;
-
 public class Student {
-    private String lastName;
+    private final String lastName;
 
     public String getLastName() {
         return lastName;
     }
 
-    private String firstName;
+    private final String firstName;
 
     public String getFirstName() {
         return firstName;
     }
 
-    private String patronymic;
+    private final String patronymic;
 
     public String getPatronymic() {
         return patronymic;
     }
 
-    private CreditBook creditBook;
+    private final CreditBook creditBook;
 
-    public Student(String lastName, String firstName, String patronymic, int year, int groupName) {
+    public CreditBook getCreditBook() {
+        return creditBook;
+    }
+
+    public Student(String lastName, String firstName, String patronymic) {
         this.lastName = lastName;
         this.firstName = firstName;
         this.patronymic = patronymic;
         this.creditBook = new CreditBook();
-    }
-
-    public CreditBook getCreditBook() {
-        return creditBook;
     }
 
     public double averageGradeOfStudentForAllTime() {
