@@ -1,0 +1,26 @@
+# makefile for Interval project
+
+TARG=IntervalApp
+JC=javac -g -encoding utf8
+JM=java -ea -jar
+JR=jar -cfe
+
+SRC=src
+BIN=bin
+
+SOURCES=$(SRC)/Interval.java $(SRC)/Main.java
+
+classes:
+	@mkdir -p $(BIN)
+	$(JC) -d $(BIN) $(SOURCES)
+
+run: build
+	$(JM) $(TARG).jar
+
+build: classes
+	$(JR) $(TARG).jar Main -C $(BIN) .
+
+clean:
+	rm -rf $(BIN)/*.class $(TARG).jar
+
+# eof makefile Interval project
