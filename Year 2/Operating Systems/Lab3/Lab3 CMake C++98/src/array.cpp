@@ -19,9 +19,9 @@ int Array::getSize()
 
 int Array::get(int index)
 {
-    EnterCriticalSection(const_cast<LPCRITICAL_SECTION>(&cs));
+    EnterCriticalSection(&cs);
     int val = data[index];
-    LeaveCriticalSection(const_cast<LPCRITICAL_SECTION>(&cs));
+    LeaveCriticalSection(&cs);
     return val;
 }
 
@@ -43,10 +43,10 @@ void Array::clearValue(int value)
 
 void Array::print()
 {
-    EnterCriticalSection(const_cast<LPCRITICAL_SECTION>(&cs));
+    EnterCriticalSection(&cs);
     std::cout << "Array: ";
     for (int i = 0; i < size; ++i)
         std::cout << data[i] << " ";
     std::cout << std::endl;
-    LeaveCriticalSection(const_cast<LPCRITICAL_SECTION>(&cs));
+    LeaveCriticalSection(&cs);
 }
