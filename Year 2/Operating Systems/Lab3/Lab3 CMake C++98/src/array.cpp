@@ -1,4 +1,4 @@
-#include "array.h"
+#include <array.h>
 
 Array::Array(int n) : size(n)
 {

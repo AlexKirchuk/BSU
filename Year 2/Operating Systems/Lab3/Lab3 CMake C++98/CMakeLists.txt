@@ -8,12 +8,13 @@ if (POLICY CMP0141)
   set(CMAKE_MSVC_DEBUG_INFORMATION_FORMAT "$<IF:$<AND:$<C_COMPILER_ID:MSVC>,$<CXX_COMPILER_ID:MSVC>>,$<$<CONFIG:Debug,RelWithDebInfo>:EditAndContinue>,$<$<CONFIG:Debug,RelWithDebInfo>:ProgramDatabase>>")
 endif()
 
-project ("Lab3 CMake C++98")
+project (Lab3CMake98)
 
 include_directories(${PROJECT_SOURCE_DIR}/include)
 set(SOURCES
     src/main.cpp
     src/array.cpp
+    src/marker.cpp
 )
 
-add_executable(lab3 ${SOURCES})
+add_executable(Lab3CMake98 src/main.cpp "src/marker.cpp")
