@@ -2,11 +2,12 @@
 
 project(Lab3CMake98)
 
-# Используем C++98 (C++03)
 set(CMAKE_CXX_STANDARD 98)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-include_directories(include)
+set(BOOST_ROOT "D:/Programming/C++ libs/boost_1_89_0")
+set(BOOST_INCLUDEDIR "${BOOST_ROOT}")
+include_directories(${BOOST_INCLUDEDIR} include)
 
 set(SOURCES
     src/main.cpp

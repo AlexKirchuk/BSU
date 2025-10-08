@@ -1,6 +1,7 @@
 #ifndef MARKER_H
 #define MARKER_H
 
+#include <boost/shared_ptr.hpp>
 #include <windows.h>
 #include <array.h>
 
@@ -12,7 +13,7 @@ struct MarkerData
     HANDLE threadHandle;
     bool terminate;
     bool active;
-    Array* sharedArray;
+    boost::shared_ptr<Array> sharedArray;
 };
 
 DWORD WINAPI MarkerProc(LPVOID param);

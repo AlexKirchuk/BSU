@@ -1,24 +1,84 @@
+/*
+Lab #3.
+Topic: "Thread Synchronization Using Bottom Sections and Events.
+Deadlock Handling."
+
+Problem: Write a program for a console process that consists of a main thread and a
+thread marker for multiple instances.
+The main thread must perform the following actions:
+1. Allocate memory for an array of integers, the size of which is entered from the console.
+2. Initialize the array elements to zero.
+3. Request the number of thread markers to start.
+4. Start a thread marker of a specified number of instances. As a parameter,
+pass each instance of the thread marker its sequence number when it starts.
+5. Signal the start of the marker for all threads.
+6. Perform the following actions in a loop:
+6.1. Wait until all thread markers signal that they cannot continue their work. 6.2. Print the array array to the console.
+6.3. Request the thread marker's sequence number from the console; it will signal the completion of its work.
+6.4. Send the thread marker, whose number was obtained from institution 6.3, a signal to
+complete its work.
+6.5. Wait for the thread marker to complete its work; a signal to
+complete work in construction 6.4 was sent.
+6.6. Print the array array to the console.
+6.7. Send a signal for the remaining threads of the marker to continue their work.
+7. Complete its work after all thread markers have completed their work.
+The marker thread must perform the following actions:
+1. Start work upon a signal from the main thread.
+2. Initialize the generation of a random number sequence. To do this,
+use the srand function, which passes its
+sequence number as an argument. 3. Run cyclically, performing the following actions in each loop:
+3.1. Generate a random number using the rand function.
+3.2. Divide this number modulo the array dimension.
+3.3. If the array element whose index calculates the division result results in
+one of the following actions:
+3.3.1. Sleep for 5 milliseconds.
+3.3.2. Set the element whose index has been calculated to its own ordered number.
+3.3.3. Sleep for 5 milliseconds.
+3.3.4. Continue execution of loop 3.
+3.4. On failure:
+3.4.1. Print this information to the console:
+- its ordered number;
+- the number of marked elements;
+- the index of the array element that cannot be marked.
+3.4.2. Signal the main thread that it is unable to continue its work.
+3.4.3. Wait for a response signal to continue or complete work on the main thread.
+
+4. If a signal to complete work is received, configure the following actions:
+4.1. Fill all array elements it marked with zeros.
+4.2. Complete the work.
+5. If a signal to continue work is received, continue execution of the loop.
+step 3.
+
+Lab3 is made on C++98 CMake
+*/
+
+#include <boost/shared_ptr.hpp>
+#include <boost/make_shared.hpp>
+#include <boost/shared_array.hpp>
 #include <windows.h>
 #include <array.h>
 #include <marker.h>
 #include <iostream>
 
 HANDLE startEvent;
-MarkerData* markers = 0;
+CRITICAL_SECTION coutCS;
+boost::shared_array<MarkerData> markers;
 int markerCount = 0;
 
 int main()
 {
+    InitializeCriticalSection(&coutCS);
+
     int sizeArr = 0;
     std::cout << "Enter array size: ";
     std::cin >> sizeArr;
 
-    Array arr(sizeArr);
+    boost::shared_ptr<Array> arr = boost::make_shared<Array>(sizeArr);
 
-    std::cout << "Enter amount of marker threads: ";
+    std::cout << "Enter number of marker threads: ";
     std::cin >> markerCount;
 
-    markers = new MarkerData[markerCount];
+    markers = boost::shared_array<MarkerData>(new MarkerData[markerCount]);
     startEvent = CreateEvent(0, TRUE, FALSE, 0);
 
     for (int i = 0; i < markerCount; ++i)
@@ -28,7 +88,7 @@ int main()
         markers[i].controlEvent = CreateEvent(0, FALSE, FALSE, 0);
         markers[i].terminate = false;
         markers[i].active = true;
-        markers[i].sharedArray = &arr;
+        markers[i].sharedArray = arr;
 
         markers[i].threadHandle = CreateThread(
             0, 0, MarkerProc, static_cast<LPVOID>(&markers[i]), 0, 0
@@ -47,25 +107,24 @@ int main()
         if (activeCount == 0)
             break;
 
-        HANDLE* activeEvents = new HANDLE[activeCount];
+        boost::shared_array<HANDLE> activeEvents(new HANDLE[activeCount]);
         int idx = 0;
         for (int i = 0; i < markerCount; ++i)
             if (markers[i].active)
                 activeEvents[idx++] = markers[i].blockedEvent;
 
-        WaitForMultipleObjects(activeCount, activeEvents, TRUE, INFINITE);
-        delete[] activeEvents;
+        WaitForMultipleObjects(activeCount, activeEvents.get(), TRUE, INFINITE);
 
-        std::cout << std::endl << "All threads are blocked!" << std::endl;
-        arr.print();
+        std::cout << std::endl << "All marker threads are blocked!" << std::endl;
+        arr->print();
 
         int num;
-        std::cout << "Enter thread number for finishing: ";
+        std::cout << "Enter marker number to terminate: ";
         std::cin >> num;
 
         if (num < 1 || num > markerCount || !markers[num - 1].active)
         {
-            std::cout << "Error!" << std::endl;
+            std::cout << "Invalid choice!" << std::endl;
             continue;
         }
 
@@ -73,7 +132,7 @@ int main()
         SetEvent(markers[num - 1].controlEvent);
         WaitForSingleObject(markers[num - 1].threadHandle, INFINITE);
 
-        arr.print();
+        arr->print();
 
         for (int i = 0; i < markerCount; ++i)
         {
@@ -85,18 +144,20 @@ int main()
         }
     }
 
-    std::cout << std::endl << "All threads finished." << std::endl;
-    arr.print();
+    std::cout << std::endl << "All marker threads have finished." << std::endl;
+    arr->print();
 
-    for (int i = 0; i < markerCount; ++i) {
+    for (int i = 0; i < markerCount; ++i)
+    {
         CloseHandle(markers[i].blockedEvent);
         CloseHandle(markers[i].controlEvent);
         CloseHandle(markers[i].threadHandle);
     }
 
     CloseHandle(startEvent);
-    delete[] markers;
 
-    std::cout << "End.";
+    DeleteCriticalSection(&coutCS);
+
+    std::cout << "Program finished." << std::endl;
     return 0;
 }
