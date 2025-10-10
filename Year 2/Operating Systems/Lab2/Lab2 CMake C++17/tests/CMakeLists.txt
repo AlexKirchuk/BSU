@@ -10,7 +10,7 @@ target_include_directories(tests PRIVATE
     ${PROJECT_SOURCE_DIR}/include
 )
 
-set_property(TARGET tests PROPERTY CXX_STANDARD 20)
+set_property(TARGET tests PROPERTY CXX_STANDARD 17)
 set_property(TARGET tests PROPERTY CXX_STANDARD_REQUIRED ON)
 
 add_test(NAME MyTest COMMAND tests)

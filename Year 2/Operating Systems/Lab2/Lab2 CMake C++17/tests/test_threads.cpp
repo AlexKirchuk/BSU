@@ -1,8 +1,8 @@
 #define DOCTEST_CONFIG_IMPLEMENT_WITH_MAIN
 #include <doctest.h>
-#include "data.h"
-#include "minmax.h"
-#include "average.h"
+#include <data.h>
+#include <minmax.h>
+#include <average.h>
 #include <mutex>
 
 std::mutex console_mutex;

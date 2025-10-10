@@ -1,4 +1,6 @@
-#pragma once
+#ifndef DATA_H
+#define DATA_H
+
 #include <vector>
 
 struct Data
@@ -8,3 +10,5 @@ struct Data
     int max{};
     double average{};
 };
+
+#endif

@@ -1,4 +1,4 @@
-#include "minmax.h"
+#include <minmax.h>
 #include <iostream>
 #include <thread>
 #include <chrono>
@@ -8,14 +8,16 @@ extern std::mutex console_mutex;
 
 void min_max_thread(Data& data)
 {
+    const int TIME_TO_SLEEP = 7;
     int min = data.arr[0];
     int max = data.arr[0];
 
-    for (int value : data.arr) {
+    for (int value : data.arr)
+    {
         if (value < min) min = value;
-        std::this_thread::sleep_for(std::chrono::milliseconds(7));
+        std::this_thread::sleep_for(std::chrono::milliseconds(TIME_TO_SLEEP));
         if (value > max) max = value;
-        std::this_thread::sleep_for(std::chrono::milliseconds(7));
+        std::this_thread::sleep_for(std::chrono::milliseconds(TIME_TO_SLEEP));
     }
 
     data.min = min;
