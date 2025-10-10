@@ -49,7 +49,7 @@ one of the following actions:
 5. If a signal to continue work is received, continue execution of the loop.
 step 3.
 
-Lab3 is made on C++98 CMake
+Lab3 is made on C++98 CMake, Boost Unit Tests
 */
 
 #include <boost/shared_ptr.hpp>
