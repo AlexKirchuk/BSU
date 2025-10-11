@@ -57,11 +57,12 @@
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <WarningLevel>Level3</WarningLevel>
-      <AdditionalIncludeDirectories>"C:\Users\akirt\source\repos\AlexKirchuk\BSU\Year 2\Operating Systems\Lab1\Lab1Processes\EmployeeLib"</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>D:\Programming\My Repositories\BSU\Year 2\Operating Systems\Lab1\Lab1 MVS Project C++14\EmployeeLib</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Console</SubSystem>
+      <AdditionalDependencies>"D:\Programming\My Repositories\BSU\Year 2\Operating Systems\Lab1\Lab1 MVS Project C++14\x64\Debug\EmployeeLib.lib"</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -88,13 +89,14 @@
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <WarningLevel>Level3</WarningLevel>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
-      <AdditionalIncludeDirectories>"C:\Users\akirt\source\repos\AlexKirchuk\BSU\Year 2\Operating Systems\Lab1\Lab1Processes\EmployeeLib"</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>D:\Programming\My Repositories\BSU\Year 2\Operating Systems\Lab1\Lab1 MVS Project C++14\EmployeeLib</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Console</SubSystem>
       <OptimizeReferences>true</OptimizeReferences>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <AdditionalDependencies>"D:\Programming\My Repositories\BSU\Year 2\Operating Systems\Lab1\Lab1 MVS Project C++14\x64\Debug\EmployeeLib.lib"</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>

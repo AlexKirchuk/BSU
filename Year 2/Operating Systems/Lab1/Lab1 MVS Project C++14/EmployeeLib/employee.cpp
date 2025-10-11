@@ -1,7 +1,8 @@
+#include "pch.h"
 #include "employee.h"
 #include <windows.h>
-#include <string>
 #include <fstream>
+#include <vector>
 #include <stdexcept>
 
 std::vector<employee> readEmployees(const std::string& filename)
@@ -20,12 +21,12 @@ std::vector<employee> readEmployees(const std::string& filename)
 
 std::string buildCreatorCmd(const std::string& binFile, int count)
 {
-    return "../Creator/Creator.exe " + binFile + " " + std::to_string(count);
+    return "Creator.exe " + binFile + " " + std::to_string(count);
 }
 
 std::string buildReporterCmd(const std::string& binFile, const std::string& reportFile, double payment)
 {
-    return "../Reporter/Reporter.exe " + binFile + " " + reportFile + " " + std::to_string(payment);
+    return "Reporter.exe " + binFile + " " + reportFile + " " + std::to_string(payment);
 }
 
 bool runProcess(const std::string& cmdLine)

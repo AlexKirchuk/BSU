@@ -1,18 +1,20 @@
+#include "pch.h"
+#include "employee.h"
+#include <windows.h>
 #include <gtest/gtest.h>
-#include <employee.h>
-#include <string>
 #include <fstream>
+#include <vector>
 
 TEST(BuildCmdTests, CreatorCmdCorrect)
 {
     std::string cmd = buildCreatorCmd("data.bin", 5);
-    EXPECT_EQ(cmd, "../Creator/Creator.exe data.bin 5");
+    EXPECT_EQ(cmd, "Creator.exe data.bin 5");
 }
 
 TEST(BuildCmdTests, ReporterCmdCorrect)
 {
     std::string cmd = buildReporterCmd("data.bin", "report.txt", 10.5);
-    EXPECT_EQ(cmd, "../Reporter/Reporter.exe data.bin report.txt 10.500000");
+    EXPECT_EQ(cmd, "Reporter.exe data.bin report.txt 10.500000");
 }
 
 TEST(ReadEmployeesTests, SingleEmployee)
