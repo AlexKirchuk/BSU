@@ -214,7 +214,7 @@ public class Main {
         int[][] L = new int[n1][];
         int[][] R = new int[n2][];
 
-        for (int i = 0; i < n1; i++) L[i] = matrix[left + i];
+        System.arraycopy(matrix, left, L, 0, n1);
         for (int j = 0; j < n2; j++) R[j] = matrix[mid + 1 + j];
 
         int i = 0, j = 0, k = left;
