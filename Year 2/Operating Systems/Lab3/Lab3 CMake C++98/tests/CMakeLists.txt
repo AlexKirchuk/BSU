@@ -16,4 +16,4 @@ target_include_directories(tests PRIVATE
 set_property(TARGET tests PROPERTY CXX_STANDARD 98)
 set_property(TARGET tests PROPERTY CXX_STANDARD_REQUIRED ON)
 
-add_test(NAME Lab3UnitTests COMMAND tests)
+add_test(NAME MyTest COMMAND tests)
