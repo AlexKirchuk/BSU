@@ -3,7 +3,12 @@ import java.util.*;
 class EquilateralTriangle extends Triangle implements Comparable<EquilateralTriangle>, Comparator<EquilateralTriangle> {
 
     private final String borderColor;
+
     private final String fillColor;
+
+    public String getFillColor() {
+        return fillColor;
+    }
 
     public EquilateralTriangle(double side, String borderColor, String fillColor) {
         super(side, side, 60.0);

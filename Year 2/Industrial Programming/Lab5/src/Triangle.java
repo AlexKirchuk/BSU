@@ -2,10 +2,34 @@ import java.util.*;
 
 abstract class Triangle implements Iterable<Object> {
     protected double sideA;
+
+    public double getSideA() {
+        return sideA;
+    }
+
     protected double sideB;
     protected double angle;
 
     public Triangle(double sideA, double sideB, double angle) {
+
+        if (sideA <= 0) {
+            throw new IllegalArgumentException("Side length must be positive. Got: " + sideA);
+        }
+
+        if (sideB <= 0) {
+            throw new IllegalArgumentException("Side length must be positive. Got: " + sideB);
+        }
+
+        if (angle <= 0) {
+            throw new IllegalArgumentException("Side length must be positive. Got: " + angle);
+        }
+
+        assert sideA > 0 : "Triangle side cannot be zero or negative";
+
+        assert sideB > 0 : "Triangle side cannot be zero or negative";
+
+        assert angle > 0 : "Triangle angle cannot be zero or negative";
+
         this.sideA = sideA;
         this.sideB = sideB;
         this.angle = angle;
