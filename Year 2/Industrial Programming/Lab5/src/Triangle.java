@@ -1,5 +1,4 @@
 import java.util.*;
-import java.util.Iterator;
 
 abstract class Triangle implements Iterable<Object> {
     protected double sideA;
