@@ -19,13 +19,6 @@ abstract class Triangle implements Iterable<Object> {
         return String.format(Locale.US, "%.2f;%.2f;%.2f", sideA, sideB, angle);
     }
 
-    public Triangle(String text) {
-        String[] parts = text.split(";");
-        this.sideA = Double.parseDouble(parts[0]);
-        this.sideB = Double.parseDouble(parts[1]);
-        this.angle = Double.parseDouble(parts[2]);
-    }
-
     @Override
     public Iterator<Object> iterator() {
         return new Iterator<>() {

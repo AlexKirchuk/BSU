@@ -1,15 +1,34 @@
-//TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or
-// click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
+import java.util.*;
+
 public class Main {
     public static void main(String[] args) {
-        //TIP Press <shortcut actionId="ShowIntentionActions"/> with your caret at the highlighted text
-        // to see how IntelliJ IDEA suggests fixing it.
-        System.out.printf("Hello and welcome!");
+        ArrayList<EquilateralTriangle> list = new ArrayList<>();
+        list.add(new EquilateralTriangle(5.0, "Red", "Yellow"));
+        list.add(new EquilateralTriangle(3.0, "Blue", "Green"));
+        list.add(new EquilateralTriangle(7.0, "Black", "White"));
 
-        for (int i = 1; i <= 5; i++) {
-            //TIP Press <shortcut actionId="Debug"/> to start debugging your code. We have set one <icon src="AllIcons.Debugger.Db_set_breakpoint"/> breakpoint
-            // for you, but you can always add more by pressing <shortcut actionId="ToggleLineBreakpoint"/>.
-            System.out.println("i = " + i);
+        System.out.println("Original list:");
+        list.forEach(System.out::println);
+
+        Collections.sort(list);
+        System.out.println("\nSorted by side:");
+        list.forEach(System.out::println);
+
+        EquilateralTriangle comparator = new EquilateralTriangle(1.0, "tmp", "tmp");
+        comparator.setCompareField("area");
+        list.sort(comparator);
+
+        System.out.println("\nSorted by area:");
+        list.forEach(System.out::println);
+
+        System.out.println("\nFields of the first triangle using iterator:");
+        for (Object field : list.getFirst()) {
+            System.out.println(field);
         }
+
+        String serialized = list.getFirst().toString();
+        EquilateralTriangle restored = new EquilateralTriangle(serialized);
+        System.out.println("\nRestored object from string:");
+        System.out.println(restored);
     }
 }
