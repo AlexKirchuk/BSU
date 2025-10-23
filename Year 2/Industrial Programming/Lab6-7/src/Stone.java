@@ -1,10 +1,10 @@
 import java.io.Serializable;
 
 public abstract class Stone implements Serializable {
-    private String name;
-    private double weight;
-    private double pricePerCarat;
-    private double transparency;
+    private final String name;
+    private final double weight;
+    private final double pricePerCarat;
+    private final double transparency;
 
     public Stone(String name, double weight, double pricePerCarat, double transparency) {
         if (weight <= 0 || pricePerCarat <= 0 || transparency < 0 || transparency > 100)
