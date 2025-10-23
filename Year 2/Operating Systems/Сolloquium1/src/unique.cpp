@@ -15,3 +15,6 @@ std::vector<T> removeDuplicates(const std::vector<T>& input)
     }
     return result;
 }
+
+template std::vector<int> removeDuplicates<int>(const std::vector<int>&);
+template std::vector<double> removeDuplicates<double>(const std::vector<double>&);
