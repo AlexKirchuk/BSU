@@ -40,47 +40,46 @@ int myMax(int a, int b)
 std::string s;
 std::vector<std::vector<int>> f;
 
-std::map<int, std::map<int, std::string>> minMemo;
-std::map<int, std::map<int, std::string>> maxMemo;
+std::map<int, std::map<int, std::string>> memo;
 
 std::string getMin(int i, int j)
 {
     if (i > j) return "";
     if (i == j) return std::string(1, s[i]);
-    if (minMemo[i].count(j)) return minMemo[i][j];
+    if (memo[i].count(j)) return memo[i][j];
 
     if (s[i] == s[j])
     {
         std::string mid = getMin(i + 1, j - 1);
-        return minMemo[i][j] = s[i] + mid + s[j];
+        return memo[i][j] = s[i] + mid + s[j];
     }
 
-    if (f[i + 1][j] > f[i][j - 1]) return minMemo[i][j] = getMin(i + 1, j);
-    if (f[i + 1][j] < f[i][j - 1]) return minMemo[i][j] = getMin(i, j - 1);
+    if (f[i + 1][j] > f[i][j - 1]) return memo[i][j] = getMin(i + 1, j);
+    if (f[i + 1][j] < f[i][j - 1]) return memo[i][j] = getMin(i, j - 1);
 
     std::string left = getMin(i + 1, j);
     std::string right = getMin(i, j - 1);
-    return minMemo[i][j] = myMin(left, right);
+    return memo[i][j] = myMin(left, right);
 }
 
 std::string getMax(int i, int j)
 {
     if (i > j) return "";
     if (i == j) return std::string(1, s[i]);
-    if (maxMemo[i].count(j)) return maxMemo[i][j];
+    if (memo[i].count(j)) return memo[i][j];
 
     if (s[i] == s[j])
     {
         std::string mid = getMax(i + 1, j - 1);
-        return maxMemo[i][j] = s[i] + mid + s[j];
+        return memo[i][j] = s[i] + mid + s[j];
     }
 
-    if (f[i + 1][j] > f[i][j - 1]) return maxMemo[i][j] = getMax(i + 1, j);
-    if (f[i + 1][j] < f[i][j - 1]) return maxMemo[i][j] = getMax(i, j - 1);
+    if (f[i + 1][j] > f[i][j - 1]) return memo[i][j] = getMax(i + 1, j);
+    if (f[i + 1][j] < f[i][j - 1]) return memo[i][j] = getMax(i, j - 1);
 
     std::string left = getMax(i + 1, j);
     std::string right = getMax(i, j - 1);
-    return maxMemo[i][j] = myMax(left, right);
+    return memo[i][j] = myMax(left, right);
 }
 
 int main()
@@ -104,6 +103,7 @@ int main()
     }
 
     std::string minPal = getMin(0, n - 1);
+    memo.clear();
     std::string maxPal = getMax(0, n - 1);
 
     std::cout << minPal << "\n" << maxPal << "\n";
