@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="f819d667-5fad-440e-a1d1-b4a60c0eea41" name="Changes" comment="lab6-7 java main + stone fixes (STAGE 1)">
+      <change afterPath="$PROJECT_DIR$/src/AppLocale.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Main.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Stone.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Stone.java" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Class" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/../../.." />
+  </component>
+  <component name="GitHubPullRequestSearchHistory"><![CDATA[{
+  "lastFilter": {
+    "state": "OPEN",
+    "assignee": "AlexKirchuk"
+  }
+}]]></component>
+  <component name="GithubPullRequestsUISettings"><![CDATA[{
+  "selectedUrlAndAccountId": {
+    "url": "https://github.com/AlexKirchuk/BSU.git",
+    "accountId": "90bdfe9b-34bc-46dd-8661-41aae76e4248"
+  }
+}]]></component>
+  <component name="ProjectColorInfo"><![CDATA[{
+  "associatedIndex": 8
+}]]></component>
+  <component name="ProjectId" id="34SN6y4GnTmRyzavklFwFIiUp7M" />
+  <component name="ProjectLevelVcsManager">
+    <ConfirmationsSetting value="2" id="Add" />
+  </component>
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "Application.Main.executor": "Run",
+    "ModuleVcsDetector.initialDetectionPerformed": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "git-widget-placeholder": "main",
+    "kotlin-language-version-configured": "true",
+    "onboarding.tips.debug.path": "D:/Programming/My Repositories/BSU/Year 2/Industrial Programming/Lab6-7/src/Main.java",
+    "settings.editor.selected.configurable": "preferences.general"
+  }
+}]]></component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="f819d667-5fad-440e-a1d1-b4a60c0eea41" name="Changes" comment="" />
+      <created>1761202844652</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1761202844652</updated>
+    </task>
+    <task id="LOCAL-00001" summary="lab6-7 java stone upd">
+      <option name="closed" value="true" />
+      <created>1761202939242</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1761202939242</updated>
+    </task>
+    <task id="LOCAL-00002" summary="lab6-7 java precious and semiprecious">
+      <option name="closed" value="true" />
+      <created>1761203230926</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1761203230926</updated>
+    </task>
+    <task id="LOCAL-00003" summary="lab6-7 java necklace + connector">
+      <option name="closed" value="true" />
+      <created>1761204644378</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1761204644378</updated>
+    </task>
+    <task id="LOCAL-00004" summary="lab6-7 java main + stone fixes (STAGE 1)">
+      <option name="closed" value="true" />
+      <created>1761205038291</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1761205038291</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
+    <servers />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="lab6-7 java stone upd" />
+    <MESSAGE value="lab6-7 java precious and semiprecious" />
+    <MESSAGE value="lab6-7 java necklace + connector" />
+    <MESSAGE value="lab6-7 java main + stone fixes (STAGE 1)" />
+    <option name="LAST_COMMIT_MESSAGE" value="lab6-7 java main + stone fixes (STAGE 1)" />
+  </component>
+</project>

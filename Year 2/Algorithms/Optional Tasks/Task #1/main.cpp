@@ -20,6 +20,7 @@ Output
 #include <iostream>
 #include <string>
 #include <vector>
+#include <map>
 
 std::string myMin(std::string a, std::string b)
 {
@@ -31,61 +32,81 @@ std::string myMax(std::string a, std::string b)
     return a > b ? a : b;
 }
 
-int main()
+int myMax(int a, int b)
 {
-    std::string s;
-    std::cin >> s;
-    int n = s.size();
+    return a > b ? a : b;
+}
 
-    std::vector<std::vector<int>> f(n, std::vector<int>(n, 0));
-    std::vector<std::vector<std::string>> minp(n, std::vector<std::string>(n, ""));
-    std::vector<std::vector<std::string>> maxp(n, std::vector<std::string>(n, ""));
+std::string s;
+std::vector<std::vector<int>> f;
 
-    for (int i = 0; i < n; ++i)
+std::map<int, std::map<int, std::string>> minMemo;
+std::map<int, std::map<int, std::string>> maxMemo;
+
+std::string getMin(int i, int j)
+{
+    if (i > j) return "";
+    if (i == j) return std::string(1, s[i]);
+    if (minMemo[i].count(j)) return minMemo[i][j];
+
+    if (s[i] == s[j])
     {
-        f[i][i] = 1;
-        minp[i][i] = maxp[i][i] = std::string(1, s[i]);
+        std::string mid = getMin(i + 1, j - 1);
+        return minMemo[i][j] = s[i] + mid + s[j];
     }
 
-    for (int d = 1; d < n; ++d)
+    if (f[i + 1][j] > f[i][j - 1]) return minMemo[i][j] = getMin(i + 1, j);
+    if (f[i + 1][j] < f[i][j - 1]) return minMemo[i][j] = getMin(i, j - 1);
+
+    std::string left = getMin(i + 1, j);
+    std::string right = getMin(i, j - 1);
+    return minMemo[i][j] = myMin(left, right);
+}
+
+std::string getMax(int i, int j)
+{
+    if (i > j) return "";
+    if (i == j) return std::string(1, s[i]);
+    if (maxMemo[i].count(j)) return maxMemo[i][j];
+
+    if (s[i] == s[j])
     {
-        for (int i = 0; i + d < n; ++i)
+        std::string mid = getMax(i + 1, j - 1);
+        return maxMemo[i][j] = s[i] + mid + s[j];
+    }
+
+    if (f[i + 1][j] > f[i][j - 1]) return maxMemo[i][j] = getMax(i + 1, j);
+    if (f[i + 1][j] < f[i][j - 1]) return maxMemo[i][j] = getMax(i, j - 1);
+
+    std::string left = getMax(i + 1, j);
+    std::string right = getMax(i, j - 1);
+    return maxMemo[i][j] = myMax(left, right);
+}
+
+int main()
+{
+    std::cin >> s;
+    int n = s.size();
+    f.assign(n, std::vector<int>(n, 0));
+
+    for (int i = 0; i < n; ++i) f[i][i] = 1;
+
+    for (int len = 2; len <= n; ++len)
+    {
+        for (int i = 0; i <= n - len; ++i)
         {
-            int j = i + d;
+            int j = i + len - 1;
             if (s[i] == s[j])
-            {
-                f[i][j] = f[i + 1][j - 1] + 2;
-                std::string mid_min = (i + 1 <= j - 1) ? minp[i + 1][j - 1] : "";
-                std::string mid_max = (i + 1 <= j - 1) ? maxp[i + 1][j - 1] : "";
-                minp[i][j] = s[i] + mid_min + s[j];
-                maxp[i][j] = s[i] + mid_max + s[j];
-            }
+                f[i][j] = (len == 2 ? 2 : f[i + 1][j - 1] + 2);
             else
-            {
-                if (f[i + 1][j] > f[i][j - 1])
-                {
-                    f[i][j] = f[i + 1][j];
-                    minp[i][j] = minp[i + 1][j];
-                    maxp[i][j] = maxp[i + 1][j];
-                }
-                else if (f[i + 1][j] < f[i][j - 1])
-                {
-                    f[i][j] = f[i][j - 1];
-                    minp[i][j] = minp[i][j - 1];
-                    maxp[i][j] = maxp[i][j - 1];
-                }
-                else
-                {
-                    f[i][j] = f[i + 1][j];
-                    minp[i][j] = myMin(minp[i + 1][j], minp[i][j - 1]);
-                    maxp[i][j] = myMax(maxp[i + 1][j], maxp[i][j - 1]);
-                }
-            }
+                f[i][j] = myMax(f[i + 1][j], f[i][j - 1]);
         }
     }
 
-    std::cout << minp[0][n - 1] << "\n";
-    std::cout << maxp[0][n - 1] << "\n";
+    std::string minPal = getMin(0, n - 1);
+    std::string maxPal = getMax(0, n - 1);
+
+    std::cout << minPal << "\n" << maxPal << "\n";
 
     return 0;
 }

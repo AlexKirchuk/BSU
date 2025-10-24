@@ -1,10 +1,12 @@
 import java.io.Serializable;
+import java.util.Date;
 
 public abstract class Stone implements Serializable {
     private final String name;
     private final double weight;
     private final double pricePerCarat;
     private final double transparency;
+    private Date creationDate;
 
     public Stone(String name, double weight, double pricePerCarat, double transparency) {
         if (weight <= 0 || pricePerCarat <= 0 || transparency < 0 || transparency > 100)
@@ -13,6 +15,7 @@ public abstract class Stone implements Serializable {
         this.weight = weight;
         this.pricePerCarat = pricePerCarat;
         this.transparency = transparency;
+        this.creationDate = new Date();
     }
 
     public double getValue() {
@@ -23,10 +26,11 @@ public abstract class Stone implements Serializable {
     public double getWeight() { return weight; }
     public double getPricePerCarat() { return pricePerCarat; }
     public double getTransparency() { return transparency; }
+    public Date geDate() { return creationDate; }
 
     @Override
     public String toString() {
-        return String.format("%s (weight: %.2f ct, price/car: %.2f, transparency: %.1f%%, value: %.2f)",
-                name, weight, pricePerCarat, transparency, getValue());
+        return String.format("%s (weight: %.2f ct, price/car: %.2f, transparency: %.1f%%, value: %.2f, created: %s)",
+                name, weight, pricePerCarat, transparency, getValue(), creationDate);
     }
 }
