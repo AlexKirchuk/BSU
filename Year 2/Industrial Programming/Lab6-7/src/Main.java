@@ -1,17 +1,17 @@
-import java.io.File;
 import java.io.PrintStream;
 import java.io.UnsupportedEncodingException;
 import java.text.DateFormat;
 import java.text.NumberFormat;
+import java.util.ArrayList;
 import java.util.Locale;
 
 public class Main {
 
-    public static Necklace createNecklace() {
+    public static Necklace createNecklace(Locale locale) {
         Necklace necklace = new Necklace();
-        necklace.addStone(new PreciousStone(AppLocale.getString(AppLocale.diamond), 2.5, 1000, 95));
-        necklace.addStone(new SemiPreciousStone(AppLocale.getString(AppLocale.amethyst), 3.2, 200, 80));
-        necklace.addStone(new PreciousStone(AppLocale.getString(AppLocale.ruby), 1.7, 850, 90));
+        necklace.addStone(new PreciousStone(AppLocale.getString(AppLocale.diamond), 2.5, 1000, 95, locale));
+        necklace.addStone(new SemiPreciousStone(AppLocale.getString(AppLocale.amethyst), 3.2, 200, 85, locale));
+        necklace.addStone(new PreciousStone(AppLocale.getString(AppLocale.ruby), 1.7, 850, 90, locale));
         return necklace;
     }
 
@@ -29,12 +29,28 @@ public class Main {
     }
 
     static Locale createLocale(String[] args) {
-        if (args.length == 2) {
-            return new Locale(args[0], args[1]);
-        } else if (args.length == 4) {
-            return new Locale(args[2], args[3]);
+        try {
+            if (args.length == 2) {
+                return Locale.of(args[0], args[1]);
+            } else if (args.length == 4) {
+                return Locale.of(args[2], args[3]);
+            }
+        } catch (IllegalArgumentException e) {
+            System.err.println("Invalid locale: " + e.getMessage());
         }
         return null;
+    }
+
+    private static void printNecklace(Necklace necklace, Locale locale) {
+        DateFormat dateFormat = DateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.MEDIUM, locale);
+        for (Stone s : necklace.getStones()) {
+            System.out.printf("%s — %.2f " + AppLocale.getString(AppLocale.ct) + " " + AppLocale.getString(AppLocale.value) + " %.2f, %s: %s%n",
+                    s.getName(),
+                    s.getWeight(),
+                    s.getValue(),
+                    AppLocale.getString(AppLocale.created_on),
+                    dateFormat.format(s.getCreationDate()));
+        }
     }
 
     public static void main(String[] args) {
@@ -42,32 +58,38 @@ public class Main {
             setupConsole(args);
             Locale loc = createLocale(args);
             if (loc == null) {
-                System.err.println("Invalid argument(s)\n"
-                        + "Syntax: [-encoding ENCODING_ID] language country\n"
-                        + "Example: -encoding UTF8 en GB");
+                System.err.println("""
+                        Invalid argument(s)
+                        Syntax: [-encoding ENCODING_ID] language country
+                        Example: -encoding UTF8 en GB""");
                 System.exit(1);
             }
 
             AppLocale.set(loc);
 
-            NecklaceConnector connector = new NecklaceConnector(new File("necklace_stage2.dat"));
-            connector.write(createNecklace());
-            Necklace necklace = connector.read();
+            String filename = "necklace.dat";
+            NecklaceConnector.save(createNecklace(loc), filename);
+            Necklace necklace = NecklaceConnector.load(filename).orElseThrow();
+
+            System.out.println("=== " + AppLocale.getString(AppLocale.app_title) + " ===");
+            printNecklace(necklace, loc);
+
+            System.out.println("=== " + AppLocale.getString(AppLocale.sort) + " ===");
+            necklace.sortByValue();
+            printNecklace(necklace, loc);
+
+            final int MIN_TR = 84;
+            final int MAX_TR = 92;
+            System.out.println("=== " + AppLocale.getString(AppLocale.found) + " [" + MIN_TR + "; " + MAX_TR +  "] ===");
+            ArrayList<Stone> filtered = necklace.findByTransparency(MIN_TR, MAX_TR);
+            for (Stone s : filtered) {
+                System.out.println(s);
+            }
 
             System.out.println(AppLocale.getString(AppLocale.app_title));
             System.out.println(AppLocale.getString(AppLocale.current_locale) + " " + loc.getDisplayName(loc));
 
-            DateFormat dateFormat = DateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.MEDIUM, loc);
             NumberFormat numFormat = NumberFormat.getNumberInstance(loc);
-
-            for (Stone s : necklace.getStones()) {
-                System.out.printf("%s — %.2f ct, %.2f value, %s: %s%n",
-                        s.getName(),
-                        s.getWeight(),
-                        s.getValue(),
-                        AppLocale.getString(AppLocale.created_on),
-                        dateFormat.format(s.getCreationDate()));
-            }
 
             System.out.println(AppLocale.getString(AppLocale.total_weight) + ": " +
                     numFormat.format(necklace.getTotalWeight()));
@@ -75,7 +97,7 @@ public class Main {
                     numFormat.format(necklace.getTotalValue()));
 
         } catch (Exception e) {
-            System.err.println(e);
+            System.err.println("Error: " + e.getMessage());
         }
     }
 }

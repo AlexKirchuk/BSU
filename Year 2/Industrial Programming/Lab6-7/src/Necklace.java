@@ -6,6 +6,10 @@ import java.util.Comparator;
 public class Necklace implements Serializable {
     private final ArrayList<Stone> stones = new ArrayList<>();
 
+    public ArrayList<Stone> getStones() {
+        return stones;
+    }
+
     public void addStone(Stone stone) {
         stones.add(stone);
     }
