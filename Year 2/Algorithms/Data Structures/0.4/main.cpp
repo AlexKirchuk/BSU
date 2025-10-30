@@ -1,5 +1,4 @@
 #include <fstream>
-#include <queue>
 #include <vector>
 
 int main()
@@ -10,27 +9,48 @@ int main()
     int n;
     in >> n;
 
-    std::priority_queue<long long, std::vector<long long>, std::greater<long long>> pq;
-
+    std::vector<long long> a(n);
     for (int i = 0; i < n; ++i)
     {
-        long long x;
-        in >> x;
-        pq.push(x);
+        in >> a[i];
     }
 
+    std::vector<long long> b;
+    b.reserve(n - 1);
+
     long long ans = 0;
+    int i = 0, j = 0;
 
-    while (pq.size() > 1)
+    while (true)
     {
-        long long a = pq.top();
-        pq.pop();
-        long long b = pq.top();
-        pq.pop();
+        long long x, y;
 
-        long long sum = a + b;
+        if (i < n && (j >= b.size() || a[i] < b[j]))
+        {
+            x = a[i++];
+        }
+        else
+        {
+            x = b[j++];
+        }
+
+        if (i < n && (j >= b.size() || a[i] < b[j]))
+        {
+            y = a[i++];
+        }
+        else
+        {
+            y = b[j++];
+        }
+
+        long long sum = x + y;
         ans += sum;
-        pq.push(sum);
+        b.push_back(sum);
+
+        if (i + j == n + b.size() - 1)
+        {
+            break;
+        }
     }
 
     out << ans;
