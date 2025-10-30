@@ -36,16 +36,15 @@ public class Buffer {
         }
     }
 
-    static Object fromZipByteArray(byte[] arr) throws IOException, ClassNotFoundException {
+    public static Object fromZipByteArray(byte[] arr) throws IOException, ClassNotFoundException {
         ByteArrayInputStream bin = new ByteArrayInputStream(arr);
         try (ZipInputStream zis = new ZipInputStream(bin)) {
             ZipEntry zen = zis.getNextEntry();
             if (zen == null || !zen.getName().equals(ZIP_ENTRY_NAME)) {
                 throw new IOException("Invalid compressed data format");
             }
-            try (ObjectInputStream ois = new ObjectInputStream(zis)) {
-                return ois.readObject();
-            }
+            ObjectInputStream ois = new ObjectInputStream(zis);
+            return ois.readObject();
         }
     }
 
@@ -87,11 +86,11 @@ public class Buffer {
 
         if (zipped == 0) {
             Object obj = fromByteArray(data);
-            System.out.println("Read plain record from position " + position);
+            System.out.println(" read plain record from position " + position);
             return obj;
         } else if (zipped == 1) {
             Object obj = fromZipByteArray(data);
-            System.out.println("Read compressed record from position " + position);
+            System.out.println(" read compressed record from position " + position);
             return obj;
         } else {
             throw new IOException("Invalid data flag at position " + position);

@@ -101,16 +101,12 @@ public class UtilityBill implements Serializable {
 
     public UtilityBill() {}
 
-    public static final String areaDel = "\n";
-
+    @Override
     public String toString() {
-        return houseNumber + areaDel +
-                apartmentNumber + areaDel +
-                address + areaDel +
-                ownerName + areaDel +
-                paymentDate + areaDel +
-                amount + areaDel +
-                penaltyPercent + areaDel +
-                overdueDays;
+        return String.format(
+                "House: %d, Apt: %d, Address: %s, Owner: %s, Date: %s, Amount: %.2f, Penalty: %.2f%%, Overdue: %d",
+                houseNumber, apartmentNumber, address, ownerName, paymentDate,
+                amount, penaltyPercent, overdueDays
+        );
     }
 }
