@@ -38,7 +38,6 @@ public class UtilityBill implements Serializable {
     }
 
     static Boolean validDate(String str) {
-        // simple validation: YYYY-MM-DD format
         return str.matches("\\d{4}-\\d{2}-\\d{2}");
     }
 
