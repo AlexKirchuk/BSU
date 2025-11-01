@@ -1,9 +1,10 @@
-#include <boost/shared_array.hpp>
 #include <common.h>
 #include <windows.h>
 #include <iostream>
+#include <fstream>
 #include <vector>
 #include <string>
+#include <stdexcept>
 
 int main()
 {
@@ -13,83 +14,109 @@ int main()
         std::cout << "Enter filename: ";
         std::cin >> filename;
 
-        int numMessages;
+        int capacity;
         std::cout << "Enter number of messages in queue: ";
-        std::cin >> numMessages;
+        std::cin >> capacity;
 
         int numSenders;
         std::cout << "Enter number of senders: ";
         std::cin >> numSenders;
 
         HANDLE hMutex = CreateSemaphore(NULL, 1, 1, "MutexAccess");
-        if (hMutex == NULL) { throw std::runtime_error("Failed to create mutex semaphore"); }
+        if (!hMutex)
+        { throw std::runtime_error("Failed to create mutex semaphore"); }
 
-        HANDLE hEmpty = CreateSemaphore(NULL, numMessages, numMessages, "EmptySlots");
-        if (hEmpty == NULL) { throw std::runtime_error("Failed to create empty semaphore"); }
+        HANDLE hEmpty = CreateSemaphore(NULL, capacity, capacity, "EmptySlots");
+        if (!hEmpty)
+        { throw std::runtime_error("Failed to create empty semaphore"); }
 
-        HANDLE hFull = CreateSemaphore(NULL, 0, numMessages, "FullSlots");
-        if (hFull == NULL) { throw std::runtime_error("Failed to create full semaphore"); }
+        HANDLE hFull = CreateSemaphore(NULL, 0, capacity, "FullSlots");
+        if (!hFull)
+        { throw std::runtime_error("Failed to create full semaphore"); }
+
+        std::ofstream file(filename.c_str(), std::ios::binary);
+        if (!file)
+        { throw std::runtime_error("Failed to create file"); }
+        file.close();
+
+        HANDLE hMap = CreateFileMapping(INVALID_HANDLE_VALUE, NULL, PAGE_READWRITE, 0, sizeof(RingBuffer), "GlobalRingBuffer");
+        if (!hMap)
+        { throw std::runtime_error("Failed to create shared memory"); }
+
+        RingBuffer* buffer = static_cast<RingBuffer*>(MapViewOfFile(hMap, FILE_MAP_ALL_ACCESS, 0, 0, sizeof(RingBuffer)));
+        if (!buffer)
+        { throw std::runtime_error("Failed to map shared memory"); }
+
+        buffer->head = 0;
+        buffer->tail = 0;
 
         std::vector<HANDLE> senderReadyEvents;
         for (int i = 0; i < numSenders; ++i)
         {
             std::string evName = "SenderReady" + std::to_string(i);
             HANDLE hEvent = CreateEvent(NULL, TRUE, FALSE, evName.c_str());
-            if (hEvent == NULL) { throw std::runtime_error("Failed to create sender ready event"); }
+            if (!hEvent)
+            { throw std::runtime_error("Failed to create sender ready event"); }
             senderReadyEvents.push_back(hEvent);
         }
 
-        STARTUPINFO si = { sizeof(STARTUPINFO) };
-        PROCESS_INFORMATION pi;
-
         for (int i = 0; i < numSenders; ++i)
         {
-            std::string cmd = "sender.exe " + std::to_string(i) + " " + std::to_string(numMessages);
-
-            STARTUPINFO si = { sizeof(STARTUPINFO) };
+            std::string cmd = "sender.exe " + std::to_string(i) + " " + std::to_string(capacity) + " " + filename;
+            STARTUPINFO si;
             PROCESS_INFORMATION pi;
-
-            if (!CreateProcess(NULL, const_cast<char*>(cmd.c_str()),
-                NULL, NULL, FALSE, 0, NULL, NULL, &si, &pi))
+            ZeroMemory(&si, sizeof(STARTUPINFO));
+            si.cb = sizeof(STARTUPINFO);
+            if (!CreateProcess(NULL, const_cast<char*>(cmd.c_str()), NULL, NULL, FALSE, CREATE_NEW_CONSOLE, NULL, NULL, &si, &pi))
             { throw std::runtime_error("Failed to start sender process"); }
-
             CloseHandle(pi.hProcess);
             CloseHandle(pi.hThread);
         }
 
-        for (int i = 0; i < numSenders; ++i) { WaitForSingleObject(senderReadyEvents[i], INFINITE); }
-        std::cout << "All senders ready" << std::endl;
+        for (int i = 0; i < senderReadyEvents.size(); ++i)
+        { WaitForSingleObject(senderReadyEvents[i], INFINITE); }
 
-        RingBuffer buffer;
-        buffer.capacity = numMessages;
-        buffer.head = 0;
-        buffer.tail = 0;
-        buffer.messages = boost::shared_array<std::string>(new std::string[numMessages]);
+        std::cout << "All senders ready" << std::endl;
 
         while (true)
         {
             std::cout << "Enter command (read/exit): ";
             std::string cmd;
             std::cin >> cmd;
-            if (cmd == "exit") break;
-            if (cmd == "read") {
-                if (WaitForSingleObject(hFull, INFINITE) != WAIT_OBJECT_0) { continue; }
-                if (WaitForSingleObject(hMutex, INFINITE) != WAIT_OBJECT_0) { continue; }
+            if (cmd == "exit")
+            { break; }
+            if (cmd == "read")
+            {
+                WaitForSingleObject(hFull, INFINITE);
+                WaitForSingleObject(hMutex, INFINITE);
 
-                std::string msg = buffer.messages[buffer.head];
+                std::fstream file(filename.c_str(), std::ios::in | std::ios::out | std::ios::binary);
+                if (!file)
+                { throw std::runtime_error("Failed to open file"); }
+
+                file.seekg(buffer->head * MAX_MESSAGE_LENGTH, std::ios::beg);
+                char msg[MAX_MESSAGE_LENGTH] = { 0 };
+                file.read(msg, MAX_MESSAGE_LENGTH);
                 std::cout << "Received: " << msg << std::endl;
 
-                buffer.head = (buffer.head + 1) % buffer.capacity;
+                file.seekp(buffer->head * MAX_MESSAGE_LENGTH, std::ios::beg);
+                std::string empty(MAX_MESSAGE_LENGTH, '\0');
+                file.write(empty.c_str(), MAX_MESSAGE_LENGTH);
+                file.close();
+
+                buffer->head = (buffer->head + 1) % capacity;
 
                 ReleaseSemaphore(hMutex, 1, NULL);
                 ReleaseSemaphore(hEmpty, 1, NULL);
             }
         }
-
+        UnmapViewOfFile(buffer);
+        CloseHandle(hMap);
         CloseHandle(hMutex);
         CloseHandle(hEmpty);
         CloseHandle(hFull);
-        for (int i = 0; i < numSenders; ++i) { CloseHandle(senderReadyEvents[i]); }
+        for (int i = 0; i < senderReadyEvents.size(); ++i)
+        { CloseHandle(senderReadyEvents[i]); }
     }
     catch (const std::exception& e)
     {
