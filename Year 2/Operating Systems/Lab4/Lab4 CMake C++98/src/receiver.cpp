@@ -1,3 +1,44 @@
+/*
+Lab #4
+
+Topic: “Process Synchronization”.
+
+Problem: Write a program for transferring messages between processes through
+a shared file. The program includes one Receiver process and several Sender processes.
+Sender processes send messages to the Receiver process.
+Requirements for the implementation of the Receiver process. The Receiver process must
+perform the following actions:
+1. Enter from the console the name of the binary file and the number of records in the binary file,
+which will be used for message transfer.
+2. Create a binary file for messages. The maximum message length is 20
+characters.
+3. Enter from the console the number of Sender processes.
+4. Start the specified number of Sender processes. Pass the file name for messages to each Sender process
+via the command line.
+5. Wait for a ready signal from all Sender processes.
+6. Cyclically perform the following actions on command from the console:
+read a message from the binary file or
+terminate its work.
+Note. The Receiver process goes into a waiting state for a new message if the command to read a message from an empty binary file is called.
+Requirements for the implementation of the Sender process. The Sender process must
+perform the following actions:
+1. Open the file for message transfer. Get the file name from the command line.
+2. Send a ready signal to the Receiver process.
+3. Cyclically perform the following actions on command from the console:
+send a message to the Receiver process or
+terminate its work.
+The message text is entered from the console. The message length is less than 20 characters.
+Note. The Sender process goes into a waiting state if the command to write a message to a binary file filled with messages is called.
+Additional requirements: Message transfer through the binary file
+should be organized as a circular FIFO queue. I.e. The Receiver process
+must read messages in the order in which they were sent by the Sender processes.
+Simplified version of the laboratory work. Solve the given problem
+for one Receiver process and one Sender process. In this case, only one message
+can be transmitted between the processes simultaneously.
+
+Lab4 is made on C++98 CMake, Google Unit Tests
+*/
+
 #include <common.h>
 #include <windows.h>
 #include <iostream>
