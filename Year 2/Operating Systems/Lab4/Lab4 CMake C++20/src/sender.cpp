@@ -24,7 +24,7 @@ int main(int argc, char* argv[])
         auto full = open_full();
         bip::managed_shared_memory segment(bip::open_only, ipc_names::SHMEM_NAME.c_str());
         
-        RingBuffer* buffer = segment.find<RingBuffer>("RingBuffer").first;
+        bip::offset_ptr<RingBuffer> buffer(segment.find<RingBuffer>("RingBuffer").first);
         if (!buffer) { throw std::runtime_error("Shared buffer not found"); }
 
         while (true)

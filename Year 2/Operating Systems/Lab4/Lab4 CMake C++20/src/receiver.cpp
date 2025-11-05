@@ -43,6 +43,7 @@ Lab4 is made on C++20 CMake, Google Unit Tests
 #include <boost/interprocess/managed_shared_memory.hpp>
 #include <boost/interprocess/sync/named_mutex.hpp>
 #include <boost/interprocess/sync/named_semaphore.hpp>
+#include <boost/interprocess/offset_ptr.hpp>
 #include <iostream>
 #include <fstream>
 #include <vector>
@@ -78,7 +79,7 @@ int main()
 
         bip::managed_shared_memory segment(bip::open_or_create, ipc_names::SHMEM_NAME.c_str(), 1024);
         
-        RingBuffer* buffer = segment.find_or_construct<RingBuffer>("RingBuffer")();
+        bip::offset_ptr<RingBuffer> buffer(segment.find_or_construct<RingBuffer>("RingBuffer")());
         buffer->head = 0;
         buffer->tail = 0;
 
