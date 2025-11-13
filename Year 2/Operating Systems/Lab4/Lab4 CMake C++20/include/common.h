@@ -8,7 +8,7 @@
 
 namespace bip = boost::interprocess;
 
-const int MAX_MESSAGE_LENGTH = 20;
+const int MAX_MESSAGE_LENGTH = 21;
 
 namespace ipc_names
 {
