@@ -46,14 +46,14 @@ int main(int argc, char* argv[])
         {
             std::cout << "Enter command (send/exit): ";
             std::string cmd;
-            std::cin >> cmd;
+            std::getline(std::cin, cmd);
             if (cmd == "exit")
             { break; }
             if (cmd == "send")
             {
                 std::string msg;
                 std::cout << "Enter message: ";
-                std::cin >> msg;
+                std::getline(std::cin, msg);
                 if (msg.size() >= MAX_MESSAGE_LENGTH)
                 { msg = msg.substr(0, MAX_MESSAGE_LENGTH - 1); }
 

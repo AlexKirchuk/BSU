@@ -123,7 +123,7 @@ int main()
         {
             std::cout << "Enter command (read/exit): ";
             std::string cmd;
-            std::cin >> cmd;
+            std::getline(std::cin, cmd);
             if (cmd == "exit")
             { break; }
             if (cmd == "read")

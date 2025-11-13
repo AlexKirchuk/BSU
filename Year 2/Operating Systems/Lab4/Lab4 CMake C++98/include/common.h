@@ -1,6 +1,6 @@
 #ifndef COMMON_H
 #define COMMON_H
-const int MAX_MESSAGE_LENGTH = 20;
+const int MAX_MESSAGE_LENGTH = 21;
 struct RingBuffer
 {
     int head;
