@@ -40,30 +40,30 @@ Numbers in each line must be separated by spaces.
   </tr>
 
   <tr>
-    <td>
-<pre style="margin:0;padding:0;background:none;border:none;"><code>3 2
-1 2
-2 3</code></pre>
-    </td>
-    <td>
-<pre style="margin:0;padding:0;background:none;border:none;"><code>0 1 0
-1 0 1
-0 1 0</code></pre>
-    </td>
+    <td><code>
+3 2<br>
+1 2<br>
+2 3
+    </code></td>
+    <td><code>
+0 1 0<br>
+1 0 1<br>
+0 1 0
+    </code></td>
   </tr>
 
   <tr>
-    <td>
-<pre style="margin:0;padding:0;background:none;border:none;"><code>4 3
-1 2
-1 3
-2 4</code></pre>
-    </td>
-    <td>
-<pre style="margin:0;padding:0;background:none;border:none;"><code>0 1 1 0
-1 0 0 1
-1 0 0 0
-0 1 0 0</code></pre>
-    </td>
+    <td><code>
+4 3<br>
+1 2<br>
+1 3<br>
+2 4
+    </code></td>
+    <td><code>
+0 1 1 0<br>
+1 0 0 1<br>
+1 0 0 0<br>
+0 1 0 0
+    </code></td>
   </tr>
 </table>
