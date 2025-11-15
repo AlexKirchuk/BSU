@@ -31,39 +31,30 @@ Numbers in each line must be separated by spaces.
 
 ---
 
-## Examples
+## Example
 
-<table border="1" cellpadding="8" cellspacing="0">
+<table>
   <tr>
     <th>Input</th>
     <th>Output</th>
   </tr>
 
   <tr>
-    <td><code>
-3 2<br>
-1 2<br>
-2 3
-    </code></td>
-    <td><code>
-0 1 0<br>
-1 0 1<br>
-0 1 0
-    </code></td>
-  </tr>
-
-  <tr>
-    <td><code>
-4 3<br>
-1 2<br>
-1 3<br>
+    <td>
+      <pre>
+4 3
+1 2
+1 3
 2 4
-    </code></td>
-    <td><code>
-0 1 1 0<br>
-1 0 0 1<br>
-1 0 0 0<br>
+      </pre>
+    </td>
+    <td>
+      <pre>
+0 1 1 0
+1 0 0 1
+1 0 0 0
 0 1 0 0
-    </code></td>
+      </pre>
+    </td>
   </tr>
 </table>
