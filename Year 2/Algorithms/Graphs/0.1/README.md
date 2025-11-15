@@ -39,42 +39,31 @@ Numbers in each line must be separated by spaces.
     <th>Output</th>
   </tr>
 
-  <!-- Example 1 -->
   <tr>
     <td>
-      <pre>
-3 2
+<pre style="margin:0;padding:0;background:none;border:none;"><code>3 2
 1 2
-2 3
-      </pre>
+2 3</code></pre>
     </td>
     <td>
-      <pre>
-0 1 0
+<pre style="margin:0;padding:0;background:none;border:none;"><code>0 1 0
 1 0 1
-0 1 0
-      </pre>
+0 1 0</code></pre>
     </td>
   </tr>
 
-  <!-- Example 2 -->
   <tr>
     <td>
-      <pre>
-4 3
+<pre style="margin:0;padding:0;background:none;border:none;"><code>4 3
 1 2
 1 3
-2 4
-      </pre>
+2 4</code></pre>
     </td>
     <td>
-      <pre>
-0 1 1 0
+<pre style="margin:0;padding:0;background:none;border:none;"><code>0 1 1 0
 1 0 0 1
 1 0 0 0
-0 1 0 0
-      </pre>
+0 1 0 0</code></pre>
     </td>
   </tr>
-
 </table>
