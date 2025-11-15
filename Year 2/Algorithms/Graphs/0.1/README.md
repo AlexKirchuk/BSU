@@ -33,7 +33,7 @@ Numbers in each line must be separated by spaces.
 
 ## Examples
 
-<table>
+<table border="1" cellpadding="8" cellspacing="0">
   <tr>
     <th>Input</th>
     <th>Output</th>
