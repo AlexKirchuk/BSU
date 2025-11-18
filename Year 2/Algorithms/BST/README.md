@@ -1,4 +1,4 @@
-﻿# Data Structures — Binary Trees Problem Set
+﻿# Binary Search Trees — Problem Set
 
 This directory contains selected problems focused on **binary trees** and **binary search trees (BSTs)**.  
 They cover tree construction, deletion, validation of BST properties, and analysis of tree paths.
