@@ -49,4 +49,18 @@ Determine the **minimal time** needed to collect all coins or report if it is im
 
 ---
 
+## ⚡ Optional Tasks (Advanced+)
+
+These additional tasks are more challenging or combinatorial in nature. They are optional but recommended for advanced practice.
+
+### **Problem 20 — Longest Palindromic Subsequence**  
+Given a string, find the **longest palindromic subsequence** that can be obtained by deleting characters (without reordering).  
+If multiple palindromes of maximal length exist, output the **lexicographically smallest and largest**.
+
+### **Problem 35.1 — Attractive Tile Patterns**  
+Count the number of distinct patterns of black and white tiles of size `m × n` such that **no 2×2 square is monochromatic**.  
+Patterns differing by **rotation, reflection, or shift** are considered distinct.
+
+---
+
 This subset focuses exclusively on recurrence-relation and dynamic-programming tasks to strengthen skills in **state definition, recurrence formulation, and optimization strategies**.
