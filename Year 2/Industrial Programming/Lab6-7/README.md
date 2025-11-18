@@ -30,7 +30,7 @@ The assignment is completed in **two stages**. Both results are submitted and ev
 
 ---
 
-## Variant 7 — "Gemstones" System
+## Variant 7 — "Stones" System
 
 - Define a **hierarchy of precious and semi-precious stones**.  
 - Select stones for a **necklace**.  
