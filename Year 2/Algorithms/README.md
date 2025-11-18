@@ -1,6 +1,6 @@
 ﻿# Algorithm Problem Set
 
-This repository contains a curated collection of **algorithmic problems** solved for practice and study.  
+This directory contains a curated collection of **algorithmic problems** solved for practice and study.  
 Most solutions are implemented in **C++**, with a few in **Java, Python**, and other languages.
 
 All problems were solved on [**IRunner**](https://acm.bsu.by/), a competitive programming platform used for training and contests.
