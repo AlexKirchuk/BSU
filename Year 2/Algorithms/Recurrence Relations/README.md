@@ -7,18 +7,18 @@ These problems develop strong intuition for identifying recurrence patterns and 
 
 ---
 
-## 📘 List of Problems (Recurrence Relations Only)
+## 📘 List of Problems
 
 ### **0.1 — Frog Path**  
 A frog jumps on lily pads arranged in a row.  
 It can jump forward by 2 or 3 pads at a time and eats mosquitoes on each pad it lands on.  
 Determine the **maximum number of mosquitoes** the frog can eat and the sequence of pads visited.
 
-### **0.2 — Binary Strings with K Ones (Part 1)**  
+### **0.2 — Binary Strings with K Ones (Simple Version)**  
 Given integers `N` and `K`, count the number of binary strings of length `N` containing exactly `K` ones.  
 Output the count modulo `10^9 + 7`.
 
-### **0.3 — Binary Strings with K Ones (Part 2)**  
+### **0.3 — Binary Strings with K Ones (Hard Version)**  
 Similar to 0.2 but with larger constraints (`N ≤ 10^6`).  
 Compute the count modulo `10^9 + 7`.
 
@@ -32,14 +32,18 @@ Given two sequences of length `n`, compute the **length of the LCS** and report 
 Given a string, remove the **minimal number of characters** to form a palindrome.  
 Output the **length** of the resulting palindrome and one possible palindrome.
 
-### **0.7 — Longest Increasing Subsequence (Strict)**  
+### **0.7 — Longest Increasing Subsequence (LIS)**  
 Given a sequence of integers, compute the **length of the longest strictly increasing subsequence** using an algorithm with `O(n log n)` complexity.
 
 ### **0.8 — String Transformation with Costs**  
 Transform string `A` into string `B` using **insertions, deletions, and substitutions** with given costs.  
 Compute the **minimal total penalty**.
 
-### **63 — Ali-Baba and Coins**  
+---
+
+## ⭐ Individual Problem (Advanced)
+
+### **Problem 63 — Ali-Baba and Coins**  
 Ali-Baba collects coins placed along a road, each with a **position and deadline**.  
 Determine the **minimal time** needed to collect all coins or report if it is impossible.
 

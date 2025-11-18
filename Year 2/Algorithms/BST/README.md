@@ -7,7 +7,7 @@ These tasks develop strong intuition for working with hierarchical data structur
 
 ---
 
-## 📘 List of Problems (Binary Trees Only)
+## 📘 List of Problems
 
 ### **0.1 — Construct a Binary Search Tree**  
 Build a BST from the given sequence of keys (ignoring duplicates) and output its **preorder left traversal**.
