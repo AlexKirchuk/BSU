@@ -1,13 +1,3 @@
-// 7. Из текста удалить все символы,
-// кроме пробелов, не являющиеся буквами.
-// Между последовательностями подряд идущих букв
-// оставить хотя бы один пробел.
-
-//Enter your text:
-//kgf4 34h4i 435h 435. -- .; rg/ eert -
-//Variant 1 with StringTokenizer: kgf h i h rg eert
-//Variant 2 with Regular Expressions: kgf h i h rg eert
-
 import java.util.Scanner;
 import java.util.StringTokenizer;
 

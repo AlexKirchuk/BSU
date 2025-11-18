@@ -1,13 +1,3 @@
-// myCos
-
-//Input x: 4
-//Input k: 9
-//My cos: -0.654
-//Standard cos: -0.654
-//
-//
-//Process finished with exit code 0
-
 import java.text.NumberFormat;
 import java.util.Scanner;
 import static java.lang.Math.*;
