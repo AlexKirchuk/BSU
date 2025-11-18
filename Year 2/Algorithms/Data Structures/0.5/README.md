@@ -5,7 +5,7 @@
 **Time limit:** 1 s  
 **Memory limit:** 256 MB
 
-Berland consists of `n` cities. Initially, all cities are isolated — there are no roads between any cities.
+Berland consists of n cities. Initially, all cities are isolated — there are no roads between any cities.
 
 Roads will be added one by one.  
 After each added road, you must determine **how many connected components** currently exist among the cities.
@@ -16,16 +16,14 @@ After each added road, you must determine **how many connected components** curr
 
 The first line contains two integers:
 
-- `n` — number of cities  
-- `q` — number of road-addition queries  
-  \[
-  1 \le n, q \le 500{,}000
-  \]
+- n — number of cities  
+- q — number of road-addition queries  
+  1 ≤ n, q ≤ 500,000
 
-Each of the next `q` lines contains two integers `u` and `v` — the cities between which a new road is built:
+Each of the next q lines contains two integers u and v — the cities between which a new road is built:
 
-- `1 ≤ u, v ≤ n`
-- `u ≠ v`
+- 1 ≤ u, v ≤ n
+- u ≠ v
 - No pair of cities receives more than one road.
 
 ---
