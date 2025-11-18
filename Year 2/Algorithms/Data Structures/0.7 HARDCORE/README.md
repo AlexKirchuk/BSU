@@ -21,7 +21,7 @@ Destroyed roads are **permanently removed**.
 - The next m lines each contain two integers u and v — the cities connected by that road  
   1 ≤ u, v ≤ n, u ≠ v  
   There is at most one road between any pair of cities.
-- The next q lines each contain a single integer x_i — the index (1-based) of the road destroyed in the i-th earthquake.  
+- The next q lines each contain a single integer xi — the index (1-based) of the road destroyed in the i-th earthquake.  
   Each road is destroyed at most once.
 
 ---
