@@ -36,3 +36,25 @@ Compute maximum flow in a small directed network (up to 200 vertices).
 ### **0.9 — Maximum Flow (Hard Version)**  
 Compute maximum flow in a large directed network (up to 200k vertices).  
 Includes stress tests with up to 10-second time limits.
+
+---
+
+## ⭐ Individual Problem (Advanced)
+
+### **Problem 19 — The Great Pyramid of Khufu**  
+Inside a system of **N rooms** inside the Pyramid of Khufu, **M bidirectional teleportation devices** connect pairs of rooms.  
+Each device consists of two independent modules located in different rooms, each activating periodically at integer time intervals.  
+A device can be used **only when both modules activate simultaneously**.
+
+Indiana Jones must reach **room N** from **room 1** as fast as possible, with movement between rooms taking **0.5 time units** once the device is available.
+
+You must compute:
+
+- the **minimum possible travel time**, and  
+- the **sequence of device indices** used to reach room **N**.
+
+A valid path is guaranteed to exist.
+
+---
+
+This set focuses on mastering graph representations, graph traversal, shortest-path algorithms, and modeling dynamic systems through graph-based structures.
