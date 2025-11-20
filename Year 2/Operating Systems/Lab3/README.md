@@ -95,16 +95,13 @@ project-root/
 │   ├── array.h
 │   ├── catch.h
 │   └── marker.h
-│
 ├── src/
 │   ├── array.cpp
 │   ├── main.cpp
 │   └── marker.cpp
-│
 ├── tests/
 │   ├── test.cpp
 │   └── CMakeLists.txt
-│
 └── CMakeLists.txt
 ```
 

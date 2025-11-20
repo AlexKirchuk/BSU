@@ -70,10 +70,8 @@ project-root/
 │   ├── data.h
 │   ├── doctest.h
 │   └── minmax.h
-│
 ├── src/
 │   └── main.cpp
-│
 ├── libs/
 │   ├── datalib/
 │   │   └── data.cpp
@@ -83,11 +81,9 @@ project-root/
 │   └── threadlib/
 │       ├── average.cpp
 │       └── minmax.cpp
-│
 ├── tests/
 │   ├── test_threads.cpp
 │   └── CMakeLists.txt
-│
 └── CMakeLists.txt
 ```
 
