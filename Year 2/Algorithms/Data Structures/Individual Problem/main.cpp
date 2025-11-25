@@ -59,24 +59,36 @@ int main()
         }
     }
 
-    for (int x1 = 0; x1 < X; x1++)
+    for (int y1 = 0; y1 < Y; ++y1)
     {
-        for (int x2 = x1 + 1; x2 < X; x2++)
+        for (int y2 = y1 + 1; y2 < Y; ++y2)
         {
-            for (int y1 = 0; y1 < Y; y1++)
+            std::vector<int> nonEmpty(X, 0);
+            for (int x = 0; x < X; ++x)
             {
-                for (int y2 = y1 + 1; y2 < Y; y2++)
+                int cnt = pref[x + 1][y2] - pref[x][y2] - pref[x + 1][y1 + 1] + pref[x][y1 + 1];
+                if (cnt > 0)
                 {
-                    int sum = pref[x2][y2] - pref[x1 + 1][y2] - pref[x2][y1 + 1] + pref[x1 + 1][y1 + 1];
-                    if (sum == 0)
-                    {
-                        int area = (cx[x2] - cx[x1]) * (cy[y2] - cy[y1]);
-                        if (area > maxArea)
-                        {
-                            maxArea = area;
-                        }
-                    }
+                    nonEmpty[x] = 1;
                 }
+                else
+                {
+                    nonEmpty[x] = 0;
+                }
+            }
+            int a = 0, non = 0;
+            for (int b = 1; b < X; ++b)
+            {
+                non += nonEmpty[b - 1];
+                while (a + 1 < b && non > 0)
+                {
+                    non -= nonEmpty[a + 1];
+                    ++a;
+                }
+                int width = cx[b] - cx[a];
+                int height = cy[y2] - cy[y1];
+                int area = width * height;
+                if (area > maxArea) maxArea = area;
             }
         }
     }
