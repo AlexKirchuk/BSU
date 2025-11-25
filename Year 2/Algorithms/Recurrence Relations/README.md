@@ -3,7 +3,7 @@
 This directory contains selected problems focused on **recurrence relations** and **dynamic programming**.  
 The tasks cover combinatorial sequences, counting problems, matrix chain multiplication, string transformations, and subsequence analysis.
 
-These problems develop strong intuition for identifying recurrence patterns and designing efficient algorithms.
+The goal of this set is to develop strong intuition for identifying recurrence patterns and designing efficient algorithms.
 
 ---
 

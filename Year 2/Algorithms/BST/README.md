@@ -1,9 +1,9 @@
 ﻿# Binary Search Trees — Problem Set
 
 This directory contains selected problems focused on **binary trees** and **binary search trees (BSTs)**.  
-They cover tree construction, deletion, validation of BST properties, and analysis of tree paths.
+The tasks cover tree construction, deletion, validation of BST properties, and analysis of tree paths.
 
-These tasks develop strong intuition for working with hierarchical data structures.
+The goal of this set is develop strong intuition for working with hierarchical data structures.
 
 ---
 
