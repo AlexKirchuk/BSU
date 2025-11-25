@@ -3,7 +3,7 @@
 This directory contains selected problems focused on **binary trees** and **binary search trees (BSTs)**.  
 The tasks cover tree construction, deletion, validation of BST properties, and analysis of tree paths.
 
-The goal of this set is develop strong intuition for working with hierarchical data structures.
+The goal of this set is to develop strong intuition for working with hierarchical data structures.
 
 ---
 
