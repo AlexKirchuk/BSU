@@ -57,7 +57,6 @@ Output the **maximum possible area** of the playground.
 4 4
 </pre>
     </td>
-
     <td>
 <pre>
 12
