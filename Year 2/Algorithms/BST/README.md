@@ -37,4 +37,4 @@ Output results using **preorder left traversal**.
 
 ---
 
-This subset focuses exclusively on binary-tree–related tasks to help solidify your understanding of BST mechanics and tree-based computations.
+This set focuses exclusively on binary-tree–related tasks to help solidify your understanding of BST mechanics and tree-based computations.

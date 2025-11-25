@@ -63,4 +63,4 @@ Patterns differing by **rotation, reflection, or shift** are considered distinct
 
 ---
 
-This subset focuses exclusively on recurrence-relation and dynamic-programming tasks to strengthen skills in **state definition, recurrence formulation, and optimization strategies**.
+This set focuses exclusively on recurrence-relation and dynamic-programming tasks to strengthen skills in **state definition, recurrence formulation, and optimization strategies**.
