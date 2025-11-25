@@ -1,5 +1,7 @@
 #include <fstream>
 #include <set>
+#include <vector>
+#include <algorithm>
 
 int main()
 {
@@ -10,7 +12,7 @@ int main()
     fin >> n >> w >> h;
 
     std::set<int> xs, ys;
-    std::set<std::pair<int, int>> trees;
+    std::vector<std::pair<int, int>> trees(n);
     xs.insert(0);
     xs.insert(w);
     ys.insert(0);
@@ -18,42 +20,57 @@ int main()
 
     for (int i = 0; i < n; i++)
     {
-        int fst, snd;
-        fin >> fst >> snd;
-        xs.insert(fst);
-        ys.insert(snd);
-        trees.insert({ fst, snd });
+        fin >> trees[i].first >> trees[i].second;
+        xs.insert(trees[i].first);
+        ys.insert(trees[i].second);
     }
 
-    for (auto it1 = xs.begin(); it1 != xs.end(); ++it1)
-    {
-        for (auto it2 = std::next(it1); it2 != xs.end(); ++it2)
+    std::vector<int> cx(xs.begin(), xs.end());
+    std::vector<int> cy(ys.begin(), ys.end());
+
+    auto getX = [&](int x)
         {
-            int x1 = *it1;
-            int x2 = *it2;
+            return std::lower_bound(cx.begin(), cx.end(), x) - cx.begin();
+        };
+    auto getY = [&](int y)
+        {
+            return std::lower_bound(cy.begin(), cy.end(), y) - cy.begin();
+        };
 
-            for (auto jt1 = ys.begin(); jt1 != ys.end(); ++jt1)
+    for (auto& t : trees)
+    {
+        t.first = getX(t.first);
+        t.second = getY(t.second);
+    }
+
+    int X = cx.size(), Y = cy.size();
+    std::vector<std::vector<int>> grid(X, std::vector<int>(Y, 0));
+    for (auto& t : trees)
+    {
+        grid[t.first][t.second] = 1;
+    }
+
+    std::vector<std::vector<int>> pref(X + 1, std::vector<int>(Y + 1, 0));
+    for (int i = 1; i <= X; i++)
+    {
+        for (int j = 1; j <= Y; j++)
+        {
+            pref[i][j] = grid[i - 1][j - 1] + pref[i - 1][j] + pref[i][j - 1] - pref[i - 1][j - 1];
+        }
+    }
+
+    for (int x1 = 0; x1 < X; x1++)
+    {
+        for (int x2 = x1 + 1; x2 < X; x2++)
+        {
+            for (int y1 = 0; y1 < Y; y1++)
             {
-                for (auto jt2 = std::next(jt1); jt2 != ys.end(); ++jt2)
+                for (int y2 = y1 + 1; y2 < Y; y2++)
                 {
-                    int y1 = *jt1;
-                    int y2 = *jt2;
-
-                    bool has_tree_inside = false;
-
-                    for (auto& t : trees)
+                    int sum = pref[x2][y2] - pref[x1 + 1][y2] - pref[x2][y1 + 1] + pref[x1 + 1][y1 + 1];
+                    if (sum == 0)
                     {
-                        int tx = t.first, ty = t.second;
-                        if (tx > x1 && tx < x2 && ty > y1 && ty < y2)
-                        {
-                            has_tree_inside = true;
-                            break;
-                        }
-                    }
-
-                    if (!has_tree_inside)
-                    {
-                        int area = (x2 - x1) * (y2 - y1);
+                        int area = (cx[x2] - cx[x1]) * (cy[y2] - cy[y1]);
                         if (area > maxArea)
                         {
                             maxArea = area;
