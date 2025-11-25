@@ -41,3 +41,27 @@ Support point and range updates, and compute range sum, min, and max queries on 
 
 ### **0.10 — Hash Table with Linear Probing**  
 Simulate a hash table with open addressing using linear probing and determine the final contents of each cell.
+
+---
+
+## ⭐ Individual Problem (Advanced)
+
+### **Problem 33 — Park**
+
+A rectangular park of size **w × h** contains **n trees**, each represented as a point with integer coordinates.  
+The park director wants to build a **rectangular children’s playground** whose sides are **parallel to the coordinate axes**.
+
+The playground must satisfy:
+
+- It must lie **entirely inside the park**.  
+- No tree may lie **inside** the playground  
+  (trees **may** lie on its boundary).  
+- Its **area must be maximal**.
+
+You must compute the **maximum possible area** of such a rectangle.
+
+This problem emphasizes **computational geometry**, efficient empty-rectangle search, and working with constraints defined by point obstacles.
+
+---
+
+This set focuses on mastering fundamental data structures — including binary search trees, heaps, segment trees, disjoint-set unions, and hash tables — and developing a deep practical understanding of how these structures support efficient queries, updates, and dynamic operations in algorithmic systems.

@@ -1,79 +1,171 @@
 #include <fstream>
 #include <vector>
 #include <algorithm>
-#include <set>
+
+struct Node
+{
+    int x;
+    int count;
+    Node* prev;
+    Node* next;
+    Node(int _x) : x(_x), count(0), prev(nullptr), next(nullptr) {}
+};
 
 int main()
 {
     std::ifstream fin("input.txt");
     std::ofstream fout("output.txt");
 
-    long long n, w, h;
+    int n, w, h;
     fin >> n >> w >> h;
 
-    std::vector<std::pair<long long, long long>> trees(n);
-    for (long long i = 0; i < n; i++)
+    std::vector<int> X(n), Y(n);
+    for (int i = 0; i < n; i++)
     {
-        fin >> trees[i].first >> trees[i].second;
+        fin >> X[i] >> Y[i];
     }
 
-    trees.push_back({ 0, -1 });
-    trees.push_back({ w, -1 });
+    std::vector<int> xs = X;
+    std::sort(xs.begin(), xs.end());
+    xs.erase(std::unique(xs.begin(), xs.end()), xs.end());
+    int m = xs.size();
 
-    std::sort(trees.begin(), trees.end());
-    n = trees.size();
-
-    long long maxArea = 0;
-
-    for (long long i = 0; i < n; i++)
+    std::vector<int> Xc(n);
+    for (int i = 0; i < n; i++)
     {
-        std::set<long long> ys;
-        ys.insert(0);
-        ys.insert(h);
+        Xc[i] = std::lower_bound(xs.begin(), xs.end(), X[i]) - xs.begin();
+    }
 
-        std::multiset<long long> gaps;
-        gaps.insert(h);
+    std::vector<std::pair<int,int>> trees(n);
+    for (int i = 0; i < n; i++)
+    {
+        trees[i] = { Y[i], Xc[i] };
+    }
+    std::sort(trees.begin(), trees.end(), [](auto& a, auto& b)
+    {
+        return a.first > b.first;
+    });
 
-        auto addY = [&](long long y)
-            {
-                if ((ys.find(y) != ys.end())) { return; }
+    std::vector<int> yValues;
+    yValues.push_back(0);
+    for (int i = 0; i < n; i++)
+    {
+        yValues.push_back(trees[i].first);
+    }
 
-                auto itR = ys.lower_bound(y);
-                auto itL = itR;
-                if (itL == ys.begin()) { ys.insert(y); return; }
-                --itL;
+    int maxArea = 0;
 
-                long long left = *itL;
-                long long right = *itR;
+    for (int bi = 0; bi < yValues.size(); bi++)
+    {
+        int ymin = yValues[bi];
 
-                gaps.erase(gaps.find(right - left));
-                gaps.insert(y - left);
-                gaps.insert(right - y);
-
-                ys.insert(y);
-            };
-
-        for (long long j = i + 1; j < n; j++)
+        std::vector<int> count(m, 0);
+        for (int i = 0; i < n; i++)
         {
-            long long width = trees[j].first - trees[i].first;
-            long long height = *(gaps.rbegin());
-            long long area = width * height;
-
-            if (area > maxArea)
+            if (trees[i].first > ymin)
             {
-                maxArea = area;
+                count[trees[i].second]++;
+            }
+        }
+
+        std::vector<Node*> nodes(m, nullptr);
+        Node* head = nullptr;
+        Node* prev = nullptr;
+        for (int i = 0; i < m; i++)
+        {
+            if (count[i] > 0)
+            {
+                Node* node = new Node(i);
+                node->count = count[i];
+                nodes[i] = node;
+                if (!head)
+                {
+                    head = node;
+                }
+                node->prev = prev;
+                if (prev)
+                {
+                    prev->next = node;
+                }
+                prev = node;
+            }
+        }
+
+        int maxGap = 0;
+        if (head)
+        {
+            maxGap = std::max(xs[head->x], w - xs[prev->x]);
+            Node* cur = head;
+            while (cur->next)
+            {
+                maxGap = std::max(maxGap, xs[cur->next->x] - xs[cur->x]);
+                cur = cur->next;
+            }
+        }
+        else
+        {
+            maxGap = w;
+        }
+
+        maxArea = std::max(maxArea, maxGap * (h - ymin));
+
+        int top = h;
+        for (int i = 0; i < n; i++)
+        {
+            if (trees[i].first <= ymin)
+            {
+                break;
+            }
+            int xi = trees[i].second;
+
+            Node* node = nodes[xi];
+            node->count--;
+            if (node->count == 0)
+            {
+                int left, right;
+                if (node->prev)
+                {
+                    left = xs[node->x] - xs[node->prev->x];
+                }
+                else
+                {
+                    left = xs[node->x];
+                }
+                if (node->next)
+                {
+                    right = xs[node->next->x] - xs[node->x];
+                }
+                else
+                {
+                    right = w - xs[node->x];
+                }
+                int combined = left + right;
+                maxGap = std::max(maxGap, combined);
+
+                if (node->prev)
+                {
+                    node->prev->next = node->next;
+                }
+                if (node->next)
+                {
+                    node->next->prev = node->prev;
+                }
+                if (head == node)
+                {
+                    head = node->next;
+                }
             }
 
-            if (trees[j].second != -1)
-            {
-                addY(trees[j].second);
-            }
+            top = trees[i].first;
+            maxArea = std::max(maxArea, maxGap * (top - ymin));
+        }
+
+        for (int i = 0; i < m; i++)
+        {
+            delete nodes[i];
         }
     }
 
     fout << maxArea;
-
-    fin.close();
-    fout.close();
     return 0;
 }
