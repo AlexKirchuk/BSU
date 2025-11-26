@@ -5,8 +5,6 @@
 #include <fstream>
 #include <vector>
 #include <string>
-#include <cstdlib>
-#include <cstring>
 #include <stdexcept>
 
 struct RecSem
@@ -237,10 +235,11 @@ int main()
         std::cin >> nEmployees;
         if (nEmployees <= 0)
         {
-            std::cerr << "nEmployees must be > 0\n"; return 1;
+            std::cerr << "Number of employees must be > 0\n";
+            return 1;
         }
 
-        std::vector< boost::shared_ptr<employee> > employees;
+        std::vector<boost::shared_ptr<employee>> employees;
         employees.reserve(nEmployees);
 
         for (int i = 0; i < nEmployees; ++i)
@@ -260,7 +259,8 @@ int main()
             std::ofstream out(fileName.c_str(), std::ios::binary | std::ios::out);
             if (!out)
             { 
-                std::cerr << "Cannot create file\n"; return 1;
+                std::cerr << "Cannot create file\n";
+                return 1;
             }
             for (int i = 0; i < nEmployees; ++i)
             {
@@ -289,12 +289,14 @@ int main()
             recs[i].readCountMutex = CreateSemaphore(NULL, 1, 1, NULL);
             if (!recs[i].readCountMutex)
             {
-                std::cerr << "CreateSemaphore failed\n"; return 1; 
+                std::cerr << "CreateSemaphore failed\n";
+                return 1; 
             }
             recs[i].resourceSem = CreateSemaphore(NULL, 1, 1, NULL);
             if (!recs[i].resourceSem)
             { 
-                std::cerr << "CreateSemaphore failed\n"; return 1;
+                std::cerr << "CreateSemaphore failed\n";
+                return 1;
             }
             recs[i].readCount = 0;
         }
@@ -304,7 +306,8 @@ int main()
         std::cin >> numClients;
         if (numClients <= 0)
         {
-            std::cerr << "numClients must be > 0\n"; return 1;
+            std::cerr << "Number of clients must be > 0\n";
+            return 1;
         }
 
         std::vector<HANDLE> clientProcs;
@@ -353,7 +356,8 @@ int main()
                 }
                 else 
                 { 
-                    CloseHandle(clientProcs[i]); clientProcs[i] = NULL;
+                    CloseHandle(clientProcs[i]);
+                    clientProcs[i] = NULL;
                 }
             }
             if (running == 0)
@@ -379,7 +383,15 @@ int main()
                 continue;
             }
 
-            BOOL connected = ConnectNamedPipe(hPipe, NULL) ? TRUE : (GetLastError() == ERROR_PIPE_CONNECTED);
+            BOOL connected;
+            if (ConnectNamedPipe(hPipe, NULL))
+            {
+                connected = TRUE;
+            }
+            else
+            {
+                connected = (GetLastError() == ERROR_PIPE_CONNECTED);
+            }
             if (!connected)
             {
                 CloseHandle(hPipe);
