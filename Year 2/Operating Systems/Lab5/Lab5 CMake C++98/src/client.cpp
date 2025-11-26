@@ -185,6 +185,5 @@ int main()
         }
         readLog.close();
     }
-
     return 0;
 }
