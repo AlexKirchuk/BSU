@@ -14,8 +14,8 @@ add_executable(client src/client.cpp)
 
 add_dependencies(Lab5CMake98 client)
 
-#enable_testing()
-#add_subdirectory(tests)
+enable_testing()
+add_subdirectory(tests)
 
 if(POLICY CMP0141)
   cmake_policy(SET CMP0141 NEW)
