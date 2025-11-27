@@ -339,7 +339,6 @@ int main()
 
         std::cout << "Launched " << clientProcs.size() << " clients.\n";
 
-        std::cout << clientProcs.size();
         while (true)
         {
             int running = -1;
