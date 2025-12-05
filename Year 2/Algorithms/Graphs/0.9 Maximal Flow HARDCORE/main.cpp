@@ -1,41 +1,42 @@
 #include <iostream>
 #include <vector>
 #include <queue>
-#include <stack>
 #include <algorithm>
 
 using LL = long long;
 
 struct Edge
 {
-    LL to, cap, rev;
+    int to;
+    LL cap;
+    int rev;
 };
 
 const LL INF = 1e18;
 
 std::vector<std::vector<Edge>> g;
-std::vector<LL> level;
-std::vector<LL> ptr;
+std::vector<int> level;
+std::vector<int> ptr;
 
-void add_edge(LL v, LL u, LL cap)
+void add_edge(int v, int u, LL cap)
 {
-    Edge a = { u, cap, g[u].size() };
-    Edge b = { v, 0, g[v].size() };
+    Edge a = { u, cap, (int)g[u].size() };
+    Edge b = { v, 0, (int)g[v].size() };
     g[v].push_back(a);
     g[u].push_back(b);
 }
 
-bool bfs(LL s, LL t)
+bool bfs(int s, int t)
 {
     std::fill(level.begin(), level.end(), -1);
 
-    std::queue<LL> q;
+    std::queue<int> q;
     level[s] = 0;
     q.push(s);
 
     while (!q.empty())
     {
-        LL v = q.front();
+        int v = q.front();
         q.pop();
 
         for (auto& e : g[v])
@@ -44,6 +45,11 @@ bool bfs(LL s, LL t)
             {
                 level[e.to] = level[v] + 1;
                 q.push(e.to);
+
+                if (e.to == t)
+                {
+                    return true;
+                }
             }
         }
     }
@@ -51,20 +57,30 @@ bool bfs(LL s, LL t)
     return level[t] != -1;
 }
 
-LL dfs(LL v, LL t, LL pushed)
+LL dfs(int v, int t, LL pushed)
 {
-    if (v == t || pushed == 0)
+    if (v == t)
     {
         return pushed;
     }
 
-    for (LL& cid = ptr[v]; cid < g[v].size(); cid++)
+    for (int& cid = ptr[v]; cid < (int)g[v].size(); cid++)
     {
         Edge& e = g[v][cid];
 
         if (e.cap > 0 && level[e.to] == level[v] + 1)
         {
-            LL tr = dfs(e.to, t, std::min(pushed, e.cap));
+            LL tr;
+
+            if (pushed == INF)
+            {
+                tr = dfs(e.to, t, e.cap);
+            }
+            else
+            {
+                tr = dfs(e.to, t, (pushed < e.cap ? pushed : e.cap));
+            }
+
             if (tr == 0)
             {
                 continue;
@@ -72,22 +88,30 @@ LL dfs(LL v, LL t, LL pushed)
 
             e.cap -= tr;
             g[e.to][e.rev].cap += tr;
+
             return tr;
         }
     }
 
+    level[v] = -1;
     return 0;
 }
 
-LL dinic(LL s, LL t)
+LL dinic(int s, int t)
 {
     LL flow = 0;
 
     while (bfs(s, t))
     {
-        fill(ptr.begin(), ptr.end(), 0);
-        while (long long pushed = dfs(s, t, INF))
+        std::fill(ptr.begin(), ptr.end(), 0);
+
+        while (true)
         {
+            LL pushed = dfs(s, t, INF);
+            if (pushed == 0)
+            {
+                break;
+            }
             flow += pushed;
         }
     }
@@ -97,16 +121,22 @@ LL dinic(LL s, LL t)
 
 int main()
 {
-    LL n, m;
+    int n, m;
     std::cin >> n >> m;
 
     g.assign(n + 1, std::vector<Edge>());
     level.resize(n + 1);
     ptr.resize(n + 1);
 
-    for (LL i = 0; i < m; i++)
+    for (int i = 1; i <= n; i++)
     {
-        LL u, v, w;
+        g[i].reserve((m / n) + 2);
+    }
+
+    for (int i = 0; i < m; i++)
+    {
+        int u, v;
+        LL w;
         std::cin >> u >> v >> w;
         add_edge(u, v, w);
     }
