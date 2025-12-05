@@ -1,6 +1,7 @@
 #include <iostream>
 #include <vector>
 #include <queue>
+#include <stack>
 #include <algorithm>
 
 using LL = long long;
@@ -26,10 +27,7 @@ void add_edge(LL v, LL u, LL cap)
 
 bool bfs(LL s, LL t)
 {
-    for (LL i = 0; i < level.size(); i++)
-    {
-        level[i] = -1;
-    }
+    std::fill(level.begin(), level.end(), -1);
 
     std::queue<LL> q;
     level[s] = 0;
@@ -40,20 +38,13 @@ bool bfs(LL s, LL t)
         LL v = q.front();
         q.pop();
 
-        std::vector<LL> neighbors;
-        for (LL i = 0; i < g[v].size(); i++)
+        for (auto& e : g[v])
         {
-            if (g[v][i].cap > 0 && level[g[v][i].to] == -1)
+            if (e.cap > 0 && level[e.to] == -1)
             {
-                neighbors.push_back(i);
+                level[e.to] = level[v] + 1;
+                q.push(e.to);
             }
-        }
-
-        for (LL idx : neighbors)
-        {
-            LL u = g[v][idx].to;
-            level[u] = level[v] + 1;
-            q.push(u);
         }
     }
 
@@ -67,14 +58,13 @@ LL dfs(LL v, LL t, LL pushed)
         return pushed;
     }
 
-    for (LL& ci = ptr[v]; ci < g[v].size(); ci++)
+    for (LL& cid = ptr[v]; cid < g[v].size(); cid++)
     {
-        Edge& e = g[v][ci];
+        Edge& e = g[v][cid];
 
         if (e.cap > 0 && level[e.to] == level[v] + 1)
         {
-            LL tr = dfs(e.to, t, pushed < e.cap ? pushed : e.cap);
-
+            LL tr = dfs(e.to, t, std::min(pushed, e.cap));
             if (tr == 0)
             {
                 continue;
@@ -95,18 +85,9 @@ LL dinic(LL s, LL t)
 
     while (bfs(s, t))
     {
-        for (LL i = 0; i < ptr.size(); i++)
+        fill(ptr.begin(), ptr.end(), 0);
+        while (long long pushed = dfs(s, t, INF))
         {
-            ptr[i] = 0;
-        }
-
-        while (true)
-        {
-            LL pushed = dfs(s, t, INF);
-            if (pushed == 0)
-            {
-                break;
-            }
             flow += pushed;
         }
     }
