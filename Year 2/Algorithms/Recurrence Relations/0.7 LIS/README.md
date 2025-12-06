@@ -1,7 +1,7 @@
 ﻿### Problem 0.7 — Longest Increasing Subsequence (LIS)
 
-**Input file:** input.txt  
-**Output file:** output.txt  
+**Input file:** `input.txt`  
+**Output file:** `output.txt`  
 **Time limit:** 1–5 s  
 **Memory limit:** no
 

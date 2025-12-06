@@ -1,7 +1,7 @@
 ﻿### Problem 35.1 — Attractive Tile Patterns
 
-**Input file:** in.txt  
-**Output file:** out.txt  
+**Input file:** `in.txt`  
+**Output file:** `out.txt`  
 **Time limit:** 1 s  
 **Memory limit:** no
 

@@ -1,7 +1,7 @@
 ﻿### Problem 0.8 — String Transformation
 
-**Input file:** in.txt  
-**Output file:** out.txt  
+**Input file:** `in.txt`  
+**Output file:** `out.txt`  
 **Time limit:** 1 s  
 **Memory limit:** no
 

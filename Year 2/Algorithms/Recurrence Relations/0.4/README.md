@@ -1,7 +1,7 @@
 ﻿### Problem 0.4 — Matrix Chain Multiplication Order
 
-**Input file:** input.txt  
-**Output file:** output.txt  
+**Input file:** `input.txt`  
+**Output file:** `output.txt`  
 **Time limit:** 1 s  
 **Memory limit:** 256 MB
 

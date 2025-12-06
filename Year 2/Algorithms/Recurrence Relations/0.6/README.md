@@ -1,7 +1,7 @@
 ### Problem 0.6 — Palindrome
 
-**Input file:** input.txt  
-**Output file:** output.txt  
+**Input file:** `input.txt`  
+**Output file:** `output.txt`  
 **Time limit:** 1 s  
 **Memory limit:** no
 
