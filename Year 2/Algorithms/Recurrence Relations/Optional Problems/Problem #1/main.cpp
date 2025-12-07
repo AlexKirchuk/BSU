@@ -1,93 +1,217 @@
 #include <iostream>
 #include <string>
 #include <vector>
-#include <map>
-
-std::string myMin(std::string a, std::string b)
-{
-    return a < b ? a : b;
-}
-
-std::string myMax(std::string a, std::string b)
-{
-    return a > b ? a : b;
-}
-
-int myMax(int a, int b)
-{
-    return a > b ? a : b;
-}
-
-std::string s;
-std::vector<std::vector<int>> f;
-
-std::map<int, std::map<int, std::string>> memo;
-
-std::string getMin(int i, int j)
-{
-    if (i > j) return "";
-    if (i == j) return std::string(1, s[i]);
-    if (memo[i].count(j)) return memo[i][j];
-
-    if (s[i] == s[j])
-    {
-        std::string mid = getMin(i + 1, j - 1);
-        return memo[i][j] = s[i] + mid + s[j];
-    }
-
-    if (f[i + 1][j] > f[i][j - 1]) return memo[i][j] = getMin(i + 1, j);
-    if (f[i + 1][j] < f[i][j - 1]) return memo[i][j] = getMin(i, j - 1);
-
-    std::string left = getMin(i + 1, j);
-    std::string right = getMin(i, j - 1);
-    return memo[i][j] = myMin(left, right);
-}
-
-std::string getMax(int i, int j)
-{
-    if (i > j) return "";
-    if (i == j) return std::string(1, s[i]);
-    if (memo[i].count(j)) return memo[i][j];
-
-    if (s[i] == s[j])
-    {
-        std::string mid = getMax(i + 1, j - 1);
-        return memo[i][j] = s[i] + mid + s[j];
-    }
-
-    if (f[i + 1][j] > f[i][j - 1]) return memo[i][j] = getMax(i + 1, j);
-    if (f[i + 1][j] < f[i][j - 1]) return memo[i][j] = getMax(i, j - 1);
-
-    std::string left = getMax(i + 1, j);
-    std::string right = getMax(i, j - 1);
-    return memo[i][j] = myMax(left, right);
-}
+#include <array>
+#include <algorithm>
 
 int main()
 {
+    std::string s;
     std::cin >> s;
     int n = s.size();
-    f.assign(n, std::vector<int>(n, 0));
 
-    for (int i = 0; i < n; ++i) f[i][i] = 1;
+    const int ALPH = 26;
 
-    for (int len = 2; len <= n; ++len)
+    std::vector<std::array<int, ALPH>> next_pos(n + 1);
+    for (int c = 0; c < ALPH; c++)
     {
-        for (int i = 0; i <= n - len; ++i)
+        next_pos[n][c] = -1;
+    }
+
+    for (int i = n - 1; i >= 0; i--)
+    {
+        for (int c = 0; c < ALPH; c++)
         {
-            int j = i + len - 1;
+            next_pos[i][c] = next_pos[i + 1][c];
+        }
+        next_pos[i][s[i] - 'a'] = i;
+    }
+
+    std::vector<std::array<int, ALPH>> prev_pos(n);
+    for (int c = 0; c < ALPH; c++)
+    {
+        prev_pos[0][c] = -1;
+    }
+    prev_pos[0][s[0] - 'a'] = 0;
+
+    for (int i = 1; i < n; i++)
+    {
+        for (int c = 0; c < ALPH; c++)
+        {
+            prev_pos[i][c] = prev_pos[i - 1][c];
+        }
+        prev_pos[i][s[i] - 'a'] = i;
+    }
+
+    std::vector<std::vector<short>> dp(n);
+    for (int i = 0; i < n; i++)
+    {
+        dp[i].resize(n - i);
+    }
+
+    for (int i = n - 1; i >= 0; i--)
+    {
+        dp[i][0] = 1;
+        if (i == n - 1)
+        {
+            continue;
+        }
+
+        for (int k = 1; k < n - i; k++)
+        {
+            int j = i + k;
             if (s[i] == s[j])
-                f[i][j] = (len == 2 ? 2 : f[i + 1][j - 1] + 2);
+            {
+                if (j == i + 1)
+                {
+                    dp[i][k] = 2;
+                }
+                else
+                {
+                    dp[i][k] = 2 + dp[i + 1][(j - 1) - (i + 1)];
+                }
+            }
             else
-                f[i][j] = myMax(f[i + 1][j], f[i][j - 1]);
+            {
+                short a = dp[i + 1][k - 1];
+                short b = dp[i][k - 1];
+                dp[i][k] = (a >= b ? a : b);
+            }
         }
     }
 
-    std::string minPal = getMin(0, n - 1);
-    memo.clear();
-    std::string maxPal = getMax(0, n - 1);
+    auto build = [&](bool want_max)
+        {
+            int l = 0;
+            int r = n - 1;
+            int need = dp[0][n - 1];
 
-    std::cout << minPal << "\n" << maxPal << "\n";
+            std::string L;
+            std::string R;
+
+            while (need > 1 && l <= r)
+            {
+                int chosen = -1;
+                int ci = -1;
+                int cj = -1;
+
+                if (!want_max)
+                {
+                    for (int c = 0; c < ALPH; c++)
+                    {
+                        int i = next_pos[l][c];
+                        if (i == -1 || i > r)
+                        {
+                            continue;
+                        }
+                        int j = prev_pos[r][c];
+                        if (j == -1 || j < i)
+                        {
+                            continue;
+                        }
+                        if (i == j)
+                        {
+                            continue;
+                        }
+
+                        int inner = (i + 1 <= j - 1)
+                            ? dp[i + 1][(j - 1) - (i + 1)]
+                            : 0;
+
+                        if (2 + inner == need)
+                        {
+                            chosen = c;
+                            ci = i;
+                            cj = j;
+                            break;
+                        }
+                    }
+                }
+                else
+                {
+                    for (int c = ALPH - 1; c >= 0; c--)
+                    {
+                        int i = next_pos[l][c];
+                        if (i == -1 || i > r)
+                        {
+                            continue;
+                        }
+                        int j = prev_pos[r][c];
+                        if (j == -1 || j < i)
+                        {
+                            continue;
+                        }
+                        if (i == j)
+                        {
+                            continue;
+                        }
+
+                        int inner = (i + 1 <= j - 1)
+                            ? dp[i + 1][(j - 1) - (i + 1)]
+                            : 0;
+
+                        if (2 + inner == need)
+                        {
+                            chosen = c;
+                            ci = i;
+                            cj = j;
+                            break;
+                        }
+                    }
+                }
+
+                if (chosen == -1)
+                {
+                    break;
+                }
+
+                char ch = static_cast<char>('a' + chosen);
+                L.push_back(ch);
+                R.push_back(ch);
+
+                l = ci + 1;
+                r = cj - 1;
+                need -= 2;
+            }
+
+            std::string center;
+
+            if (need == 1)
+            {
+                if (!want_max)
+                {
+                    for (int c = 0; c < ALPH; c++)
+                    {
+                        int i = next_pos[l][c];
+                        if (i != -1 && i <= r)
+                        {
+                            center = static_cast<char>('a' + c);
+                            break;
+                        }
+                    }
+                }
+                else
+                {
+                    for (int c = ALPH - 1; c >= 0; c--)
+                    {
+                        int i = next_pos[l][c];
+                        if (i != -1 && i <= r)
+                        {
+                            center = static_cast<char>('a' + c);
+                            break;
+                        }
+                    }
+                }
+            }
+
+            std::reverse(R.begin(), R.end());
+            return L + center + R;
+        };
+
+    std::string mn = build(false);
+    std::string mx = build(true);
+
+    std::cout << mn << "\n" << mx << "\n";
 
     return 0;
 }
