@@ -8,7 +8,7 @@
 The company **Broken Tiles** produces small black and white tiles.  
 A wealthy client wants to assemble a rectangular figure using these tiles, with one important restriction:
 
-> The figure must **not contain any 2×2 square fully composed of tiles of the same color**.
+The figure must **not contain any 2×2 square fully composed of tiles of the same color**.
 
 Any rectangle satisfying this condition is called **attractive**.
 
