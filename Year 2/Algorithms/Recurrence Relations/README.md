@@ -57,9 +57,13 @@ These additional tasks are more challenging or combinatorial in nature. They are
 Given a string, find the **longest palindromic subsequence** that can be obtained by deleting characters (without reordering).  
 If multiple palindromes of maximal length exist, output the **lexicographically smallest and largest**.
 
-### **Problem 35.1 — Attractive Tile Patterns**  
+### **Problem 35.1 — Attractive Tile Patterns (Simple Version)**  
 Count the number of distinct patterns of black and white tiles of size `m × n` such that **no 2×2 square is monochromatic**.  
 Patterns differing by **rotation, reflection, or shift** are considered distinct.
+
+### **Problem 35.2 — Attractive Tile Patterns (Hard Version)**  
+Similar to 35.1 but with larger constraints (`n ≤ 10^100`).  
+Compute the count modulo `10000`.
 
 ---
 

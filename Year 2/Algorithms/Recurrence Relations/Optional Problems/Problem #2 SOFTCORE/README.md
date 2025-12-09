@@ -1,4 +1,4 @@
-﻿### Problem 35.1 — Attractive Tile Patterns
+﻿### Problem 35.1 — Attractive Tile Patterns (Simple Version)
 
 **Input file:** `in.txt`  
 **Output file:** `out.txt`  
@@ -36,17 +36,18 @@ Two patterns are considered different even if one is obtained from another by **
     <th>in.txt</th>
     <th>out.txt</th>
   </tr>
+
   <tr>
     <td>
-<pre>
+      <pre>
 2
 2
-</pre>
+      </pre>
     </td>
     <td>
-<pre>
+      <pre>
 14
-</pre>
+      </pre>
     </td>
   </tr>
 </table>
