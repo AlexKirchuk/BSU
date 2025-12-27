@@ -20,3 +20,6 @@ class TaskUpdate(BaseModel):
 
 class TaskResponse(TaskBase):
     id: int
+
+    class Config:
+        orm_mode = True
