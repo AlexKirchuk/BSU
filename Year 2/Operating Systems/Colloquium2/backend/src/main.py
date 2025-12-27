@@ -1,6 +1,7 @@
 from typing import List
 from fastapi import FastAPI, HTTPException
 from schemas import TaskCreate, TaskResponse, TaskUpdate
+
 app = FastAPI()
 
 tasks: list[TaskResponse] = []
