@@ -6,6 +6,7 @@ from gateway import APIGatewayMiddleware
 from database import Base, engine, session_local
 from models import Task
 from schemas import TaskCreate, TaskResponse, TaskUpdate
+from cache import get_cache, set_cache, invalidate_cache
 
 app = FastAPI()
 app.add_middleware(APIGatewayMiddleware)
@@ -30,25 +31,40 @@ def get_task_or_404(task_id: int, db: Session) -> type[Task]:
 
 @app.get("/tasks", response_model=List[TaskResponse])
 async def get_tasks(db: Session = Depends(get_db)):
-    return db.query(Task).all()
+    cache_key = "tasks:all"
+    cached = get_cache(cache_key)
+    if cached:
+        return cached
+
+    tasks = db.query(Task).all()
+    result = [TaskResponse.model_validate(task).model_dump() for task in tasks]
+    set_cache(cache_key, result)
+    return result
 
 
 @app.post("/tasks", response_model=TaskResponse, status_code=201)
 async def create_task(task: TaskCreate, db: Session = Depends(get_db)):
-    db_task = Task(
-        title=task.title,
-        description=task.description,
-        status=task.status
-    )
+    db_task = Task(title=task.title, description=task.description, status=task.status)
     db.add(db_task)
     db.commit()
     db.refresh(db_task)
-    return db_task
+
+    # сбрасываем кеш
+    invalidate_cache("tasks:all")
+    return TaskResponse.model_validate(db_task)
 
 
 @app.get("/tasks/{task_id}", response_model=TaskResponse)
 async def get_task(task_id: int, db: Session = Depends(get_db)):
-    return get_task_or_404(task_id, db)
+    cache_key = f"tasks:{task_id}"
+    cached = get_cache(cache_key)
+    if cached:
+        return cached
+
+    task = get_task_or_404(task_id, db)
+    result = TaskResponse.model_validate(task).model_dump()
+    set_cache(cache_key, result)
+    return result
 
 
 @app.put("/tasks/{task_id}", response_model=TaskResponse)
@@ -65,7 +81,11 @@ async def update_task(
 
     db.commit()
     db.refresh(task)
-    return task
+
+    invalidate_cache("tasks:all")
+    invalidate_cache(f"tasks:{task_id}")
+
+    return TaskResponse.model_validate(task)
 
 
 @app.patch("/tasks/{task_id}", response_model=TaskResponse)
@@ -85,7 +105,11 @@ async def partial_update_task(
 
     db.commit()
     db.refresh(task)
-    return task
+
+    invalidate_cache("tasks:all")
+    invalidate_cache(f"tasks:{task_id}")
+
+    return TaskResponse.model_validate(task)
 
 
 @app.delete("/tasks/{task_id}", status_code=200)
@@ -94,4 +118,8 @@ async def delete_task(task_id: int, db: Session = Depends(get_db)):
 
     db.delete(task)
     db.commit()
+
+    invalidate_cache("tasks:all")
+    invalidate_cache(f"tasks:{task_id}")
+
     return {"detail": "Task deleted"}
