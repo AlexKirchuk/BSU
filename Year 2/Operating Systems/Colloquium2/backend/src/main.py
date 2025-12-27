@@ -1,12 +1,14 @@
 from typing import List
 from fastapi import FastAPI, Depends, HTTPException
 from sqlalchemy.orm import Session
+from gateway import APIGatewayMiddleware
 
 from database import Base, engine, session_local
 from models import Task
 from schemas import TaskCreate, TaskResponse, TaskUpdate
 
 app = FastAPI()
+app.add_middleware(APIGatewayMiddleware)
 
 Base.metadata.create_all(bind=engine)
 
