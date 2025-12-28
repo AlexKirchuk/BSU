@@ -1,16 +1,22 @@
 from typing import List
-from fastapi import FastAPI, Depends, HTTPException
+from fastapi import FastAPI, Depends, HTTPException, Response, Request
+from fastapi.responses import JSONResponse
 from sqlalchemy.orm import Session
 from gateway import APIGatewayMiddleware
+from prometheus_client import generate_latest, CONTENT_TYPE_LATEST
 
 from database import Base, engine, session_local
 from models import Task
 from schemas import TaskCreate, TaskResponse, TaskUpdate
 from cache import get_cache, set_cache, invalidate_cache
 from tasks import task_created
+from logging_config import logger
+from middleware import LoggingMiddleware, MetricsMiddleware
 
 app = FastAPI()
 app.add_middleware(APIGatewayMiddleware)
+app.add_middleware(LoggingMiddleware)
+app.add_middleware(MetricsMiddleware)
 
 Base.metadata.create_all(bind=engine)
 
@@ -124,3 +130,20 @@ async def delete_task(task_id: int, db: Session = Depends(get_db)):
     invalidate_cache(f"tasks:{task_id}")
 
     return {"detail": "Task deleted"}
+
+
+@app.get("/metrics")
+def metrics():
+    return Response(
+        generate_latest(),
+        media_type=CONTENT_TYPE_LATEST
+    )
+
+
+@app.exception_handler(Exception)
+async def global_exception_handler(request: Request, exc: Exception):
+    logger.exception(f"Unhandled error on {request.url.path}")
+    return JSONResponse(
+        status_code=500,
+        content={"detail": "Internal Server Error"},
+    )
