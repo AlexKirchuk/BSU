@@ -7,6 +7,7 @@ from database import Base, engine, session_local
 from models import Task
 from schemas import TaskCreate, TaskResponse, TaskUpdate
 from cache import get_cache, set_cache, invalidate_cache
+from tasks import task_created
 
 app = FastAPI()
 app.add_middleware(APIGatewayMiddleware)
@@ -49,8 +50,8 @@ async def create_task(task: TaskCreate, db: Session = Depends(get_db)):
     db.commit()
     db.refresh(db_task)
 
-    # сбрасываем кеш
     invalidate_cache("tasks:all")
+    task_created.delay(db_task.id)
     return TaskResponse.model_validate(db_task)
 
 
