@@ -5,7 +5,8 @@ from sqlalchemy.orm import sessionmaker
 SQL_DB_URL = "sqlite:///tasks.db"
 engine = create_engine(
     SQL_DB_URL,
-    connect_args={"check_same_thread":False}
+    pool_pre_ping=True,
+    pool_recycle=300
 )
 
 session_local = sessionmaker(
