@@ -1,0 +1,39 @@
+version: "3.9"
+
+services:
+  api:
+    build: ./backend
+    container_name: todo_api
+    ports:
+      - "8000:8000"
+    depends_on:
+      - redis
+    environment:
+      REDIS_HOST: redis
+    restart: always
+
+  redis:
+    image: redis:7
+    container_name: redis
+    ports:
+      - "6379:6379"
+    restart: always
+
+  celery:
+    build: ./backend
+    container_name: celery_worker
+    command: celery -A tasks_queue worker --loglevel=info
+    depends_on:
+      - redis
+    environment:
+      REDIS_HOST: redis
+    restart: always
+
+  prometheus:
+    image: prom/prometheus
+    container_name: prometheus
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+    restart: always
