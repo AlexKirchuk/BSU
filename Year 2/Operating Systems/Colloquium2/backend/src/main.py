@@ -2,6 +2,7 @@ from typing import List
 from fastapi import FastAPI, Depends, HTTPException, Response, Request
 from fastapi.responses import JSONResponse
 from sqlalchemy.orm import Session
+from sqlalchemy.exc import OperationalError
 from gateway import APIGatewayMiddleware
 from prometheus_client import generate_latest, CONTENT_TYPE_LATEST
 
@@ -25,6 +26,9 @@ def get_db():
     db = session_local()
     try:
         yield db
+    except OperationalError:
+        logger.error("DB connection error")
+        raise HTTPException(503, "Database unavailable")
     finally:
         db.close()
 
@@ -57,7 +61,14 @@ async def create_task(task: TaskCreate, db: Session = Depends(get_db)):
     db.refresh(db_task)
 
     invalidate_cache("tasks:all")
-    task_created.delay(db_task.id)
+
+    try:
+        task_created.delay(db_task.id)
+    except OperationalError:
+        logger.warning("Celery broker unavailable")
+    except ConnectionError:
+        logger.warning("Celery connection error")
+
     return TaskResponse.model_validate(db_task)
 
 
