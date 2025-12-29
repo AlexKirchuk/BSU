@@ -1,9 +1,20 @@
-def test_create_task_success(client):
+import pytest
+
+from auth import create_access_token
+
+
+@pytest.fixture
+def auth_headers():
+    token = create_access_token({"sub": "testuser"})
+    return {"Authorization": f"Bearer {token}"}
+
+
+def test_create_task_success(client, auth_headers):
     r = client.post("/tasks", json={
         "title": "New task",
         "description": "Test",
         "status": "todo"
-    })
+    }, headers=auth_headers)
 
     assert r.status_code == 201
     body = r.json()
@@ -11,17 +22,17 @@ def test_create_task_success(client):
     assert body["status"] == "todo"
 
 
-def test_create_task_without_title(client):
+def test_create_task_without_title(client, auth_headers):
     r = client.post("/tasks", json={
         "description": "No title",
         "status": "todo"
-    })
+    }, headers=auth_headers)
     assert r.status_code == 422
 
 
-def test_create_task_invalid_status(client):
+def test_create_task_invalid_status(client, auth_headers):
     r = client.post("/tasks", json={
         "title": "Bad",
         "status": "invalid"
-    })
+    }, headers=auth_headers)
     assert r.status_code == 422
