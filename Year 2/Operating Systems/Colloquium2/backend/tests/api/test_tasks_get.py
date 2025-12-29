@@ -1,4 +1,5 @@
 import pytest
+
 from auth import create_access_token
 
 @pytest.fixture
