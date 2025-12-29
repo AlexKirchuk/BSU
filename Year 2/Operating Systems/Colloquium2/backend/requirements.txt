@@ -1,0 +1,30 @@
+# Web framework
+fastapi
+uvicorn[standard]
+
+# Database
+sqlalchemy
+alembic
+
+# Pydantic (v2)
+pydantic
+
+# Cache (Redis)
+redis
+
+# Background tasks / Queue
+celery
+kombu
+
+# API Gateway features / middleware utils
+python-jose[cryptography]
+passlib[bcrypt]
+
+# Metrics & monitoring
+prometheus-client
+
+# HTTP client (иногда нужен)
+httpx
+
+# Logging helpers
+python-json-logger
