@@ -1,8 +1,10 @@
 from fastapi import HTTPException, Header, Request
+from sqlalchemy.exc import OperationalError
 import time
 
 from database import session_local
 from auth import decode_token
+from logging_config import logger
 
 
 # ---------- DB ----------
@@ -10,6 +12,9 @@ def get_db():
     db = session_local()
     try:
         yield db
+    except OperationalError:
+        logger.error("DB connection error")
+        raise HTTPException(503, "Database unavailable")
     finally:
         db.close()
 
