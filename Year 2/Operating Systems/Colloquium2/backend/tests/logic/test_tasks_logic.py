@@ -1,5 +1,3 @@
-from datetime import datetime
-
 import pytest
 from sqlalchemy import create_engine, Column, DateTime
 from sqlalchemy.exc import IntegrityError
