@@ -1,5 +1,5 @@
 from fastapi import HTTPException, Header, Request
-from sqlalchemy.exc import OperationalError
+from sqlalchemy.exc import SQLAlchemyError
 import time
 
 from database import session_local
@@ -12,9 +12,12 @@ def get_db():
     db = session_local()
     try:
         yield db
-    except OperationalError:
-        logger.error("DB connection error")
-        raise HTTPException(503, "Database unavailable")
+    except SQLAlchemyError:
+        logger.error("Database unavailable")
+        raise HTTPException(status_code=503, detail="Database unavailable")
+    except Exception:
+        logger.error("Unknown DB error")
+        raise HTTPException(status_code=503, detail="Database unavailable")
     finally:
         db.close()
 
