@@ -28,3 +28,9 @@ httpx
 
 # Logging helpers
 python-json-logger
+
+pytest
+pytest-asyncio
+httpx
+faker
+pytest-cov
