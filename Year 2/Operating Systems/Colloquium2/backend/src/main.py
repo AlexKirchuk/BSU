@@ -1,8 +1,8 @@
 from typing import List
 from fastapi import FastAPI, Depends, HTTPException, Response, Request
 from fastapi.responses import JSONResponse
+from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.orm import Session
-from sqlalchemy.exc import OperationalError
 from gateway import APIGatewayMiddleware
 from prometheus_client import generate_latest, CONTENT_TYPE_LATEST
 
@@ -10,9 +10,10 @@ from database import Base, engine, session_local
 from models import Task
 from schemas import TaskCreate, TaskResponse, TaskUpdate
 from cache import get_cache, set_cache, invalidate_cache
-from tasks import task_created
+from tasks import some_celery_task
 from logging_config import logger
 from middleware import LoggingMiddleware, MetricsMiddleware
+from auth import get_current_user
 
 app = FastAPI()
 app.add_middleware(APIGatewayMiddleware)
@@ -26,9 +27,12 @@ def get_db():
     db = session_local()
     try:
         yield db
-    except OperationalError:
-        logger.error("DB connection error")
-        raise HTTPException(503, "Database unavailable")
+    except SQLAlchemyError:
+        logger.error("Database unavailable")
+        raise HTTPException(status_code=503, detail="Database unavailable")
+    except Exception:
+        logger.error("Unknown DB error")
+        raise HTTPException(status_code=503, detail="Database unavailable")
     finally:
         db.close()
 
@@ -41,20 +45,30 @@ def get_task_or_404(task_id: int, db: Session) -> type[Task]:
 
 
 @app.get("/tasks", response_model=List[TaskResponse])
-async def get_tasks(db: Session = Depends(get_db)):
-    cache_key = "tasks:all"
-    cached = get_cache(cache_key)
-    if cached:
-        return cached
+async def get_tasks(
+    db: Session = Depends(get_db),
+    user=Depends(get_current_user)
+):
+    try:
+        cache_key = "tasks:all"
+        cached = get_cache(cache_key)
+        if cached:
+            return cached
 
-    tasks = db.query(Task).all()
-    result = [TaskResponse.model_validate(task).model_dump() for task in tasks]
-    set_cache(cache_key, result)
-    return result
+        tasks = db.query(Task).all()
+        result = [TaskResponse.model_validate(task).model_dump() for task in tasks]
+        set_cache(cache_key, result)
+        return result
+    except (SQLAlchemyError, Exception):
+        raise HTTPException(status_code=503, detail="Database unavailable")
 
 
 @app.post("/tasks", response_model=TaskResponse, status_code=201)
-async def create_task(task: TaskCreate, db: Session = Depends(get_db)):
+async def create_task(
+    task: TaskCreate,
+    db: Session = Depends(get_db),
+    user=Depends(get_current_user)
+):
     db_task = Task(title=task.title, description=task.description, status=task.status)
     db.add(db_task)
     db.commit()
@@ -63,17 +77,19 @@ async def create_task(task: TaskCreate, db: Session = Depends(get_db)):
     invalidate_cache("tasks:all")
 
     try:
-        task_created.delay(db_task.id)
-    except OperationalError:
-        logger.warning("Celery broker unavailable")
-    except ConnectionError:
-        logger.warning("Celery connection error")
+        some_celery_task.delay(task.id)
+    except Exception as e:
+        logger.warning(f"Celery unavailable: {e}")
 
     return TaskResponse.model_validate(db_task)
 
 
 @app.get("/tasks/{task_id}", response_model=TaskResponse)
-async def get_task(task_id: int, db: Session = Depends(get_db)):
+async def get_task(
+    task_id: int,
+    db: Session = Depends(get_db),
+    user=Depends(get_current_user)
+):
     cache_key = f"tasks:{task_id}"
     cached = get_cache(cache_key)
     if cached:
@@ -89,7 +105,8 @@ async def get_task(task_id: int, db: Session = Depends(get_db)):
 async def update_task(
     task_id: int,
     task_data: TaskCreate,
-    db: Session = Depends(get_db)
+    db: Session = Depends(get_db),
+    user=Depends(get_current_user)
 ):
     task = get_task_or_404(task_id, db)
 
@@ -110,7 +127,8 @@ async def update_task(
 async def partial_update_task(
     task_id: int,
     task_data: TaskUpdate,
-    db: Session = Depends(get_db)
+    db: Session = Depends(get_db),
+    user=Depends(get_current_user)
 ):
     task = get_task_or_404(task_id, db)
 
@@ -131,7 +149,11 @@ async def partial_update_task(
 
 
 @app.delete("/tasks/{task_id}", status_code=200)
-async def delete_task(task_id: int, db: Session = Depends(get_db)):
+async def delete_task(
+    task_id: int,
+    db: Session = Depends(get_db),
+    user=Depends(get_current_user)
+):
     task = get_task_or_404(task_id, db)
 
     db.delete(task)
