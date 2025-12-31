@@ -41,3 +41,8 @@ def test_gateway_timeout_http(client, monkeypatch):
     )
 
     assert response.status_code == 504
+
+
+def test_gateway_allows_normal_request(client):
+    r = client.get("/tasks")
+    assert r.status_code in (200, 401)
