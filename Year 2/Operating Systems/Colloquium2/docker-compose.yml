@@ -37,3 +37,12 @@ services:
     volumes:
       - ./prometheus.yml:/etc/prometheus/prometheus.yml
     restart: always
+
+  frontend:
+    build: ./frontend
+    container_name: todo_frontend
+    ports:
+      - "3000:80"
+    depends_on:
+      - api
+    restart: always
