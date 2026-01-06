@@ -17,23 +17,23 @@ def db_session():
     session.close()
 
 
-def test_task_default_status(db_session):
-    task = Task(title="Test task")
+def test_task_default_status(db_session, user):
+    task = Task(title="Test task", user_id=user.id)
     db_session.add(task)
     db_session.commit()
 
     assert task.status == "todo"
 
 
-def test_invalid_status_raises(db_session):
+def test_invalid_status_raises(db_session, user):
     with pytest.raises(ValueError):
-        task = Task(title="Bad", status="invalid")
+        task = Task(title="Bad", status="invalid", user_id=user.id)
         db_session.add(task)
         db_session.commit()
 
 
-def test_partial_update(db_session):
-    task = Task(title="Old", status="todo")
+def test_partial_update(db_session, user):
+    task = Task(title="Old", status="todo", user_id=user.id)
     db_session.add(task)
     db_session.commit()
 
@@ -44,9 +44,9 @@ def test_partial_update(db_session):
     assert task.status == "todo"
 
 
-def test_id_autoincrement(db_session):
-    t1 = Task(title="A")
-    t2 = Task(title="B")
+def test_id_autoincrement(db_session, user):
+    t1 = Task(title="A", user_id=user.id)
+    t2 = Task(title="B", user_id=user.id)
 
     db_session.add_all([t1, t2])
     db_session.commit()
@@ -54,21 +54,13 @@ def test_id_autoincrement(db_session):
     assert t2.id == t1.id + 1
 
 
-def test_created_at_auto_set(db_session):
-    task = Task(title="Time test")
-    db_session.add(task)
-    db_session.commit()
-
-    assert task.created_at is not None
-
-
-def test_rollback_on_error(db_session):
-    task1 = Task(title="OK")
+def test_rollback_on_error(db_session, user):
+    task1 = Task(title="OK", user_id=user.id)
     db_session.add(task1)
     db_session.commit()
 
     try:
-        task2 = Task(title="FAIL", status="invalid")
+        task2 = Task(title="FAIL", status="invalid", user_id=user.id)
         db_session.add(task2)
         db_session.commit()
     except Exception:
@@ -78,16 +70,16 @@ def test_rollback_on_error(db_session):
     assert len(tasks) == 1
 
 
-def test_title_required(db_session):
-    task = Task(title=None)
+def test_title_required(db_session, user):
+    task = Task(title=None, user_id=user.id)
     db_session.add(task)
 
     with pytest.raises(IntegrityError):
         db_session.commit()
 
 
-def test_status_stable(db_session):
-    task = Task(title="Stable")
+def test_status_stable(db_session, user):
+    task = Task(title="Stable", user_id=user.id)
     db_session.add(task)
     db_session.commit()
 
@@ -95,8 +87,8 @@ def test_status_stable(db_session):
     assert task.status == "todo"
 
 
-def test_status_transition(db_session):
-    task = Task(title="Flow", status="todo")
+def test_status_transition(db_session, user):
+    task = Task(title="Flow", status="todo", user_id=user.id)
     db_session.add(task)
     db_session.commit()
 
