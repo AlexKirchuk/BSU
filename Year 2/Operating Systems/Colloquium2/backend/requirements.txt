@@ -29,8 +29,14 @@ httpx
 # Logging helpers
 python-json-logger
 
+python-multipart
+
+# Tests
 pytest
 pytest-asyncio
 httpx
 faker
 pytest-cov
+
+# For passwords
+bcrypt==4.1.2
