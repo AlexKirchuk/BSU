@@ -1,9 +1,11 @@
+import os
 import redis
 import json
-
 from logging_config import logger
 
-r = redis.Redis(host="localhost", port=6379, db=0, decode_responses=True)
+REDIS_HOST = os.getenv("REDIS_HOST", "localhost")
+
+r = redis.Redis(host=REDIS_HOST, port=6379, db=0, decode_responses=True)
 CACHE_TTL = 60
 
 
