@@ -1,13 +1,3 @@
-import pytest
-
-from auth import create_access_token
-
-@pytest.fixture
-def auth_headers():
-    token = create_access_token({"sub": "testuser"})
-    return {"Authorization": f"Bearer {token}"}
-
-
 def test_get_tasks_empty(client, auth_headers):
     r = client.get("/tasks", headers=auth_headers)
     assert r.status_code == 200

@@ -1,14 +1,3 @@
-import pytest
-
-from auth import create_access_token
-
-
-@pytest.fixture
-def auth_headers():
-    token = create_access_token({"sub": "testuser"})
-    return {"Authorization": f"Bearer {token}"}
-
-
 def create_task(client, auth_headers, title="Task to delete"):
     r = client.post("/tasks", json={
         "title": title,
