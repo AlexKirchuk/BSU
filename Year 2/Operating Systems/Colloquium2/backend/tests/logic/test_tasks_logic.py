@@ -1,7 +1,7 @@
 import pytest
-from sqlalchemy import create_engine, Column, DateTime
+from sqlalchemy import create_engine
 from sqlalchemy.exc import IntegrityError
-from sqlalchemy.orm import sessionmaker, validates
+from sqlalchemy.orm import sessionmaker
 
 from database import Base
 from models import Task
@@ -63,7 +63,7 @@ def test_rollback_on_error(db_session, user):
         task2 = Task(title="FAIL", status="invalid", user_id=user.id)
         db_session.add(task2)
         db_session.commit()
-    except Exception:
+    except ValueError:
         db_session.rollback()
 
     tasks = db_session.query(Task).all()
