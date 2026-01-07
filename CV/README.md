@@ -1,4 +1,4 @@
-﻿# 📄 Curriculum Vitae – [Alexander Kirchuk]
+﻿# 📄 Curriculum Vitae – Alexander Kirchuk
 
 Welcome! This folder contains my **Curriculum Vitae (CV)** in both PDF and Markdown formats.  
 It highlights my education, technical skills, projects, and achievements relevant for **Systems / Backend Engineering** roles.
