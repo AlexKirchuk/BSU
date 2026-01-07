@@ -39,9 +39,7 @@ BSU/
 
 ## 🧩 Year 1 – Foundations
 
-* Procedural & object-oriented programming
-* Basic algorithms & data structures
-* Mathematical computation & problem solving
+TBD...
 
 ---
 
@@ -89,19 +87,6 @@ A classic **Pac-Man 2D game** implemented in **C++17 + Qt**.
 * Randomly moving ghosts with constrained AI
 * Qt Graphics View Framework
 
-### Project Structure
-
-```
-MyPacMan/
-├── main.cpp
-├── mainwindow.cpp / .h / .ui
-├── pacman.cpp / .h
-├── scores.txt
-└── img/
-    └── pacman.png
-```
-
-**Tools:** Qt 5 / 6, QMake, Qt Creator
 
 ---
 
