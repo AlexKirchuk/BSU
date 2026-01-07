@@ -1,4 +1,4 @@
-﻿# Operating Systems — Industrial Programming Lab Collection
+﻿# Operating Systems — Lab Work Collection & Colloquiums
 
 This repository contains a comprehensive collection of **Operating Systems** laboratory works and colloquiums, implemented using **industrial-grade programming practices**.
 
