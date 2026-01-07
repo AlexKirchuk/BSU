@@ -1,4 +1,4 @@
-﻿# 🎓 BSU Year 1–2 & Practice Portfolio
+﻿# 🎓 BSU Portfolio
 
 ## Overview
 
