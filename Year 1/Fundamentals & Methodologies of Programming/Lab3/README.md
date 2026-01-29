@@ -1,6 +1,6 @@
 # Lab 3: Computation of a Series
 
-## Problem Statement
+## Description
 
 Compute the value of the series:
 
