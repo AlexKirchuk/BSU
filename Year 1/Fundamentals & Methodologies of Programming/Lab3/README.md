@@ -4,7 +4,7 @@
 
 Compute the value of the series:
 
-[ S = \sum_{n=5}^{m} \frac{x^{2n+1} \cdot \sin(nx)}{2n+1} ]
+S = Σ (x^(2n+1) * sin(n*x)) / (2n + 1),  n = 5 .. m
 
 for a given value of **m**, where **x** varies from **a** to **b** with a step **h**.
 
