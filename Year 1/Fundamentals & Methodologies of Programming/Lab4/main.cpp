@@ -211,6 +211,9 @@ void task4()
 
     for (int i = 0; i < n; i++) arr[i] = rand() % 100;
 
+    for (int i = 0; i < n; i++) cout << arr[i] << " ";
+    cout << endl;
+
     bubbleSort(arr, n);
 
     int count = 0;
