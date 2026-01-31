@@ -1,4 +1,4 @@
-# Lab 1–2: Working with Numerical Problems
+# Lab 1–2 — Working with Numerical Problems
 
 ## Description
 

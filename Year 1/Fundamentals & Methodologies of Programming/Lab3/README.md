@@ -1,4 +1,4 @@
-# Lab 3: Computation of a Series
+# Lab 3 — Computation of a Series
 
 ## Description
 

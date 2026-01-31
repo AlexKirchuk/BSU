@@ -1,4 +1,4 @@
-# Lab 9: Classes, Operator Overloading, Exceptions
+# Lab 9 — Classes, Operator Overloading, Exceptions
 
 ## Task Description
 

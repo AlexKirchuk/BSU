@@ -1,4 +1,4 @@
-# Lab 5: Matrix Processing and Smoothing
+# Lab 5 — Matrix Processing and Smoothing
 
 ## Description
 

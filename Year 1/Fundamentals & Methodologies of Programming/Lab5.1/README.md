@@ -1,4 +1,4 @@
-# Lab 5.1: Shell Sort Implementation
+# Lab 5.1 — Shell Sort Implementation
 
 ## Description
 

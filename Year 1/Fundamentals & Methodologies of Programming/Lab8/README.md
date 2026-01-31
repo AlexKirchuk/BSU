@@ -1,4 +1,4 @@
-# Lab 8: Working with a Number Class in C++
+# Lab 8 — Working with a Number Class in C++
 
 ## Description
 

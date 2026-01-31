@@ -1,4 +1,4 @@
-# Lab 4: Array and Sequence Processing
+# Lab 4 — Array and Sequence Processing
 
 ## Description
 
