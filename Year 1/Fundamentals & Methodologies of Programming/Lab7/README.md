@@ -1,4 +1,4 @@
-# Lab: Student Records Processing Using Files
+# Lab 7: Student Records Processing Using Files
 
 ## Description
 
