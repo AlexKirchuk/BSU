@@ -1,4 +1,4 @@
-# Lab: String and File Processing
+# Lab 6: String and File Processing
 
 ## Description
 
