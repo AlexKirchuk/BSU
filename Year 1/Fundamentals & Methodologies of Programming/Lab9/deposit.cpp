@@ -156,8 +156,11 @@ double Deposit::taskEveryHour() const
 
 std::istream& operator>>(std::istream& in, Deposit& dep)
 {
-    std::cout << "Enter deposit: " << std::endl;
-    in >> dep.money >> dep.percent;
+    std::cout << "Enter percent: " << std::endl;
+    in >> dep.percent;
+    std::cout << "Enter money: " << std::endl;
+    in >> dep.money;
+    dep.profit = dep.money * dep.percent / 100.;
     return in;
 }
 
