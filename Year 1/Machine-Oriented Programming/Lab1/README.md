@@ -1,4 +1,4 @@
-# Laboratory Work 1 — Assembly Language
+# Lab 1 — Assembly Language
 
 ## Overview
 
