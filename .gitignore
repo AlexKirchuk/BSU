@@ -59,3 +59,5 @@
 /Year 1/Machine-Oriented Programming/Lab1/CMakePresets.json
 /Year 1/Machine-Oriented Programming/Lab2/.vs
 /Year 1/Machine-Oriented Programming/Lab2/out/build/x64-debug
+/Year 1/Machine-Oriented Programming/Lab2/out/build/x86-debug
+*.json
