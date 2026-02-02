@@ -61,3 +61,6 @@
 /Year 1/Machine-Oriented Programming/Lab2/out/build/x64-debug
 /Year 1/Machine-Oriented Programming/Lab2/out/build/x86-debug
 *.json
+/Year 1/Machine-Oriented Programming/Lab3/out/build/x64-debug
+/Year 1/Machine-Oriented Programming/Lab3/.vs
+/Year 1/Machine-Oriented Programming/Lab3/out/build/x86-debug
