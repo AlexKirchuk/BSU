@@ -1,4 +1,4 @@
-# Lab 1 — Assembly Language
+# Lab 1 — Mathematical Expressions
 
 ## Overview
 
