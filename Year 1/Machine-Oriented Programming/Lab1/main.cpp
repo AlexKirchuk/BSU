@@ -203,8 +203,6 @@ void task3()
 
 int main()
 {
-    std::setlocale(LC_ALL, "");
-
     std::cout << "\n--- Task 1 ---\n";
     task1();
 
