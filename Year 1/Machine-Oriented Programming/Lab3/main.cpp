@@ -6,7 +6,7 @@ void printResult(int isKapr)
     else std::cout << "This number is not a Kaprekar number: ";
 }
 
-int cppKaprekar(int num)
+int kaprekarCpp(int num)
 {
     int sqcopy, sq;
     int d = 1;
@@ -27,7 +27,7 @@ int cppKaprekar(int num)
     if (sqcopy != -1) return 0;
 }
 
-int asmKaprekar(int num)
+int kaprekarAsm(int num)
 {
     __asm
     {
@@ -71,9 +71,9 @@ int main()
     std::cout << "C++ result: " << std::endl;
     for (int i = 0; i < 1000; i++)
     {
-        if (cppKaprekar(i))
+        if (kaprekarCpp(i))
         {
-            printResult(cppKaprekar(i));
+            printResult(kaprekarCpp(i));
             std::cout << i << std::endl;
         }
     }
@@ -81,9 +81,9 @@ int main()
     std::cout << std::endl << "Assembler result: " << std::endl;
     for (int i = 0; i < 1000; i++)
     {
-        if (asmKaprekar(i))
+        if (kaprekarAsm(i))
         {
-            printResult(asmKaprekar(i));
+            printResult(kaprekarAsm(i));
             std::cout << i << std::endl;
         }
     }
