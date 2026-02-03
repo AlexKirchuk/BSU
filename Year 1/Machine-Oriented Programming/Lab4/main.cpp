@@ -183,8 +183,6 @@ void intersectionC(int* x, int n, int* y, int m)
 
 int main()
 {
-    std::setlocale(LC_ALL, "");
-
     // -------- Task 1 --------
     std::cout << "--- Task 1: Progressions ---\n";
     int n = inputSize(0, 100);
