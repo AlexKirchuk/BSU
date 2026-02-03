@@ -41,7 +41,7 @@ void printArray(int* arr, int size)
 // Task 1 — Progressions (C++)
 // =======================================================
 
-void isArithmeticC(int* arr, int n)
+void isArithmeticCpp(int* arr, int n)
 {
     if (n <= 2)
     {
@@ -61,7 +61,7 @@ void isArithmeticC(int* arr, int n)
     std::cout << "Difference d = " << d << "\n";
 }
 
-void isGeometricC(int* arr, int n)
+void isGeometricCpp(int* arr, int n)
 {
     if (n <= 2 || arr[0] == 0)
     {
@@ -156,7 +156,7 @@ void isGeometricAsm(int* arr, int n)
 // Task 2 — Intersection (C++)
 // =======================================================
 
-void intersectionC(int* x, int n, int* y, int m)
+void intersectionCpp(int* x, int n, int* y, int m)
 {
     int z[10], p = 0;
     for (int i = 0, j = 0; i < n && j < m; )
@@ -190,8 +190,8 @@ int main()
     inputArray(arr, n, false);
 
     std::cout << "\nC++ result:\n";
-    isArithmeticC(arr, n);
-    isGeometricC(arr, n);
+    isArithmeticCpp(arr, n);
+    isGeometricCpp(arr, n);
 
     std::cout << "\nAssembly result:\n";
     isArithmeticAsm(arr, n);
@@ -210,7 +210,7 @@ int main()
     inputArray(y, n2, true);
 
     std::cout << "\nC++ result:\n";
-    intersectionC(x, n1, y, n2);
+    intersectionCpp(x, n1, y, n2);
 
     std::cout << "\nAssembly result:\n";
 
