@@ -1,6 +1,6 @@
 #include <iostream>
 
-void printAsmResult(int a)
+void printResultAsm(int a)
 {
 	std::cout << "Assembler result: " << a << std::endl;
 }
@@ -85,7 +85,7 @@ int main()
 	end1:
 		mov eax, asmResult
 		push eax
-		call printAsmResult
+		call printResultAsm
 		pop eax
 	}
 
