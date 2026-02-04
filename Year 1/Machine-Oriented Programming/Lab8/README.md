@@ -1,6 +1,6 @@
 # Lab 8 — Assembly Functions Integration
 
-## Task
+## Overview
 
 This laboratory work demonstrates the use of **separate Assembly (.asm) files** integrated with a **C++ program** using external functions.
 
