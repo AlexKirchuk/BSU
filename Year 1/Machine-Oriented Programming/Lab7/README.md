@@ -1,6 +1,6 @@
 # Lab 7 — String Processing
 
-## Task
+## Task Description
 
 During a single pass through the characters of a string, find all words that contain the **maximum number of distinct characters** and place them into a new string.
 
