@@ -84,5 +84,29 @@ int main(int argc, char* argv[])
     {
         qDebug() << "Exception: " << e.whatAsQString();
     }
+
+    // email
+    qDebug() << Qt::endl << "Email check:";
+    QRegularExpression reg("(https?:\/\/)?([^-_\n][a-zA-Z0-9-][^-_\n]{2,}\.?[^-_\n][a-zA-Z0-9-][^-_\n]{2,}\.[a-zA-Z]{2,})(:[0-9]+)?(\/[^\s]*)?(\\?[^\s]*)?(#[^\s]*)?$");
+    QVector<QString> URLs =
+    {
+        "http://www.zcontest.ru",
+        "http://zcontest.ru",
+        "http://zcontest.com",
+        "https://zcontest.ru",
+        "https://sub.zcontest-ru.com:8080",
+        "http://zcontest.ru/dir%201/dir_2/program.ext?var1=x&var2=my%20value",
+        "zcon.com/index.html#bookmark",
+        "Just Text.",
+        "http://a.com",
+        "http://www.domain-.com",
+    };
+    for (const auto& url : URLs)
+    {
+        QRegularExpressionMatch match = reg.match(url);
+        if (match.hasMatch()) qDebug() << "Valid URL: " << url;
+        else qDebug() << "Invalid URL: " << url;
+    }
+
     return QCoreApplication::exec();
 }
