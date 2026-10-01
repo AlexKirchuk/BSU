@@ -130,7 +130,7 @@ std::vector<std::vector<double>> inverse(int n, const std::vector<std::vector<do
     return inv;
 }
 
-double norm1(int n, const std::vector<std::vector<double>>& m)
+double normMatrix(int n, const std::vector<std::vector<double>>& m)
 {
     double norm = 0.0;
     for (int i = 0; i < n; i++)
@@ -148,12 +148,25 @@ double norm1(int n, const std::vector<std::vector<double>>& m)
     return norm;
 }
 
+double normVector(int n, const std::vector<double>& v)
+{
+    double norm = 0.0;
+    for (int i = 0; i < n; i++)
+    {
+        if (std::abs(v[i]) > norm)
+        {
+            norm = std::abs(v[i]);
+        }
+    }
+    return norm;
+}
+
 double conditionNumber(int n,
     const std::vector<std::vector<double>>& a,
     const std::vector<std::vector<double>>& inv)
 {
-    double normA = norm1(n, a);
-    double normInv = norm1(n, inv);
+    double normA = normMatrix(n, a);
+    double normInv = normMatrix(n, inv);
     return normA * normInv;
 }
 
@@ -285,9 +298,15 @@ int main()
     fout << "Residual matrix R = A^{-1} * A - E:" << std::endl;
     printMatrix(n, R, fout);
 
+    double normR = normMatrix(n, R);
+    fout << std::defaultfloat << "Residual matrix norm ||R||_1: " << normR << std::endl << std::endl;
+
     auto r = residualVector(n, a, sol, f);
     fout << "Residual vector r = A * x - b:" << std::endl;
     printVector(n, r, fout);
+
+    double normRVector = normVector(n, r);
+    fout << std::defaultfloat << "Residual vector norm ||r||_1: " << normRVector << std::endl << std::endl;
 
     fout.close();
     return 0;
