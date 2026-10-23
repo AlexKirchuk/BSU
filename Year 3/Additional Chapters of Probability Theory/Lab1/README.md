@@ -1,6 +1,6 @@
 # Laboratory Work 1: Statistical Goodness-of-Fit Tests
 
-## 📋 Overview
+## Overview
 
 This repository contains the implementation of **Laboratory Work 1** on statistical goodness-of-fit tests. The work covers modeling random samples, testing them for normality using classical statistical criteria, and performing descriptive analysis.
 
@@ -8,7 +8,7 @@ The implementation is done in **Python** using standard scientific libraries (`n
 
 ---
 
-## 🎯 Objectives
+## Objectives
 
 - Model random samples from a normal distribution
 - Model a mixture of two Gaussian distributions
@@ -20,7 +20,7 @@ The implementation is done in **Python** using standard scientific libraries (`n
 
 ---
 
-## 📁 Project Structure
+## Project Structure
 
 ```
 .
@@ -31,7 +31,7 @@ The implementation is done in **Python** using standard scientific libraries (`n
 
 ---
 
-## ⚙️ Requirements
+## Requirements
 
 - Python 3.8+
 - `numpy`
@@ -48,7 +48,7 @@ pip install numpy scipy pandas matplotlib seaborn
 
 ---
 
-## 🧪 Task 1: Normal Distribution
+## Task 1: Normal Distribution
 
 **Parameters:**
 - Sample size: `n = 300`
@@ -65,7 +65,7 @@ pip install numpy scipy pandas matplotlib seaborn
 
 ---
 
-## 🧪 Task 2: Mixture of Two Gaussian Distributions
+## Task 2: Mixture of Two Gaussian Distributions
 
 **Parameters (Variant 20):**
 | Parameter | Value |
@@ -94,7 +94,7 @@ For each observation, with probability `ε` sample from `N(μ₂, σ₂²)`, oth
 
 ---
 
-## 📊 Statistical Tests Used
+## Statistical Tests Used
 
 ### Kolmogorov–Smirnov Test
 Compares the empirical CDF with the theoretical normal CDF. The sample is standardized before testing:
@@ -106,7 +106,7 @@ Compares observed and expected frequencies across bins. Bins with expected frequ
 
 ---
 
-## 📈 Graphical Analysis
+## Graphical Analysis
 
 The script produces `task2_histogram.png` containing:
 - Histogram of the mixture sample (density-normalized)
@@ -117,7 +117,7 @@ This visualization clearly shows why the normality hypothesis is rejected for th
 
 ---
 
-## 🖥️ Usage
+## Usage
 
 Run the full analysis:
 
@@ -134,7 +134,7 @@ The script prints:
 
 ---
 
-## 📚 Reference
+## Reference
 
 - Харин Ю. С., Абрамович М. С., Малюгин В. И., Харин А. Ю.  
   *Компьютерный анализ данных. Статистические модели и методы.*  
@@ -142,7 +142,7 @@ The script prints:
 
 ---
 
-## 📝 Notes
+## Notes
 
 - Task 3 is marked as *"to be continued"* in the assignment and is not implemented in this version.
 - Random seeds are fixed (`seed = 1` for Task 1, `seed = 2` for Task 2) to ensure reproducibility.
@@ -150,7 +150,7 @@ The script prints:
 
 ---
 
-## ✅ Results Summary
+## Results Summary
 
 | Criterion | Task 1 (Normal) | Task 2 (Mixture) |
 |-----------|-----------------|------------------|
