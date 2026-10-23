@@ -113,7 +113,7 @@ std::vector<double> gaussian(int n, std::vector<std::vector<double>> a, std::vec
     return result;
 }
 
-std::vector<std::vector<double>> inverse(int n, const std::vector<std::vector<double>>& matrix)
+std::vector<std::vector<double>> inverseGaussian(int n, const std::vector<std::vector<double>>& matrix)
 {
     std::vector<std::vector<double>> inv(n, std::vector<double>(n, 0.0));
     for (int j = 0; j < n; j++)
@@ -127,6 +127,140 @@ std::vector<std::vector<double>> inverse(int n, const std::vector<std::vector<do
             inv[i][j] = x[i];
         }
     }
+    return inv;
+}
+
+bool isTridiagonal(int n, const std::vector<std::vector<double>>& a)
+{
+    for (int i = 0; i < n; i++)
+    {
+        for (int j = 0; j < n; j++)
+        {
+            if (std::abs(i - j) > 1 && std::abs(a[i][j]) > 1e-15)
+            {
+                return false;
+            }
+        }
+    }
+    return true;
+}
+
+std::vector<double> tridiagonalSolveLeft(
+    int n,
+    const std::vector<std::vector<double>>& A,
+    const std::vector<double>& f,
+    bool& ok)
+{
+    ok = true;
+    std::vector<double> xi(n, 0.0), eta(n, 0.0), y(n, 0.0);
+
+    if (n == 1)
+    {
+        if (std::abs(A[0][0]) < 1e-15)
+        {
+            ok = false;
+            return y;
+        }
+        y[0] = f[0] / A[0][0];
+        return y;
+    }
+
+    if (std::abs(A[n - 1][n - 1]) < 1e-15)
+    {
+        ok = false;
+        return y;
+    }
+
+    double a_nm1 = -A[n - 1][n - 2];
+    xi[n - 1] = a_nm1 / A[n - 1][n - 1];
+    eta[n - 1] = f[n - 1] / A[n - 1][n - 1];
+
+    for (int i = n - 2; i >= 1; i--)
+    {
+        double c_i = A[i][i];
+        double a_i = -A[i][i - 1];
+        double b_i = -A[i][i + 1];
+
+        double d_i = c_i - xi[i + 1] * b_i;
+        if (std::abs(d_i) < 1e-15)
+        {
+            ok = false;
+            return y;
+        }
+
+        xi[i] = a_i / d_i;
+        eta[i] = (f[i] + b_i * eta[i + 1]) / d_i;
+    }
+
+    double c_0 = A[0][0];
+    double b_0 = -A[0][1];
+    double d_0 = c_0 - xi[1] * b_0;
+    if (std::abs(d_0) < 1e-15)
+    {
+        ok = false;
+        return y;
+    }
+    eta[0] = (f[0] + b_0 * eta[1]) / d_0;
+    
+    y[0] = eta[0];
+    for (int i = 0; i < n - 1; i++)
+    {
+        y[i + 1] = xi[i + 1] * y[i] + eta[i + 1];
+    }
+
+    return y;
+}
+
+double determinantTridiagonal(int n, const std::vector<std::vector<double>>& A)
+{
+    if (n == 1)
+    {
+        return A[0][0];
+    }
+
+    std::vector<double> D(n + 1, 0.0);
+    D[0] = 1.0;
+    D[1] = A[0][0];
+
+    for (int m = 2; m <= n; m++)
+    {
+        double c = A[m - 1][m - 1];
+        double a = A[m - 1][m - 2];
+        double b = (m - 2 >= 0) ? A[m - 2][m - 1] : 0.0;
+        D[m] = c * D[m - 1] - a * b * D[m - 2];
+    }
+
+    return D[n];
+}
+
+std::vector<std::vector<double>> inverseTridiagonal(
+    int n,
+    const std::vector<std::vector<double>>& A,
+    bool& ok)
+{
+    ok = true;
+    std::vector<std::vector<double>> inv(n, std::vector<double>(n, 0.0));
+
+    for (int j = 0; j < n; j++)
+    {
+        std::vector<double> e(n, 0.0);
+        e[j] = 1.0;
+
+        bool localOk = true;
+        std::vector<double> x = tridiagonalSolveLeft(n, A, e, localOk);
+
+        if (!localOk)
+        {
+            ok = false;
+            return inv;
+        }
+
+        for (int i = 0; i < n; i++)
+        {
+            inv[i][j] = x[i];
+        }
+    }
+
     return inv;
 }
 
@@ -282,12 +416,14 @@ int main()
     double det;
 
     auto sol = gaussian(n, a, f, det);
+    fout << "========================================" << std::endl;
     fout << "Gaussian Method:" << std::endl;
+    fout << "========================================" << std::endl;
     printVector(n, sol, fout);
     
     fout << std::defaultfloat << "Determinant: " << det << std::endl << std::endl;
     
-    auto inv = inverse(n, a);
+    auto inv = inverseGaussian(n, a);
     fout << "Inverse Matrix:" << std::endl;
     printMatrix(n, inv, fout);
 
@@ -307,6 +443,65 @@ int main()
 
     double normRVector = normVector(n, r);
     fout << std::defaultfloat << "Residual vector norm ||r||_1: " << normRVector << std::endl << std::endl;
+
+    if (isTridiagonal(n, a))
+    {
+        fout << "========================================" << std::endl;
+        fout << "Left Sweep Method (Tridiagonal):" << std::endl;
+        fout << "========================================" << std::endl;
+
+        bool ok = true;
+        auto yLeft = tridiagonalSolveLeft(n, a, f, ok);
+
+        if (!ok)
+        {
+            fout << "Left sweep failed: zero pivot encountered." << std::endl;
+        }
+        else
+        {
+            fout << "Solution y (left sweep):" << std::endl;
+            printVector(n, yLeft, fout);
+
+            double detTri = determinantTridiagonal(n, a);
+            fout << std::defaultfloat << "Determinant (tridiagonal formula): " << detTri << std::endl << std::endl;
+
+            bool invOk = true;
+            auto invTri = inverseTridiagonal(n, a, invOk);
+
+            if (!invOk)
+            {
+                fout << "Inverse via left sweep failed: zero pivot." << std::endl;
+            }
+            else
+            {
+                fout << "Inverse Matrix (via left sweep):" << std::endl;
+                printMatrix(n, invTri, fout);
+
+                double condTri = conditionNumber(n, a, invTri);
+                fout << std::defaultfloat << "Condition number (left sweep, first norm): " << condTri << std::endl << std::endl;
+
+                auto RTri = residualMatrix(n, a, invTri);
+                fout << "Residual matrix R = A^{-1} * A - E (left sweep):" << std::endl;
+                printMatrix(n, RTri, fout);
+
+                double normRTri = normMatrix(n, RTri);
+                fout << std::defaultfloat << "Residual matrix norm ||R||_1: " << normRTri << std::endl << std::endl;
+
+                auto rTri = residualVector(n, a, yLeft, f);
+                fout << "Residual vector r = A * y - b (left sweep):" << std::endl;
+                printVector(n, rTri, fout);
+
+                double normRVectorTri = normVector(n, rTri);
+                fout << std::defaultfloat << "Residual vector norm ||r||_1: " << normRVectorTri << std::endl << std::endl;
+            }
+        }
+    }
+    else
+    {
+        fout << "========================================" << std::endl;
+        fout << "Left Sweep Method skipped: matrix is not tridiagonal." << std::endl;
+        fout << "========================================" << std::endl;
+    }
 
     fout.close();
     return 0;
