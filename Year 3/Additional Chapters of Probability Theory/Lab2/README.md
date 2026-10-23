@@ -104,7 +104,9 @@ All computed from first principles:
 
 Computed via the **error function**:
 
-$$F(x) = \frac{1}{2}\left[1 + \operatorname{erf}\!\left(\frac{x-\mu}{\sigma\sqrt{2}}\right)\right]$$
+$$
+F(x) = \frac{1}{2}\left[1 + \text{erf}\!\left(\frac{x-\mu}{\sigma\sqrt{2}}\right)\right]
+$$
 
 using `math.erf`.
 
