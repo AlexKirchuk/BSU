@@ -513,6 +513,73 @@ std::vector<double> jacobiSecond(int n, const std::vector<std::vector<double>>& 
     return x;
 }
 
+std::vector<double> sor(int n, const std::vector<std::vector<double>>& A,
+    const std::vector<double>& b, double eps, double omega,
+    bool& ok, int& iterations)
+{
+    ok = true;
+    iterations = 0;
+
+    std::vector<double> x = b;
+    std::vector<double> x_old(n, 0.0);
+
+    int max_iter = 10000;
+    bool converged = false;
+
+    for (int k = 0; k < max_iter; k++)
+    {
+        iterations = k + 1;
+
+        x_old = x;
+
+        for (int i = 0; i < n; i++)
+        {
+            if (std::abs(A[i][i]) < 1e-15)
+            {
+                ok = false;
+                return x;
+            }
+
+            double sum = 0.0;
+
+            for (int j = 0; j < i; j++)
+            {
+                sum += A[i][j] * x[j];
+            }
+
+            for (int j = i + 1; j < n; j++)
+            {
+                sum += A[i][j] * x[j];
+            }
+
+            double x_gs = (b[i] - sum) / A[i][i];
+
+            x[i] = (1.0 - omega) * x_old[i] + omega * x_gs;
+        }
+
+        std::vector<double> diff(n);
+        for (int i = 0; i < n; i++)
+        {
+            diff[i] = x[i] - x_old[i];
+        }
+
+        double norm = normVector(n, diff);
+
+        if (norm <= eps)
+        {
+            converged = true;
+            break;
+        }
+    }
+
+    if (!converged)
+    {
+        ok = false;
+    }
+
+    return x;
+}
+
 int main()
 {
     std::ifstream fin("Input.txt");
@@ -666,6 +733,38 @@ int main()
 
         double normRJacobi = normVector(n, rJacobi);
         fout << std::defaultfloat << "Residual vector norm ||r||_I: " << normRJacobi << std::endl;
+        fout << std::endl;
+    }
+
+    fout << "========================================" << std::endl;
+    fout << "Successive Over-Relaxation (SOR) Method:" << std::endl;
+    fout << "========================================" << std::endl;
+
+    double omega = 1.5;
+
+    bool sorOk = true;
+    int sorIters = 0;
+
+    auto xSor = sor(n, a, f, eps, omega, sorOk, sorIters);
+
+    if (!sorOk)
+    {
+        fout << "SOR method failed to converge or zero diagonal element encountered." << std::endl;
+    }
+    else
+    {
+        fout << "Omega parameter: " << omega << std::endl;
+        fout << "Solution x:" << std::endl;
+        printVector(n, xSor, fout);
+
+        fout << "Iterations required: " << sorIters << std::endl;
+
+        auto rSor = residualVector(n, a, xSor, f);
+        fout << "Residual vector r = A * x - b:" << std::endl;
+        printVector(n, rSor, fout);
+
+        double normRSor = normVector(n, rSor);
+        fout << std::defaultfloat << "Residual vector norm ||r||_I: " << normRSor << std::endl;
         fout << std::endl;
     }
 
