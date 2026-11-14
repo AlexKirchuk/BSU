@@ -7,6 +7,119 @@
 #include <cstring>
 #include <cerrno>
 
+double normMatrix(int n, const std::vector<std::vector<double>>& m)
+{
+    double norm = 0.0;
+    for (int i = 0; i < n; i++)
+    {
+        double rowSum = 0.0;
+        for (int j = 0; j < n; j++)
+        {
+            rowSum += std::abs(m[i][j]);
+        }
+        if (rowSum > norm)
+        {
+            norm = rowSum;
+        }
+    }
+    return norm;
+}
+
+double normVector(int n, const std::vector<double>& v)
+{
+    double norm = 0.0;
+    for (int i = 0; i < n; i++)
+    {
+        if (std::abs(v[i]) > norm)
+        {
+            norm = std::abs(v[i]);
+        }
+    }
+    return norm;
+}
+
+double conditionNumber(int n,
+    const std::vector<std::vector<double>>& a,
+    const std::vector<std::vector<double>>& inv)
+{
+    double normA = normMatrix(n, a);
+    double normInv = normMatrix(n, inv);
+    return normA * normInv;
+}
+
+std::vector<std::vector<double>> multiply(int n,
+    const std::vector<std::vector<double>>& A,
+    const std::vector<std::vector<double>>& B)
+{
+    std::vector<std::vector<double>> C(n, std::vector<double>(n, 0.0));
+    for (int i = 0; i < n; i++)
+    {
+        for (int k = 0; k < n; k++)
+        {
+            double aik = A[i][k];
+            if (aik == 0.0) continue;
+            for (int j = 0; j < n; j++)
+            {
+                C[i][j] += aik * B[k][j];
+            }
+        }
+    }
+    return C;
+}
+
+std::vector<std::vector<double>> residualMatrix(
+    int n,
+    const std::vector<std::vector<double>>& A,
+    const std::vector<std::vector<double>>& inv)
+{
+    auto prod = multiply(n, inv, A);
+    for (int i = 0; i < n; i++)
+    {
+        prod[i][i] -= 1.0;
+    }
+    return prod;
+}
+
+std::vector<double> residualVector(int n,
+    const std::vector<std::vector<double>>& A,
+    const std::vector<double>& x,
+    const std::vector<double>& b)
+{
+    std::vector<double> r(n, 0.0);
+    for (int i = 0; i < n; i++)
+    {
+        double s = 0.0;
+        for (int j = 0; j < n; j++)
+        {
+            s += A[i][j] * x[j];
+        }
+        r[i] = s - b[i];
+    }
+    return r;
+}
+
+void printVector(int n, const std::vector<double>& vector, std::ofstream& fout)
+{
+    for (int i = 0; i < n; i++)
+    {
+        fout << std::scientific << std::setw(16) << vector[i] << std::endl;
+    }
+    fout << std::endl;
+}
+
+void printMatrix(int n, const std::vector<std::vector<double>>& matrix, std::ofstream& fout)
+{
+    for (int i = 0; i < n; i++)
+    {
+        for (int j = 0; j < n; j++)
+        {
+            fout << std::scientific << std::setw(16) << matrix[i][j] << " ";
+        }
+        fout << std::endl;
+    }
+    fout << std::endl;
+}
+
 std::vector<double> gaussian(int n, std::vector<std::vector<double>> a, std::vector<double> f, double& det)
 {
     det = 1.;
@@ -264,117 +377,140 @@ std::vector<std::vector<double>> inverseTridiagonal(
     return inv;
 }
 
-double normMatrix(int n, const std::vector<std::vector<double>>& m)
+std::vector<double> jacobi(int n, const std::vector<std::vector<double>>& A,
+    const std::vector<double>& b, double eps, bool& ok, int& iterations)
 {
-    double norm = 0.0;
-    for (int i = 0; i < n; i++)
-    {
-        double rowSum = 0.0;
-        for (int j = 0; j < n; j++)
-        {
-            rowSum += std::abs(m[i][j]);
-        }
-        if (rowSum > norm)
-        {
-            norm = rowSum;
-        }
-    }
-    return norm;
-}
+    ok = true;
+    iterations = 0;
 
-double normVector(int n, const std::vector<double>& v)
-{
-    double norm = 0.0;
-    for (int i = 0; i < n; i++)
-    {
-        if (std::abs(v[i]) > norm)
-        {
-            norm = std::abs(v[i]);
-        }
-    }
-    return norm;
-}
+    std::vector<double> x = b;
+    std::vector<double> x_new(n, 0.0);
 
-double conditionNumber(int n,
-    const std::vector<std::vector<double>>& a,
-    const std::vector<std::vector<double>>& inv)
-{
-    double normA = normMatrix(n, a);
-    double normInv = normMatrix(n, inv);
-    return normA * normInv;
-}
+    int max_iter = 10000;
+    bool converged = false;
 
-std::vector<std::vector<double>> multiply(int n,
-    const std::vector<std::vector<double>>& A,
-    const std::vector<std::vector<double>>& B)
-{
-    std::vector<std::vector<double>> C(n, std::vector<double>(n, 0.0));
-    for (int i = 0; i < n; i++)
+    for (int k = 0; k < max_iter; k++)
     {
-        for (int k = 0; k < n; k++)
+        iterations = k + 1;
+
+        for (int i = 0; i < n; i++)
         {
-            double aik = A[i][k];
-            if (aik == 0.0) continue;
+            double sum = 0.0;
             for (int j = 0; j < n; j++)
             {
-                C[i][j] += aik * B[k][j];
+                if (i != j)
+                {
+                    sum += A[i][j] * x[j];
+                }
+            }
+
+            if (std::abs(A[i][i]) < 1e-15)
+            {
+                ok = false;
+                return x;
+            }
+
+            x_new[i] = (b[i] - sum) / A[i][i];
+        }
+
+        std::vector<double> diff(n);
+        for (int i = 0; i < n; i++)
+        {
+            diff[i] = x_new[i] - x[i];
+        }
+
+        double norm = normVector(n, diff);
+
+        if (norm <= eps)
+        {
+            converged = true;
+            x = x_new;
+            break;
+        }
+
+        x = x_new;
+    }
+
+    if (!converged)
+    {
+        ok = false;
+    }
+
+    return x;
+}
+
+std::vector<double> jacobiSecond(int n, const std::vector<std::vector<double>>& A,
+    const std::vector<double>& b, double eps, bool& ok, int& iterations)
+{
+    ok = true;
+    iterations = 0;
+
+    std::vector<std::vector<double>> B(n, std::vector<double>(n, 0.0));
+    std::vector<double> g(n, 0.0);
+
+    for (int i = 0; i < n; i++)
+    {
+        if (std::abs(A[i][i]) < 1e-15)
+        {
+            ok = false;
+            return b;
+        }
+
+        g[i] = b[i] / A[i][i];
+
+        for (int j = 0; j < n; j++)
+        {
+            if (i != j)
+            {
+                B[i][j] = -A[i][j] / A[i][i];
             }
         }
     }
-    return C;
-}
 
-std::vector<std::vector<double>> residualMatrix(
-    int n,
-    const std::vector<std::vector<double>>& A,
-    const std::vector<std::vector<double>>& inv)
-{
-    auto prod = multiply(n, inv, A);
-    for (int i = 0; i < n; i++)
-    {
-        prod[i][i] -= 1.0;
-    }
-    return prod;
-}
+    std::vector<double> x = b;
+    std::vector<double> x_new(n, 0.0);
 
-std::vector<double> residualVector(int n,
-    const std::vector<std::vector<double>>& A,
-    const std::vector<double>& x,
-    const std::vector<double>& b)
-{
-    std::vector<double> r(n, 0.0);
-    for (int i = 0; i < n; i++)
+    int max_iter = 10000;
+    bool converged = false;
+
+    for (int k = 0; k < max_iter; k++)
     {
-        double s = 0.0;
-        for (int j = 0; j < n; j++)
+        iterations = k + 1;
+
+        for (int i = 0; i < n; i++)
         {
-            s += A[i][j] * x[j];
+            double sum = 0.0;
+            for (int j = 0; j < n; j++)
+            {
+                sum += B[i][j] * x[j];
+            }
+            x_new[i] = sum + g[i];
         }
-        r[i] = s - b[i];
-    }
-    return r;
-}
 
-void printVector(int n, const std::vector<double>& vector, std::ofstream& fout)
-{
-    for (int i = 0; i < n; i++)
-    {
-        fout << std::scientific << std::setw(16) << vector[i] << std::endl;
-    }
-    fout << std::endl;
-}
-
-void printMatrix(int n, const std::vector<std::vector<double>>& matrix, std::ofstream& fout)
-{
-    for (int i = 0; i < n; i++)
-    {
-        for (int j = 0; j < n; j++)
+        std::vector<double> diff(n);
+        for (int i = 0; i < n; i++)
         {
-            fout << std::scientific << std::setw(16) << matrix[i][j] << " ";
+            diff[i] = x_new[i] - x[i];
         }
-        fout << std::endl;
+
+        double norm = normVector(n, diff);
+
+        if (norm <= eps)
+        {
+            converged = true;
+            x = x_new;
+            break;
+        }
+
+        x = x_new;
     }
-    fout << std::endl;
+
+    if (!converged)
+    {
+        ok = false;
+    }
+
+    return x;
 }
 
 int main()
@@ -421,86 +557,116 @@ int main()
     fout << "========================================" << std::endl;
     printVector(n, sol, fout);
     
-    fout << std::defaultfloat << "Determinant: " << det << std::endl << std::endl;
-    
-    auto inv = inverseGaussian(n, a);
-    fout << "Inverse Matrix:" << std::endl;
-    printMatrix(n, inv, fout);
+    //fout << std::defaultfloat << "Determinant: " << det << std::endl << std::endl;
+    //
+    //auto inv = inverseGaussian(n, a);
+    //fout << "Inverse Matrix:" << std::endl;
+    //printMatrix(n, inv, fout);
 
-    double cond = conditionNumber(n, a, inv);
-    fout << std::defaultfloat << "Condition number (first norm): " << cond << std::endl << std::endl;
+    //double cond = conditionNumber(n, a, inv);
+    //fout << std::defaultfloat << "Condition number (first norm): " << cond << std::endl << std::endl;
 
-    auto R = residualMatrix(n, a, inv);
-    fout << "Residual matrix R = A^{-1} * A - E:" << std::endl;
-    printMatrix(n, R, fout);
+    //auto R = residualMatrix(n, a, inv);
+    //fout << "Residual matrix R = A^{-1} * A - E:" << std::endl;
+    //printMatrix(n, R, fout);
 
-    double normR = normMatrix(n, R);
-    fout << std::defaultfloat << "Residual matrix norm ||R||_1: " << normR << std::endl << std::endl;
+    //double normR = normMatrix(n, R);
+    //fout << std::defaultfloat << "Residual matrix norm ||R||_I: " << normR << std::endl << std::endl;
 
     auto r = residualVector(n, a, sol, f);
     fout << "Residual vector r = A * x - b:" << std::endl;
     printVector(n, r, fout);
 
     double normRVector = normVector(n, r);
-    fout << std::defaultfloat << "Residual vector norm ||r||_1: " << normRVector << std::endl << std::endl;
+    fout << std::defaultfloat << "Residual vector norm ||r||_I: " << normRVector << std::endl << std::endl;
 
-    if (isTridiagonal(n, a))
+    //if (isTridiagonal(n, a))
+    //{
+    //    fout << "========================================" << std::endl;
+    //    fout << "Left Sweep Method (Tridiagonal):" << std::endl;
+    //    fout << "========================================" << std::endl;
+
+    //    bool ok = true;
+    //    auto yLeft = tridiagonalSolveLeft(n, a, f, ok);
+
+    //    if (!ok)
+    //    {
+    //        fout << "Left sweep failed: zero pivot encountered." << std::endl;
+    //    }
+    //    else
+    //    {
+    //        fout << "Solution y (left sweep):" << std::endl;
+    //        printVector(n, yLeft, fout);
+
+    //        double detTri = determinantTridiagonal(n, a);
+    //        fout << std::defaultfloat << "Determinant (tridiagonal formula): " << detTri << std::endl << std::endl;
+
+    //        bool invOk = true;
+    //        auto invTri = inverseTridiagonal(n, a, invOk);
+
+    //        if (!invOk)
+    //        {
+    //            fout << "Inverse via left sweep failed: zero pivot." << std::endl;
+    //        }
+    //        else
+    //        {
+    //            fout << "Inverse Matrix (via left sweep):" << std::endl;
+    //            printMatrix(n, invTri, fout);
+
+    //            double condTri = conditionNumber(n, a, invTri);
+    //            fout << std::defaultfloat << "Condition number (left sweep, first norm): " << condTri << std::endl << std::endl;
+
+    //            auto RTri = residualMatrix(n, a, invTri);
+    //            fout << "Residual matrix R = A^{-1} * A - E (left sweep):" << std::endl;
+    //            printMatrix(n, RTri, fout);
+
+    //            double normRTri = normMatrix(n, RTri);
+    //            fout << std::defaultfloat << "Residual matrix norm ||R||_I: " << normRTri << std::endl << std::endl;
+
+    //            auto rTri = residualVector(n, a, yLeft, f);
+    //            fout << "Residual vector r = A * y - b (left sweep):" << std::endl;
+    //            printVector(n, rTri, fout);
+
+    //            double normRVectorTri = normVector(n, rTri);
+    //            fout << std::defaultfloat << "Residual vector norm ||r||_I: " << normRVectorTri << std::endl << std::endl;
+    //        }
+    //    }
+    //}
+    //else
+    //{
+    //    fout << "========================================" << std::endl;
+    //    fout << "Left Sweep Method skipped: matrix is not tridiagonal." << std::endl;
+    //    fout << "========================================" << std::endl;
+    //}
+
+    fout << "========================================" << std::endl;
+    fout << "Jacobi Method:" << std::endl;
+    fout << "========================================" << std::endl;
+
+    double eps = 1e-5;
+    bool jacobiOk = true;
+    int jacobiIters = 0;
+
+    auto xJacobi = jacobiSecond(n, a, f, eps, jacobiOk, jacobiIters);
+
+    if (!jacobiOk)
     {
-        fout << "========================================" << std::endl;
-        fout << "Left Sweep Method (Tridiagonal):" << std::endl;
-        fout << "========================================" << std::endl;
-
-        bool ok = true;
-        auto yLeft = tridiagonalSolveLeft(n, a, f, ok);
-
-        if (!ok)
-        {
-            fout << "Left sweep failed: zero pivot encountered." << std::endl;
-        }
-        else
-        {
-            fout << "Solution y (left sweep):" << std::endl;
-            printVector(n, yLeft, fout);
-
-            double detTri = determinantTridiagonal(n, a);
-            fout << std::defaultfloat << "Determinant (tridiagonal formula): " << detTri << std::endl << std::endl;
-
-            bool invOk = true;
-            auto invTri = inverseTridiagonal(n, a, invOk);
-
-            if (!invOk)
-            {
-                fout << "Inverse via left sweep failed: zero pivot." << std::endl;
-            }
-            else
-            {
-                fout << "Inverse Matrix (via left sweep):" << std::endl;
-                printMatrix(n, invTri, fout);
-
-                double condTri = conditionNumber(n, a, invTri);
-                fout << std::defaultfloat << "Condition number (left sweep, first norm): " << condTri << std::endl << std::endl;
-
-                auto RTri = residualMatrix(n, a, invTri);
-                fout << "Residual matrix R = A^{-1} * A - E (left sweep):" << std::endl;
-                printMatrix(n, RTri, fout);
-
-                double normRTri = normMatrix(n, RTri);
-                fout << std::defaultfloat << "Residual matrix norm ||R||_1: " << normRTri << std::endl << std::endl;
-
-                auto rTri = residualVector(n, a, yLeft, f);
-                fout << "Residual vector r = A * y - b (left sweep):" << std::endl;
-                printVector(n, rTri, fout);
-
-                double normRVectorTri = normVector(n, rTri);
-                fout << std::defaultfloat << "Residual vector norm ||r||_1: " << normRVectorTri << std::endl << std::endl;
-            }
-        }
+        fout << "Jacobi method failed to converge or zero diagonal element encountered." << std::endl;
     }
     else
     {
-        fout << "========================================" << std::endl;
-        fout << "Left Sweep Method skipped: matrix is not tridiagonal." << std::endl;
-        fout << "========================================" << std::endl;
+        fout << "Solution x:" << std::endl;
+        printVector(n, xJacobi, fout);
+
+        fout << "Iterations required: " << jacobiIters << std::endl;
+
+        auto rJacobi = residualVector(n, a, xJacobi, f);
+        fout << "Residual vector r = A * x - b:" << std::endl;
+        printVector(n, rJacobi, fout);
+
+        double normRJacobi = normVector(n, rJacobi);
+        fout << std::defaultfloat << "Residual vector norm ||r||_I: " << normRJacobi << std::endl;
+        fout << std::endl;
     }
 
     fout.close();
