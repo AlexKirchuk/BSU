@@ -86,3 +86,14 @@
 /Year 3/Functional Analysis/Lab3/.vs
 /Year 3/Functional Analysis/Lab2/.vs
 /Year 3/Functional Analysis/Lab2/out/build/x64-debug
+/Year 3/Term Project/.idea
+/Year 3/Term Project/results
+/Year 3/Term Project/src/conformal/__pycache__
+/Year 3/Term Project/src/data/__pycache__
+/Year 3/Term Project/src/experiments/__pycache__
+/Year 3/Term Project/src/metrics/__pycache__
+*.pyc
+/Year 3/Functional Analysis & Integral Equations/Lab1/.vs
+/Year 3/Functional Analysis & Integral Equations/Lab1/out/build/x64-debug
+/Year 3/Functional Analysis & Integral Equations/Lab2/.vs
+/Year 3/Functional Analysis & Integral Equations/Lab2/out/build/x64-debug
