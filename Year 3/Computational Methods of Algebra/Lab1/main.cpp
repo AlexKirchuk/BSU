@@ -624,21 +624,21 @@ int main()
     fout << "========================================" << std::endl;
     printVector(n, sol, fout);
     
-    //fout << std::defaultfloat << "Determinant: " << det << std::endl << std::endl;
-    //
-    //auto inv = inverseGaussian(n, a);
-    //fout << "Inverse Matrix:" << std::endl;
-    //printMatrix(n, inv, fout);
+    fout << std::defaultfloat << "Determinant: " << det << std::endl << std::endl;
+    
+    auto inv = inverseGaussian(n, a);
+    fout << "Inverse Matrix:" << std::endl;
+    printMatrix(n, inv, fout);
 
-    //double cond = conditionNumber(n, a, inv);
-    //fout << std::defaultfloat << "Condition number (first norm): " << cond << std::endl << std::endl;
+    double cond = conditionNumber(n, a, inv);
+    fout << std::defaultfloat << "Condition number (first norm): " << cond << std::endl << std::endl;
 
-    //auto R = residualMatrix(n, a, inv);
-    //fout << "Residual matrix R = A^{-1} * A - E:" << std::endl;
-    //printMatrix(n, R, fout);
+    auto R = residualMatrix(n, a, inv);
+    fout << "Residual matrix R = A^{-1} * A - E:" << std::endl;
+    printMatrix(n, R, fout);
 
-    //double normR = normMatrix(n, R);
-    //fout << std::defaultfloat << "Residual matrix norm ||R||_I: " << normR << std::endl << std::endl;
+    double normR = normMatrix(n, R);
+    fout << std::defaultfloat << "Residual matrix norm ||R||_I: " << normR << std::endl << std::endl;
 
     auto r = residualVector(n, a, sol, f);
     fout << "Residual vector r = A * x - b:" << std::endl;
@@ -647,64 +647,64 @@ int main()
     double normRVector = normVector(n, r);
     fout << std::defaultfloat << "Residual vector norm ||r||_I: " << normRVector << std::endl << std::endl;
 
-    //if (isTridiagonal(n, a))
-    //{
-    //    fout << "========================================" << std::endl;
-    //    fout << "Left Sweep Method (Tridiagonal):" << std::endl;
-    //    fout << "========================================" << std::endl;
+    if (isTridiagonal(n, a))
+    {
+        fout << "========================================" << std::endl;
+        fout << "Left Sweep Method (Tridiagonal):" << std::endl;
+        fout << "========================================" << std::endl;
 
-    //    bool ok = true;
-    //    auto yLeft = tridiagonalSolveLeft(n, a, f, ok);
+        bool ok = true;
+        auto yLeft = tridiagonalSolveLeft(n, a, f, ok);
 
-    //    if (!ok)
-    //    {
-    //        fout << "Left sweep failed: zero pivot encountered." << std::endl;
-    //    }
-    //    else
-    //    {
-    //        fout << "Solution y (left sweep):" << std::endl;
-    //        printVector(n, yLeft, fout);
+        if (!ok)
+        {
+            fout << "Left sweep failed: zero pivot encountered." << std::endl;
+        }
+        else
+        {
+            fout << "Solution y (left sweep):" << std::endl;
+            printVector(n, yLeft, fout);
 
-    //        double detTri = determinantTridiagonal(n, a);
-    //        fout << std::defaultfloat << "Determinant (tridiagonal formula): " << detTri << std::endl << std::endl;
+            double detTri = determinantTridiagonal(n, a);
+            fout << std::defaultfloat << "Determinant (tridiagonal formula): " << detTri << std::endl << std::endl;
 
-    //        bool invOk = true;
-    //        auto invTri = inverseTridiagonal(n, a, invOk);
+            bool invOk = true;
+            auto invTri = inverseTridiagonal(n, a, invOk);
 
-    //        if (!invOk)
-    //        {
-    //            fout << "Inverse via left sweep failed: zero pivot." << std::endl;
-    //        }
-    //        else
-    //        {
-    //            fout << "Inverse Matrix (via left sweep):" << std::endl;
-    //            printMatrix(n, invTri, fout);
+            if (!invOk)
+            {
+                fout << "Inverse via left sweep failed: zero pivot." << std::endl;
+            }
+            else
+            {
+                fout << "Inverse Matrix (via left sweep):" << std::endl;
+                printMatrix(n, invTri, fout);
 
-    //            double condTri = conditionNumber(n, a, invTri);
-    //            fout << std::defaultfloat << "Condition number (left sweep, first norm): " << condTri << std::endl << std::endl;
+                double condTri = conditionNumber(n, a, invTri);
+                fout << std::defaultfloat << "Condition number (left sweep, first norm): " << condTri << std::endl << std::endl;
 
-    //            auto RTri = residualMatrix(n, a, invTri);
-    //            fout << "Residual matrix R = A^{-1} * A - E (left sweep):" << std::endl;
-    //            printMatrix(n, RTri, fout);
+                auto RTri = residualMatrix(n, a, invTri);
+                fout << "Residual matrix R = A^{-1} * A - E (left sweep):" << std::endl;
+                printMatrix(n, RTri, fout);
 
-    //            double normRTri = normMatrix(n, RTri);
-    //            fout << std::defaultfloat << "Residual matrix norm ||R||_I: " << normRTri << std::endl << std::endl;
+                double normRTri = normMatrix(n, RTri);
+                fout << std::defaultfloat << "Residual matrix norm ||R||_I: " << normRTri << std::endl << std::endl;
 
-    //            auto rTri = residualVector(n, a, yLeft, f);
-    //            fout << "Residual vector r = A * y - b (left sweep):" << std::endl;
-    //            printVector(n, rTri, fout);
+                auto rTri = residualVector(n, a, yLeft, f);
+                fout << "Residual vector r = A * y - b (left sweep):" << std::endl;
+                printVector(n, rTri, fout);
 
-    //            double normRVectorTri = normVector(n, rTri);
-    //            fout << std::defaultfloat << "Residual vector norm ||r||_I: " << normRVectorTri << std::endl << std::endl;
-    //        }
-    //    }
-    //}
-    //else
-    //{
-    //    fout << "========================================" << std::endl;
-    //    fout << "Left Sweep Method skipped: matrix is not tridiagonal." << std::endl;
-    //    fout << "========================================" << std::endl;
-    //}
+                double normRVectorTri = normVector(n, rTri);
+                fout << std::defaultfloat << "Residual vector norm ||r||_I: " << normRVectorTri << std::endl << std::endl;
+            }
+        }
+    }
+    else
+    {
+        fout << "========================================" << std::endl;
+        fout << "Left Sweep Method skipped: matrix is not tridiagonal." << std::endl;
+        fout << "========================================" << std::endl;
+    }
 
     fout << "========================================" << std::endl;
     fout << "Jacobi Method:" << std::endl;
