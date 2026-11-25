@@ -198,8 +198,8 @@ $$
 \frac{h}{3}
 \left[
 f_0+f_m+
-4\sum_{\substack{i=1\\i\text{ odd}}}^{m-1}f_i+
-2\sum_{\substack{i=2\\i\text{ even}}}^{m-2}f_i
+4\sum_{i=1,3,5,\ldots,m-1}f_i+
+2\sum_{i=2,4,6,\ldots,m-2}f_i
 \right]
 $$
 
@@ -218,8 +218,8 @@ $$
 \frac{h}{3}
 \left[
 f_0+f_m+
-4\sum_{\substack{i=1\\i\text{ odd}}}^{m-1}f_i+
-2\sum_{\substack{i=2\\i\text{ even}}}^{m-2}f_i
+4\sum_{i=1,3,5,\ldots,m-1}f_i+
+2\sum_{i=2,4,6,\ldots,m-2}f_i
 \right]
 }
 $$
@@ -244,7 +244,7 @@ where \(S_h\) denotes the composite Simpson approximation.
 The space \(C[0,1]\) is equipped with the uniform norm:
 
 $$
-\|x\|_{C}=
+\|x\|_C=
 \max_{t\in[0,1]}|x(t)|
 $$
 
