@@ -6,9 +6,7 @@ This repository contains the implementation of a laboratory work on numerical me
 
 The work focuses on solving systems of the form:
 
-\[
-Ax=b
-\]
+**Ax = b**
 
 using direct and iterative numerical methods, evaluating solution accuracy, and analyzing the numerical properties of the coefficient matrix.
 
@@ -44,7 +42,7 @@ The implementation is done in **C++** using the standard library.
 
 ## Requirements
 
-- C++11 or higher
+- C++17 or higher
 - GCC, Clang, or MSVC compiler
 - Standard C++ library
 
@@ -58,17 +56,20 @@ The program reads input data from `Input.txt`.
 
 The input format consists of:
 
-1. Matrix dimension \(n\).
-2. Coefficient matrix \(A\) of size \(n \times n\).
-3. Right-hand-side vector \(b\).
+1. Matrix dimension `n`.
+2. Coefficient matrix `A` of size `n x n`.
+3. Right-hand-side vector `b`.
 
 **Parameters (Assigned Variant):**
 
-- Matrix dimension: `n = 5`
-- Required accuracy: `ε = 10⁻⁵`
-- Initial approximation: `x⁰ = b`
-- SOR relaxation parameter: `ω = 1.5`
-- Maximum number of iterations: `10000`
+| Parameter | Value |
+|---|---|
+| Matrix dimension | `n = 5` |
+| Required accuracy | `epsilon = 10^-5` |
+| Initial approximation | `x^(0) = b` |
+| SOR relaxation parameter | `omega = 1.5` |
+| Maximum iterations | `10000` |
+| Pivot threshold | `10^-15` |
 
 ---
 
@@ -76,7 +77,7 @@ The input format consists of:
 
 ### 1. Gaussian Elimination with Complete Pivoting
 
-Direct method for solving systems of linear equations.
+A direct method for solving systems of linear equations.
 
 **Implementation steps:**
 
@@ -88,14 +89,14 @@ Direct method for solving systems of linear equations.
 
 **Additional calculations:**
 
-- Determinant of matrix \(A\).
-- Inverse matrix \(A^{-1}\).
+- Determinant of matrix `A`.
+- Inverse matrix `A^-1`.
 - Condition number.
 - Residual vector and its norm.
 
 ### 2. Left Sweep Method (Thomas Algorithm)
 
-Direct method designed for solving tridiagonal systems of linear equations.
+A direct method designed for solving tridiagonal systems of linear equations.
 
 **Implementation steps:**
 
@@ -110,42 +111,63 @@ Direct method designed for solving tridiagonal systems of linear equations.
 - Condition number.
 - Residual matrix and residual vector.
 
-The method is executed only if the input matrix is tridiagonal.
+The method is executed only if the input matrix is tridiagonal. Otherwise, it is automatically skipped.
 
 ### 3. Jacobi Iterative Method
 
-Iterative method in which each new approximation is calculated using the values from the previous iteration.
+An iterative method in which each new approximation is calculated using the values from the previous iteration.
+
+**Iteration formula:**
+
+```text
+x_i^(k+1) = (b_i - sum(a_ij * x_j^(k))) / a_ii
+```
+
+where the summation is performed for all `j != i`.
 
 **Parameters:**
 
-- Initial approximation: `x⁰ = b`
-- Accuracy: `ε = 10⁻⁵`
+- Initial approximation: `x^(0) = b`
+- Accuracy: `epsilon = 10^-5`
 - Maximum iterations: `10000`
 
 **Stopping criterion:**
 
-\[
-\|x^{(k+1)}-x^{(k)}\|_\infty \leq \varepsilon
-\]
+```text
+||x^(k+1) - x^(k)||_inf <= epsilon
+```
 
 The program calculates the final solution, number of iterations, and residual vector.
 
 ### 4. Successive Over-Relaxation (SOR) Method
 
-Iterative method based on the Gauss-Seidel approach with an additional relaxation parameter.
+An iterative method based on the Gauss-Seidel approach with an additional relaxation parameter.
+
+**Iteration formula:**
+
+```text
+x_i^(k+1) = (1 - omega) * x_i^(k) + omega * x_i_GS
+```
+
+where `x_i_GS` is calculated using the most recently available values:
+
+```text
+x_i_GS = (b_i - sum(j < i, a_ij * x_j^(k+1))
+             - sum(j > i, a_ij * x_j^(k))) / a_ii
+```
 
 **Parameters:**
 
-- Initial approximation: `x⁰ = b`
-- Relaxation parameter: `ω = 1.5`
-- Accuracy: `ε = 10⁻⁵`
+- Initial approximation: `x^(0) = b`
+- Relaxation parameter: `omega = 1.5`
+- Accuracy: `epsilon = 10^-5`
 - Maximum iterations: `10000`
 
 **Stopping criterion:**
 
-\[
-\|x^{(k+1)}-x^{(k)}\|_\infty \leq \varepsilon
-\]
+```text
+||x^(k+1) - x^(k)||_inf <= epsilon
+```
 
 The program calculates the final solution, number of iterations, and residual vector.
 
@@ -157,47 +179,59 @@ The program performs additional calculations to evaluate the accuracy and numeri
 
 ### Matrix Determinant
 
-Calculated using Gaussian elimination with complete pivoting.
+The determinant of matrix `A` is calculated using Gaussian elimination with complete pivoting.
 
 ### Inverse Matrix
 
-Calculated by solving a set of linear systems:
+The inverse matrix is calculated by solving a set of linear systems:
 
-\[
-AX=E
-\]
+```text
+A * X = E
+```
 
-where \(E\) is the identity matrix.
+where `E` is the identity matrix.
 
 ### Condition Number
 
-Calculated using the infinity norm:
+The condition number is calculated using the infinity norm:
 
-\[
-\kappa_\infty(A)=\|A\|_\infty\cdot\|A^{-1}\|_\infty
-\]
+```text
+kappa_inf(A) = ||A||_inf * ||A^-1||_inf
+```
+
+The matrix infinity norm is defined as:
+
+```text
+||A||_inf = max_i(sum_j(|a_ij|))
+```
+
+A larger condition number indicates that the system may be more sensitive to perturbations in the input data.
 
 ### Residual Matrix
 
-\[
-R=A^{-1}A-E
-\]
+The residual matrix is calculated as:
 
-The infinity norm of the residual matrix is also calculated.
+```text
+R = A^-1 * A - E
+```
+
+The infinity norm of the residual matrix is also calculated to evaluate the accuracy of the inverse matrix.
 
 ### Residual Vector
 
-For each numerical method, the residual vector is calculated as:
+For each obtained solution, the residual vector is calculated as:
 
-\[
-r=Ax-b
-\]
+```text
+r = A * x - b
+```
 
-Its infinity norm is used to evaluate the accuracy of the obtained solution:
+Its infinity norm is:
 
-\[
-\|r\|_\infty=\max_i|r_i|
-\]
+```text
+||r||_inf = max_i(|r_i|)
+```
+
+A smaller residual norm indicates that the obtained solution satisfies the original system more accurately.
 
 ---
 
@@ -213,9 +247,9 @@ g++ -std=c++17 -O2 main.cpp -o slau
 
 ### Execution
 
-Make sure `Input.txt` is located in the working directory.
+Make sure `Input.txt` is located in the working directory of the executable.
 
-Run the executable:
+Run the program:
 
 ```bash
 ./slau
@@ -236,9 +270,9 @@ The program reads the input data from `Input.txt` and writes all calculation res
 The output file contains:
 
 - Gaussian elimination solution.
-- Determinant of matrix \(A\).
-- Inverse matrix \(A^{-1}\).
-- Condition number of matrix \(A\).
+- Determinant of matrix `A`.
+- Inverse matrix `A^-1`.
+- Condition number of matrix `A`.
 - Residual matrix and its norm.
 - Residual vector and its norm.
 - Left sweep solution and additional calculations (if the matrix is tridiagonal).
@@ -259,7 +293,7 @@ All numerical values are displayed in scientific notation where appropriate.
 | Jacobi | Iterative | Number of iterations, residual |
 | SOR | Iterative | Number of iterations, residual |
 
-**Note:** The Left Sweep Method requires a tridiagonal coefficient matrix. If the input matrix does not satisfy this condition, the method is automatically skipped.
+**Note:** The Left Sweep Method requires a tridiagonal coefficient matrix. The assigned matrix is not tridiagonal, so this method is automatically skipped for the provided input data.
 
 ---
 
