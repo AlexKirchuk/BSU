@@ -1,411 +1,405 @@
-# Laboratory Work 2: Numerical Solution of a Fredholm Integral Equation
+# Laboratory Work 2: Numerical Solution of a Fredholm Integral Equation of the Second Kind
 
 ## Overview
 
-This project implements a numerical method for solving a **Fredholm integral equation of the second kind** using the method of successive approximations.
+This repository contains a C++ implementation of a numerical method for solving a **Fredholm integral equation of the second kind** using the method of successive approximations.
 
-The solution is approximated numerically by applying the **composite Simpson's rule** to evaluate the integral at discrete points.
+The work focuses on transforming the integral equation into an operator equation, establishing convergence conditions in different functional spaces, approximating the integral using the **composite Simpson's rule**, and calculating the numerical solution through iterative procedures.
 
-The convergence of the iterative method is investigated in two functional spaces:
+The implementation investigates convergence in two functional spaces:
 
-- \(C[0,1]\) — the space of continuous functions with the uniform norm.
+- \(C[0,1]\) — the space of continuous functions with the maximum norm.
 - \(L_2[0,1]\) — the space of square-integrable functions with the \(L_2\) norm.
 
-The program also calculates a priori and a posteriori error estimates and visualizes the approximate solution, the exact solution, and the absolute approximation error using **SFML**.
+The program also calculates a priori and a posteriori error estimates, compares the numerical solution with an analytical solution, and provides graphical visualizations using the **SFML** graphics library.
+
+All numerical algorithms are implemented manually using the C++ standard library without external mathematical libraries.
+
+---
 
 ## Objectives
 
 - Study Fredholm integral equations of the second kind.
-- Implement the method of successive approximations.
-- Apply the composite Simpson's rule for numerical integration.
-- Investigate the convergence of the iterative process in \(C[0,1]\) and \(L_2[0,1]\).
-- Calculate a priori and a posteriori error estimates.
-- Compare numerical and analytical solutions.
-- Visualize the obtained results and approximation error.
+- Transform the integral equation into an operator equation.
+- Apply the method of successive approximations.
+- Implement numerical integration using the composite Simpson's rule.
+- Investigate the convergence of the iterative method in \(C[0,1]\) and \(L_2[0,1]\).
+- Calculate contraction coefficients for both functional spaces.
+- Determine the required number of iterations using an a priori error estimate.
+- Implement an a posteriori error estimation to determine the stopping condition.
+- Obtain numerical approximations of the solution.
+- Compare approximate and analytical solutions.
+- Visualize the solutions and their absolute difference using SFML.
+
+---
 
 ## Project Structure
 
 ```text
-Lab2/
-├── main.cpp
-└── README.md
+.
+├── main.cpp       # Numerical methods and graphical visualization
+└── README.md      # This file
 ```
+
+---
 
 ## Requirements
 
-- C++17 compatible compiler
-- SFML 2.x
-- Standard C++ libraries
+- C++17 or higher
+- GCC, Clang, or MSVC compiler
+- SFML 2.x graphics library
+- A TrueType font (.ttf) for graphical labels
+
+SFML is used exclusively for graphical visualization. All mathematical calculations, including numerical integration and iterative solution procedures, are performed using the C++ standard library.
+
+---
 
 ## Mathematical Background
 
-### 1. Original Integral Equation
+### 1. Fredholm Integral Equation of the Second Kind
 
-The problem considers the following Fredholm integral equation of the second kind:
+The problem is to solve the following Fredholm integral equation:
 
-$$
-x(t)=\lambda\int_0^1 K(t,s)x(s)\,ds+2,
-\quad t\in[0,1]
-$$
+\[
+x(t)=\lambda\int_0^1 K(t,s)x(s)\,ds+2
+\]
 
 where the kernel is defined as:
 
-$$
+\[
 K(t,s)=t^2(1+s)
-$$
+\]
 
-The parameters used in the implementation are:
+The integration interval is:
 
-| Parameter | Value |
-|---|---:|
-| \(\lambda\) | \(0.4\) |
-| Integration interval | \([0,1]\) |
-| Step size \(h\) | \(0.05\) |
-| Accuracy \(\varepsilon\) | \(10^{-3}\) |
-| Number of subintervals | \(20\) |
-| Number of grid points | \(21\) |
+\[
+t,s\in[0,1]
+\]
 
-### 2. Analytical Solution
+The assigned parameter is:
 
-The exact solution is used to evaluate the accuracy of the numerical approximation.
+\[
+\lambda=0.4
+\]
 
-Assume that the solution has the form:
+The equation can be rewritten in operator form:
 
-$$
-x(t)=At^2+2
-$$
+\[
+x=Ax+f
+\]
 
-Substituting it into the original equation gives:
+where the integral operator is:
 
-$$
-At^2+2=
-\lambda t^2\int_0^1(1+s)(As^2+2)\,ds+2
-$$
+\[
+(Ax)(t)=\lambda\int_0^1 K(t,s)x(s)\,ds
+\]
 
-Evaluating the integral:
+and the free term is:
 
-$$
-\int_0^1(1+s)(As^2+2)\,ds
-=
-\frac{7A}{12}+3
-$$
+\[
+f(t)=2
+\]
+
+### 2. Method of Successive Approximations
+
+The solution is obtained using the method of successive approximations:
+
+\[
+x_{n+1}(t)=\lambda\int_0^1 K(t,s)x_n(s)\,ds+2
+\]
+
+The initial approximation is chosen as:
+
+\[
+x_0(t)=2
+\]
+
+Each subsequent approximation is calculated using the previous one.
+
+The iterative process continues until the estimated error becomes smaller than the specified accuracy.
+
+### 3. Analytical Solution
+
+For verification purposes, an analytical solution can be derived.
+
+Starting with:
+
+\[
+x(t)=0.4t^2\int_0^1(1+s)x(s)\,ds+2
+\]
+
+Let:
+
+\[
+C=\int_0^1(1+s)x(s)\,ds
+\]
+
+Then:
+
+\[
+x(t)=0.4Ct^2+2
+\]
+
+Substituting this expression into the definition of \(C\):
+
+\[
+C=\int_0^1(1+s)(0.4Cs^2+2)\,ds
+\]
+
+Evaluating the integrals:
+
+\[
+C=0.4C\left(\frac{1}{3}+\frac{1}{4}\right)+3
+\]
+
+\[
+C=\frac{7}{15}C+3
+\]
 
 Therefore:
 
-$$
-A=\lambda\left(\frac{7A}{12}+3\right)
-$$
+\[
+\frac{8}{15}C=3
+\]
 
-Solving for \(A\):
+\[
+C=\frac{45}{8}
+\]
 
-$$
-A(12-7\lambda)=36\lambda
-$$
+The analytical solution is consequently:
 
-Thus, the analytical solution is:
+\[
+x^*(t)=0.4\cdot\frac{45}{8}t^2+2
+\]
 
-$$
-\boxed{
-x_{\text{exact}}(t)=
-\frac{36\lambda}{12-7\lambda}t^2+2
-}
-$$
+\[
+\boxed{x^*(t)=2+2.25t^2}
+\]
 
-For \(\lambda=0.4\):
+This analytical expression is used to evaluate the accuracy of the numerical approximation.
 
-$$
-\boxed{
-x_{\text{exact}}(t)=
-\frac{18}{23}t^2+2
-}
-$$
-
-### 3. Operator Formulation
-
-The integral equation can be represented as:
-
-$$
-x=Ax+f
-$$
-
-where the integral operator \(A\) is defined by:
-
-$$
-(Ax)(t)=
-\lambda\int_0^1 K(t,s)x(s)\,ds
-$$
-
-and:
-
-$$
-f(t)=2
-$$
-
-The solution is obtained through successive approximations:
-
-$$
-x_{n+1}=Ax_n+f
-$$
-
-or, in expanded form:
-
-$$
-\boxed{
-x_{n+1}(t)=
-\lambda\int_0^1K(t,s)x_n(s)\,ds+2
-}
-$$
-
-The initial approximation is:
-
-$$
-x_0(t)=2
-$$
-
-If the operator is a contraction, the sequence of approximations converges to the unique solution of the integral equation.
+---
 
 ## Numerical Method
 
-### 1. Discretization of the Integration Interval
+### 1. Numerical Integration: Composite Simpson's Rule
 
-The interval \([0,1]\) is divided into \(m\) equal subintervals:
+The integral in the iterative formula is approximated using the composite Simpson's rule.
 
-$$
-h=\frac{b-a}{m}
-$$
+For an even number of subintervals, the approximation is:
 
-The grid points are defined as:
-
-$$
-t_i=a+ih,\quad i=0,1,\ldots,m
-$$
-
-For the selected parameters:
-
-$$
-h=0.05,\qquad m=20
-$$
-
-Therefore, the grid contains \(21\) points.
-
-### 2. Composite Simpson's Rule
-
-The integral is evaluated using the composite Simpson's rule:
-
-$$
+\[
 \int_a^b f(s)\,ds
 \approx
 \frac{h}{3}
 \left[
-f_0+f_m+
-4\sum_{\substack{i=1\\i\text{ odd}}}^{m-1}f_i+
-2\sum_{\substack{i=2\\i\text{ even}}}^{m-2}f_i
+f(s_0)+f(s_n)
++4\sum_{\substack{i=1\\i\text{ odd}}}^{n-1}f(s_i)
++2\sum_{\substack{i=2\\i\text{ even}}}^{n-2}f(s_i)
 \right]
-$$
-
-In this implementation:
-
-$$
-f(s)=K(t,s)x_n(s)
-$$
-
-Consequently, the integral approximation becomes:
-
-$$
-\boxed{
-\int_0^1K(t,s)x_n(s)\,ds
-\approx
-\frac{h}{3}
-\left[
-f_0+f_m+
-4\sum_{\substack{i=1\\i\text{ odd}}}^{m-1}f_i+
-2\sum_{\substack{i=2\\i\text{ even}}}^{m-2}f_i
-\right]
-}
-$$
+\]
 
 where:
 
-$$
-f_i=K(t,s_i)x_n(s_i)
-$$
+\[
+h=\frac{b-a}{n}
+\]
 
-The resulting numerical iteration is:
+The integration interval is divided into 20 equal subintervals:
 
-$$
-x_{n+1}(t_i)=
-\lambda S_h[K(t_i,s)x_n(s)]+2
-$$
+\[
+a=0,\qquad b=1
+\]
 
-where \(S_h\) denotes the composite Simpson approximation.
+\[
+h=0.05
+\]
 
-### 3. Convergence in \(C[0,1]\)
+The resulting grid contains 21 points:
 
-The space \(C[0,1]\) is equipped with the uniform norm:
+\[
+s_i=ih,\qquad i=0,1,\ldots,20
+\]
 
-$$
-\|x\|_{C}=
-\max_{t\in[0,1]}|x(t)|
-$$
+For the given integral equation, the integrand is:
 
-The contraction coefficient satisfies:
+\[
+f(s)=K(t,s)x_n(s)
+\]
 
-$$
-\|A\|_C\leq
+Thus, each integral is evaluated as:
+
+\[
+\int_0^1 K(t,s)x_n(s)\,ds
+\approx
+\frac{h}{3}
+\sum_{i=0}^{20}w_iK(t,s_i)x_n(s_i)
+\]
+
+where the Simpson weights are:
+
+\[
+w_i=
+\begin{cases}
+1, & i=0\text{ or }i=20\\
+4, & i\text{ is odd}\\
+2, & i\text{ is even and }0<i<20
+\end{cases}
+\]
+
+### 2. Convergence in the Space \(C[0,1]\)
+
+The space \(C[0,1]\) is equipped with the maximum norm:
+
+\[
+\|x\|_C=\max_{t\in[0,1]}|x(t)|
+\]
+
+The contraction coefficient is estimated using:
+
+\[
+\alpha_C=
 |\lambda|
 \max_{t\in[0,1]}
 \int_0^1|K(t,s)|\,ds
-$$
+\]
+
+For the given kernel:
+
+\[
+\alpha_C=
+|\lambda|
+\max_{t\in[0,1]}
+\int_0^1t^2(1+s)\,ds
+\]
 
 Since:
 
-$$
-|K(t,s)|=t^2(1+s)\leq 2
-$$
+\[
+\int_0^1(1+s)\,ds=\frac{3}{2}
+\]
 
-and the integration interval has length \(1\), we obtain:
+and:
 
-$$
-\|A\|_C\leq 2|\lambda|
-$$
+\[
+\max_{t\in[0,1]}t^2=1
+\]
 
-Therefore, the contraction coefficient used in the implementation is:
+we obtain:
 
-$$
-\boxed{\alpha_C=2|\lambda|}
-$$
+\[
+\alpha_C=\frac{3}{2}|\lambda|
+\]
 
-For \(\lambda=0.4\):
+However, the implementation uses the following contraction coefficient:
 
-$$
-\alpha_C=0.8
-$$
+\[
+\boxed{\alpha_C=2|\lambda|=0.8}
+\]
+
+This is a valid conservative upper bound because:
+
+\[
+\frac{3}{2}|\lambda|\leq 2|\lambda|
+\]
 
 Since:
 
-$$
-\alpha_C<1
-$$
+\[
+0<\alpha_C<1
+\]
 
 the operator satisfies the contraction condition in \(C[0,1]\).
 
-The norm of the difference between consecutive approximations is calculated as:
+### 3. Convergence in the Space \(L_2[0,1]\)
 
-$$
-\|x_{n+1}-x_n\|_C
-=
-\max_{0\leq i\leq m}
-|x_{n+1}(t_i)-x_n(t_i)|
-$$
+The space \(L_2[0,1]\) is equipped with the norm:
 
-### 4. Convergence in \(L_2[0,1]\)
-
-The \(L_2\) norm is defined as:
-
-$$
+\[
 \|x\|_{L_2}=
-\sqrt{\int_0^1|x(t)|^2\,dt}
-$$
+\left(
+\int_0^1|x(t)|^2\,dt
+\right)^{1/2}
+\]
 
-Using the integral operator's kernel, its norm can be bounded by the Hilbert-Schmidt norm:
+Using the Hilbert-Schmidt estimate, the contraction coefficient is bounded by:
 
-$$
-\|A\|_{L_2}
-\leq
+\[
+\alpha_{L_2}
+=
 |\lambda|
-\sqrt{
+\left(
 \int_0^1\int_0^1|K(t,s)|^2\,ds\,dt
-}
-$$
+\right)^{1/2}
+\]
 
 Substituting the kernel:
 
-$$
-\int_0^1\int_0^1t^4(1+s)^2\,ds\,dt
+\[
+\alpha_{L_2}
 =
-\left(\int_0^1t^4\,dt\right)
-\left(\int_0^1(1+s)^2\,ds\right)
-$$
+|\lambda|
+\left(
+\int_0^1\int_0^1t^4(1+s)^2\,ds\,dt
+\right)^{1/2}
+\]
 
 Evaluating the integrals:
 
-$$
-=
-\frac{1}{5}\cdot\frac{7}{3}
-=
-\frac{7}{15}
-$$
+\[
+\int_0^1t^4\,dt=\frac{1}{5}
+\]
 
-Thus, the contraction coefficient is bounded by:
+\[
+\int_0^1(1+s)^2\,ds=\frac{7}{3}
+\]
 
-$$
-\boxed{
-\alpha_{L_2}=
-|\lambda|\sqrt{\frac{7}{15}}
-}
-$$
+Therefore:
 
-For \(\lambda=0.4\):
-
-$$
+\[
 \alpha_{L_2}
 =
-0.4\sqrt{\frac{7}{15}}
-\approx 0.273252
-$$
+|\lambda|\sqrt{\frac{7}{15}}
+\]
+
+For the assigned parameter:
+
+\[
+\boxed{\alpha_{L_2}=0.4\sqrt{\frac{7}{15}}\approx0.273252}
+\]
 
 Since:
 
-$$
-\alpha_{L_2}<1
-$$
+\[
+0<\alpha_{L_2}<1
+\]
 
 the operator also satisfies the contraction condition in \(L_2[0,1]\).
 
-The discrete approximation of the \(L_2\) norm used in the program is:
+### 4. A Priori Error Estimation
 
-$$
-\|x_{n+1}-x_n\|_{L_2}
-\approx
-\sqrt{
-h\sum_{i=0}^{m}
-|x_{n+1}(t_i)-x_n(t_i)|^2
-}
-$$
+Before executing the iterative algorithm, the program estimates the number of iterations required to achieve the specified accuracy.
 
-This expression is evaluated using a rectangular sum over the grid.
+The a priori error bound is:
 
-### 5. A Priori Error Estimation
-
-For a contraction operator with coefficient \(\alpha\), the a priori error estimate is:
-
-$$
+\[
 \|x_n-x^*\|
 \leq
 \frac{\alpha^n}{1-\alpha}
 \|x_1-x_0\|
-$$
+\]
 
-where \(x^*\) is the exact solution.
+where:
 
-To guarantee the required accuracy:
+- \(x^*\) is the exact solution;
+- \(\alpha\) is the contraction coefficient;
+- \(x_0\) is the initial approximation;
+- \(x_1\) is the first approximation;
+- \(\varepsilon\) is the required accuracy.
 
-$$
-\|x_n-x^*\|\leq\varepsilon
-$$
+The number of iterations is estimated using:
 
-it is sufficient to choose \(n\) such that:
-
-$$
-\frac{\alpha^n}{1-\alpha}
-\|x_1-x_0\|
-\leq\varepsilon
-$$
-
-Taking logarithms gives the iteration count:
-
-$$
-\boxed{
+\[
 N=
 \left\lfloor
 \frac{
@@ -414,228 +408,337 @@ N=
 {\|x_1-x_0\|}
 \right)
 }{
-\ln\alpha
+\ln(\alpha)
 }
 \right\rfloor+1
-}
-$$
+\]
 
-The program calculates this estimate independently for both functional spaces.
+The implementation uses:
 
-### 6. A Posteriori Error Estimation
+\[
+\varepsilon=10^{-3}
+\]
 
-The a posteriori estimate uses the difference between two consecutive approximations:
+The norm of the difference between the first two approximations is calculated according to the selected functional space.
 
-$$
-\boxed{
+For \(C[0,1]\):
+
+\[
+\|x_1-x_0\|_C
+=
+\max_i|x_1(t_i)-x_0(t_i)|
+\]
+
+For \(L_2[0,1]\):
+
+\[
+\|x_1-x_0\|_{L_2}
+\approx
+\left(
+h\sum_{i=0}^{20}
+|x_1(t_i)-x_0(t_i)|^2
+\right)^{1/2}
+\]
+
+### 5. A Posteriori Error Estimation
+
+During the iterative process, the program evaluates the error using the difference between two consecutive approximations.
+
+The a posteriori error bound is:
+
+\[
 \|x^*-x_{n+1}\|
 \leq
 \frac{\alpha}{1-\alpha}
 \|x_{n+1}-x_n\|
-}
-$$
+\]
 
-The iteration process stops when:
+For \(C[0,1]\), the error estimate is:
 
-$$
-\frac{\alpha}{1-\alpha}
-\|x_{n+1}-x_n\|
-\leq\varepsilon
-$$
-
-For \(C[0,1]\), the implementation uses:
-
-$$
+\[
 E_C=
 \frac{\alpha_C}{1-\alpha_C}
-\max_{0\leq i\leq m}
-|x_{n+1}(t_i)-x_n(t_i)|
-$$
+\max_i|x_{n+1}(t_i)-x_n(t_i)|
+\]
 
-For \(L_2[0,1]\), it uses:
+For \(L_2[0,1]\), it is:
 
-$$
+\[
 E_{L_2}=
 \frac{\alpha_{L_2}}{1-\alpha_{L_2}}
-\sqrt{
-h\sum_{i=0}^{m}
+\left(
+h\sum_{i=0}^{20}
 |x_{n+1}(t_i)-x_n(t_i)|^2
-}
-$$
+\right)^{1/2}
+\]
 
-The iterative process terminates when the corresponding error estimate becomes smaller than or equal to the prescribed accuracy.
+The iterative process terminates when:
+
+\[
+\boxed{E\leq\varepsilon}
+\]
+
+This condition ensures that the estimated distance between the current approximation and the exact solution does not exceed the required accuracy, under the contraction assumptions.
+
+---
 
 ## Implementation Details
 
-### 1. Integral Evaluation
+The program is implemented in **C++17** and consists of several logical components.
 
-The `simpson_integral()` function calculates the integral using the composite Simpson's rule.
+| Function | Description |
+|---|---|
+| `exact_solution(t, lambda)` | Calculates the analytical solution |
+| `K(t, s)` | Defines the integral equation kernel |
+| `simpson_integral()` | Approximates the integral using Simpson's rule |
+| `format_number()` | Formats numerical values for graphical labels |
+| `solve_integral_equation()` | Implements successive approximations and error estimation |
+| `draw_solution_plot()` | Visualizes analytical and numerical solutions |
+| `draw_error_plot()` | Visualizes the absolute difference between solutions |
+| `main()` | Initializes parameters, executes calculations, and opens graphical windows |
 
-It applies the following coefficients to the grid values:
+### Numerical Parameters
 
-- \(1\) for the first and last points.
-- \(4\) for odd-indexed interior points.
-- \(2\) for even-indexed interior points.
+The following parameters are used in the implementation:
 
-### 2. Successive Approximations
+| Parameter | Value | Description |
+|---|---:|---|
+| \(\lambda\) | 0.4 | Integral operator parameter |
+| \(\varepsilon\) | \(10^{-3}\) | Required accuracy |
+| \(a\) | 0.0 | Lower integration limit |
+| \(b\) | 1.0 | Upper integration limit |
+| \(h\) | 0.05 | Grid step |
+| \(n\) | 20 | Number of integration subintervals |
+| \(x_0(t)\) | 2.0 | Initial approximation |
+| \(\alpha_C\) | 0.8 | Contraction coefficient in \(C[0,1]\) |
+| \(\alpha_{L_2}\) | 0.273252 | Contraction coefficient in \(L_2[0,1]\) |
 
-The `solve_integral_equation()` function implements the iterative algorithm.
+---
 
-Its main operations are:
+## Graphical Visualization
 
-1. Initialize the first approximation with \(x_0(t)=2\).
-2. Calculate the first iteration using Simpson's rule.
-3. Determine the contraction coefficient for the selected functional space.
-4. Calculate the a priori iteration estimate.
-5. Perform successive approximations.
-6. Calculate the a posteriori error estimate.
-7. Stop when the required accuracy is achieved.
-8. Display the numerical results.
+The application uses **SFML** to display two graphical representations of the numerical results.
 
-The function is executed separately for \(C[0,1]\) and \(L_2[0,1]\).
+### 1. Comparison of Analytical and Numerical Solutions
 
-### 3. Exact and Approximate Solutions
+The first graphical window displays:
 
-The `exact_solution()` function evaluates the analytical solution:
+- The analytical solution in green.
+- The numerical approximation in blue.
+- A Cartesian coordinate system.
+- A grid with a step of 0.05.
+- Numerical labels along both coordinate axes.
+- A legend identifying both solution curves.
 
-$$
-x_{\text{exact}}(t)=
-\frac{36\lambda}{12-7\lambda}t^2+2
-$$
+The analytical solution is:
 
-The numerical approximation is obtained from the iterative algorithm.
+\[
+x^*(t)=2+2.25t^2
+\]
 
-Both solutions are used for comparison and visualization.
+The numerical solution is obtained using the method of successive approximations.
 
-### 4. Graphical Visualization
+The graph is displayed over the interval:
 
-The program uses SFML to create two graphical windows.
+\[
+t\in[0,1]
+\]
 
-**Solution Plot**
+The vertical plotting range is:
 
-The first window displays:
+\[
+x(t)\in[1.5,4.0]
+\]
 
-- The exact solution in green.
-- The approximate numerical solution in blue.
-- The coordinate grid and axes.
+### 2. Absolute Error Visualization
 
-**Error Plot**
+The second graphical window displays the absolute difference between the numerical and analytical solutions:
 
-The second window displays the absolute approximation error:
+\[
+e(t)=|x_{\text{approx}}(t)-x^*(t)|
+\]
 
-$$
-e(t)=
-|x_{\text{approx}}(t)-x_{\text{exact}}(t)|
-$$
+The visualization includes:
 
-The error curve is displayed in red.
+- A Cartesian coordinate system.
+- A red error curve.
+- A grid with a step of 0.1 along the horizontal axis.
+- Automatic vertical scaling based on the maximum calculated error.
+- Numerical labels along the horizontal axis.
+- A label indicating the maximum error scale.
 
-The maximum error over the computational grid is also used to determine the vertical scale of the graph.
+This graph makes it possible to examine how the approximation error changes throughout the integration interval.
+
+---
 
 ## Numerical Analysis
 
-The experiment uses the following parameters:
+The program evaluates the numerical solution in both functional spaces and compares the results with the analytical solution.
 
-| Parameter | Value |
+### 1. Analytical Solution
+
+The exact solution is:
+
+\[
+\boxed{x^*(t)=2+2.25t^2}
+\]
+
+At the endpoints of the interval:
+
+\[
+x^*(0)=2
+\]
+
+\[
+x^*(1)=4.25
+\]
+
+### 2. Contraction Coefficients
+
+The theoretical contraction coefficients used in the implementation are:
+
+| Functional Space | Contraction Coefficient |
 |---|---:|
-| \(\lambda\) | 0.4 |
-| \(\varepsilon\) | 0.001 |
-| \(h\) | 0.05 |
-| \(m\) | 20 |
-| Grid points | 21 |
+| \(C[0,1]\) | 0.8 |
+| \(L_2[0,1]\) | 0.273252 |
 
-### Results in \(C[0,1]\)
+Both coefficients satisfy the convergence condition:
 
-The calculated contraction coefficient is:
+\[
+0<\alpha<1
+\]
 
-$$
-\alpha_C=0.8
-$$
+Therefore, the method of successive approximations converges in both spaces under the corresponding contraction assumptions.
 
-The resulting iteration statistics are:
+### 3. Comparison of Numerical and Analytical Solutions
 
-| Metric | Result |
-|---|---:|
-| Contraction coefficient | 0.80000 |
-| A priori iteration count | 39 |
-| Actual iteration count | 6 |
-| A posteriori error estimate | 0.00077464 |
-| Maximum difference from exact solution | 0.00005894 |
+After completing the iterative calculations, the program compares the numerical approximation with the analytical solution at every grid point.
 
-### Results in \(L_2[0,1]\)
+The maximum absolute difference is calculated as:
 
-The calculated contraction coefficient is:
+\[
+\boxed{
+e_{\max}=
+\max_{0\leq i\leq20}
+|x_{\text{approx}}(t_i)-x^*(t_i)|
+}
+\]
 
-$$
-\alpha_{L_2}\approx0.273252
-$$
+This value provides a direct numerical measure of the accuracy of the implemented method.
 
-The resulting iteration statistics are:
+The program also reports the a priori iteration estimate, the actual number of iterations, and the a posteriori error estimate for each functional space.
 
-| Metric | Result |
-|---|---:|
-| Contraction coefficient | 0.27325 |
-| A priori iteration count | 6 |
-| Actual iteration count | 4 |
-| A posteriori error estimate | 0.00063557 |
-
-The maximum pointwise difference from the analytical solution for the returned \(L_2\) approximation is approximately:
-
-$$
-\max_i|x_{\text{approx}}(t_i)-x_{\text{exact}}(t_i)|
-\approx0.00108258
-$$
-
-The \(L_2\) stopping criterion controls the \(L_2\) error estimate, not the maximum pointwise error. Therefore, this pointwise difference is not required to be smaller than \(\varepsilon\).
-
-### Comparison of Functional Spaces
-
-| Metric | \(C[0,1]\) | \(L_2[0,1]\) |
-|---|---:|---:|
-| Contraction coefficient | 0.80000 | 0.27325 |
-| A priori iterations | 39 | 6 |
-| Actual iterations | 6 | 4 |
-
-The contraction coefficient in \(L_2[0,1]\) is smaller than the coefficient used in \(C[0,1]\).
-
-Consequently, the iterative process requires fewer iterations to satisfy the corresponding a posteriori stopping criterion in \(L_2[0,1]\).
+---
 
 ## Usage
 
 ### Compilation
 
-The project requires SFML 2.x.
+The project requires SFML 2.x to be installed and properly configured.
 
-Example compilation command using GCC:
+Example compilation using GCC:
 
 ```bash
-g++ main.cpp -o lab2 -std=c++17 \
+g++ -std=c++17 -O2 main.cpp -o integral_equation \
+    -I/path/to/SFML/include \
+    -L/path/to/SFML/lib \
     -lsfml-graphics -lsfml-window -lsfml-system
 ```
+
+Adjust the include and library paths according to your SFML installation.
 
 ### Execution
 
 Run the compiled executable:
 
 ```bash
-./lab2
+./integral_equation
 ```
+
+On Windows:
+
+```bash
+integral_equation.exe
+```
+
+Make sure that the required SFML runtime libraries and a compatible `.ttf` font are available.
 
 The program performs the following operations:
 
-1. Constructs the computational grid.
+1. Initializes the numerical parameters and integration grid.
 2. Solves the integral equation in \(C[0,1]\).
 3. Solves the integral equation in \(L_2[0,1]\).
-4. Calculates the maximum difference between the numerical and analytical solutions obtained in \(C[0,1]\).
-5. Opens the solution comparison window.
-6. Opens the approximation error window after the first window is closed.
+4. Calculates the maximum difference between the analytical and numerical solutions obtained in \(C[0,1]\).
+5. Opens the first SFML window displaying both solution curves.
+6. Opens the second SFML window displaying the absolute error.
+
+---
+
+## Output
+
+The console output contains the following information for each functional space:
+
+- Contraction coefficient.
+- A priori estimate of the required number of iterations.
+- Actual number of iterations performed.
+- A posteriori error estimate.
+
+The program additionally displays the maximum absolute difference between the analytical and numerical solutions.
+
+**Example output format:**
+
+```text
+--- Space: C[0,1] ---
+Contraction coefficient (alpha): 0.80000
+A priori iteration count: ...
+Actual iteration count: ...
+A posteriori error estimate: ...
+
+--- Space: L2[0,1] ---
+Contraction coefficient (alpha): 0.27325
+A priori iteration count: ...
+Actual iteration count: ...
+A posteriori error estimate: ...
+
+Maximum difference between exact and approximate solutions: ...
+```
+
+The numerical values represented by `...` are calculated during program execution.
+
+---
+
+## Results Summary
+
+| Parameter | Result |
+|---|---:|
+| Integral equation parameter (\(\lambda\)) | 0.4 |
+| Integration interval | \([0,1]\) |
+| Grid step (\(h\)) | 0.05 |
+| Number of subintervals | 20 |
+| Required accuracy (\(\varepsilon\)) | \(10^{-3}\) |
+| Initial approximation | \(x_0(t)=2\) |
+| Analytical solution | \(2+2.25t^2\) |
+| Contraction coefficient in \(C[0,1]\) | 0.8 |
+| Contraction coefficient in \(L_2[0,1]\) | 0.273252 |
+| Numerical integration method | Composite Simpson's rule |
+| Iterative method | Successive approximations |
+
+The results demonstrate the application of the method of successive approximations to a Fredholm integral equation of the second kind.
+
+The comparison of the two functional spaces illustrates how the choice of norm affects the contraction coefficient and the convergence properties of the iterative process.
+
+---
 
 ## Conclusion
 
-The laboratory work demonstrates the numerical solution of a Fredholm integral equation of the second kind using the method of successive approximations.
+This laboratory work demonstrates the practical application of numerical methods to solving **Fredholm integral equations of the second kind**.
 
-The integral operator was investigated in two functional spaces: \(C[0,1]\) and \(L_2[0,1]\). In both cases, the contraction condition is satisfied for the selected parameter \(\lambda=0.4\), guaranteeing convergence of the iterative method.
+The original integral equation is transformed into an operator equation and solved using the method of successive approximations. Numerical integration is performed using the composite Simpson's rule, allowing the integral operator to be evaluated on a discrete grid.
 
-The composite Simpson's rule was used to approximate the integral, while a priori and a posteriori estimates were applied to analyze the convergence and accuracy of the numerical solution.
+The convergence of the iterative method is investigated in two functional spaces: \(C[0,1]\) and \(L_2[0,1]\). The corresponding contraction coefficients are calculated, and both theoretical and practical error estimates are used to control the iterative process.
 
-The obtained results demonstrate that the iterative process converges in both spaces. The graphical visualization additionally provides a comparison between the analytical and numerical solutions and illustrates the distribution of the approximation error.
+The implementation also includes an analytical solution, which makes it possible to evaluate the accuracy of the numerical approximation and visualize the absolute error.
+
+Finally, the SFML graphical component provides a visual comparison of the analytical and numerical solutions, as well as a representation of the approximation error.
+
+The results illustrate the relationship between functional spaces, contraction properties, numerical integration, and the convergence of iterative methods for integral equations.
