@@ -165,7 +165,7 @@ x_i^{(k+1)} =
 \frac{1}{a_{ii}}
 \left(
 b_i -
-\sum_{\substack{j=1,\,j\neq i}}^{n}
+\sum_{\substack{j=1,j\neq i}}^{n}
 a_{ij}x_j^{(k)}
 \right)
 $$
