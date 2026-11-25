@@ -346,7 +346,7 @@ The actual number of iterations can be smaller than the a priori estimate becaus
 To verify the obtained result, the program substitutes the approximate solution into the original equation:
 
 $$
-g(x^*) = 3x^* + \sin(x^*) + \sqrt{1 + (x^*)^2}
+g(x^{\ast}) = 3x^{\ast} + \sin(x^{\ast}) + \sqrt{1 + (x^{\ast})^2}
 $$
 
 For the calculated approximation:
