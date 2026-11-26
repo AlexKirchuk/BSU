@@ -50,11 +50,11 @@ Task 3:
 
 ## Project Structure
 
+```
 .
-├── lab4_tasks2_3.py             # Main script
-├── fig1_covariance_ci.png       # Task 2: R(h), R_bar(h), 95% CI
-├── fig2_random_walk.png         # Task 3: random walk trajectories
-└── README.md                    # This file
+├── main.py                # Main script (manual implementation)
+└── README.md                     # This file
+```
 
 ---
 

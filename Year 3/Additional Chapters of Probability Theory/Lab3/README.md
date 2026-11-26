@@ -37,9 +37,11 @@ behind AR(2) simulation and preliminary statistical analysis.
 
 ## Project Structure
 
+```
 .
-├── main.py                       # Main script
+├── main.py                       # Main script (manual implementation)
 └── README.md                     # This file
+```
 
 ---
 

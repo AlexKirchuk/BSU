@@ -31,8 +31,7 @@ This approach demonstrates a deep understanding of the underlying mathematics be
 
 ```
 .
-├── lab2_manual.py                # Main script (manual implementation)
-├── task2_manual_histogram.png    # Graphical output
+├── main.py                # Main script (manual implementation)
 └── README.md                     # This file
 ```
 

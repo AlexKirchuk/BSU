@@ -24,8 +24,7 @@ The implementation is done in **Python** using standard scientific libraries (`n
 
 ```
 .
-├── lab1.py                  # Main script with all computations
-├── task2_histogram.png      # Graphical output for Task 2
+├── main.py                  # Main script with all computations
 └── README.md                # This file
 ```
 
