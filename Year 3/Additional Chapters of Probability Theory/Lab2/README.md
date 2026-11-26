@@ -31,7 +31,7 @@ This approach demonstrates a deep understanding of the underlying mathematics be
 
 ```
 .
-├── main.py                # Main script (manual implementation)
+├── main.py                       # Main script (manual implementation)
 └── README.md                     # This file
 ```
 
