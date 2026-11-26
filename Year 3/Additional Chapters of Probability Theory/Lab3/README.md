@@ -1,4 +1,4 @@
-# Laboratory Work 3: Stationary Random Processes (Task 1)
+# Laboratory Work 3: Stationary Random Processes
 
 ## Overview
 
@@ -38,13 +38,7 @@ behind AR(2) simulation and preliminary statistical analysis.
 ## Project Structure
 
 .
-├── lab3_task1.py                 # Main script
-├── fig1_realization.png          # Realization X(t)
-├── fig2_histogram.png            # Histogram + fitted N(mean, std)
-├── fig3_boxplot.png              # Box-and-whisker plot
-├── fig4_qq.png                   # Normal probability plot
-├── fig5_trend.png                # Trend analysis
-├── fig6_covariance.png           # R(h) and R_hat(h)
+├── main.py                       # Main script
 └── README.md                     # This file
 
 ---
