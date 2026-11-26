@@ -52,7 +52,7 @@ Task 3:
 
 ```
 .
-├── main.py                # Main script (manual implementation)
+├── main.py                       # Main script (manual implementation)
 └── README.md                     # This file
 ```
 
