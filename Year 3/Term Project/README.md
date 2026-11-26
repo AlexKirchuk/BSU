@@ -55,9 +55,7 @@ ACI dynamically adjusts the current miscoverage level according to the predictio
 The update rule is:
 
 $$
-\alpha_{t+1}
-=
-\alpha_t + \gamma(\alpha - E_t)
+\alpha_{t+1} = \alpha_t + \gamma(\alpha - E_t)
 $$
 
 where:
