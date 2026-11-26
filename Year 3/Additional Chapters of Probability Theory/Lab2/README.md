@@ -162,7 +162,7 @@ The histogram will show a clear **two-peak structure** that no single Gaussian c
 Run the analysis:
 
 ```bash
-python lab2_manual.py
+python main.py
 ```
 
 **Output:**

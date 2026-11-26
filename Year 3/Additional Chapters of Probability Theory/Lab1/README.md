@@ -121,7 +121,7 @@ This visualization clearly shows why the normality hypothesis is rejected for th
 Run the full analysis:
 
 ```bash
-python lab1.py
+python main.py
 ```
 
 The script prints:
