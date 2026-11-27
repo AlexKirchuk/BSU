@@ -1,4 +1,4 @@
-# Laboratory Work: Numerical Methods for Solving Systems of Linear Algebraic Equations
+# Laboratory Work 1: Numerical Methods for Solving Systems of Linear Algebraic Equations
 
 ## Overview
 
